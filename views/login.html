@@ -1,0 +1,207 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=edge,chrome=1"/>
+    <!--[if lt IE 9]
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]>-->
+    <title></title>
+    <script src="/static/js/jquery-1.9.0.min.js"></script>
+    <style>
+        *{margin:0;padding:0;}
+        html,body{height:100%;}
+        body{
+            /*background-color:#1f2228;*/
+            background:url("/static/img/ice.png") no-repeat center bottom;
+            background-size:100%;
+            background-color:#f5f4f4;
+            font-family: "Microsoft YaHei";
+        }
+        .container{
+            /*width:70%;*/
+            margin:0 auto 60px;
+            padding:90px 0 40px;
+            background:url("/static/img/lg_pic.png") no-repeat center top;
+            background-size:100%;
+            /*max-width:500px;*/
+        }
+        .title{
+            font-size:24px;
+            color:#6d6d6d;
+            text-align:center;
+            /*margin-top:100px;*/
+        }
+        .msg{
+            font-size:16px;
+            color:#a0a0a0;
+            text-align:center;
+            margin:40px auto;
+            line-height:30px;
+        }
+        .msg span{
+            color:#0abcdf;
+            cursor: pointer;
+        }
+        .btn{
+            width:250px;
+            height:50px;
+            display:block;
+            margin:0 auto 40px;
+            text-align:center;
+            line-height:50px;
+            color:#fff;
+            background-color:#0abcdf;
+            border-radius:3px;
+            text-decoration:none;
+            font-size:18px;
+        }
+        .btn:hover{
+            background-color:#0abcff;
+        }
+        .checkbox{
+            width:16px;
+            height:16px;
+            vertical-align: middle;
+        }
+
+        /*弹出框样式*/
+        /*layer*/
+        .layer{
+            display:none;
+            width:100%;
+            height:100%;
+            position:absolute;
+            z-index: 1900;
+        }
+        .bglayer{
+            width:100%;
+            height:100%;
+            position:absolute;
+            z-index: 2000;
+            top:0;
+            left:0;
+            background-color:#000;
+            opacity: 0.4;
+        }
+        .white_content {
+            position: absolute;
+            top: 30%;
+            width:100%;
+            z-index: 2002;
+            overflow: auto;
+        }
+        .cont_inner{
+            margin:0 auto;
+            background-color:#fff;
+            border-radius:6px;
+            overflow:hidden;
+            width: 350px;
+            min-width:300px;
+        }
+        .cont_title{
+            width:160px;
+            margin:0 auto;
+            display:block;
+        }
+        .lay_title{
+            overflow:hidden;
+        }
+        .Edit_title1 {
+            text-align: center;
+            background-color: #0abcdf;
+            font-size: 18px;
+            color: #fff;
+            width: 90%;
+            height: 50px;
+            line-height: 50px;
+            float: left;
+            font-family: 'Microsoft Yahei';
+            border-radius: 6px 0 0 0;
+        }
+        .Edit_title2 {
+            height: 50px;
+            line-height: 50px;
+            width: 10%;
+            float: right;
+            padding-right: 2%;
+            text-align: center;
+            background: url("/static/img/colse.png") no-repeat;
+            background-position: center;
+            background-color: #0abcdf;
+            border-radius: 0 6px 0 0;
+            box-sizing:border-box;
+            cursor: pointer;
+        }
+        .xy_txt {
+            font-size: 14px;
+            color: #666;
+            line-height: 24px;
+        }
+        .xy_txt h4{
+            padding:5px 0;
+        }
+        .pad40 {
+            padding: 40px 40px 60px 40px;
+        }
+        @media  screen and (max-width:520px){
+            .container{
+                padding: 150px 0 40px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+<div id="MyDiv_xieyi" class="layer" style="display: none;">
+    <div class="bglayer">
+    </div>
+    <div class="white_content" style="top:10%;">
+        <div class="cont_inner" style="">
+            <div class="lay_title" style="text-align: right; cursor: default;">
+                <div class="Edit_title1" style="width:92%;"><span class="cont_title" style="width:200px;padding-left:30px;">上网服务条款</span></div>
+                <div class="Edit_title2" style="width:8%;" onclick="CloseDiv('MyDiv_xieyi')"></div>
+            </div>
+            <div class="pad40 xy_txt" style="height:300px;overflow-y: auto;">
+                <h4>1、本网络为免费网络，不向用户个人收取任何费用。</h4>
+                <h4>2、用户上网时请遵守国家相关法律，禁止访问非法、不良网站。</h4>
+                <h4>3、严禁散布、传播违法信息。若因用户在使用本网络时的行为产生危害公共安全、损害公共利益、侵害他人正当权益等后果，由用户自行承担相应的法律责任。</h4>
+                <h4>4、为确保网络安全，用户登录网络所使用的手机号码将作为实名认证的依据。</h4>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <a href="<%= wfcAuth %>" class="btn" id="wfc">支付WFC</a>
+    <a href="javascript:;" class="btn" id="weixin">微信认证</a>
+    <p class="msg"><input type="checkbox" class="checkbox" id="checkbox" checked> <label for="checkbox">已阅读并同意</label> <span id="xieyihref">上网服务条款</span></p>
+</div>
+</body>
+
+<script type="text/javascript">
+    //关闭弹出层
+    function CloseDiv(ele) {
+//        document.getElementById(ele).style.display = 'none';
+        $("#"+ele).fadeOut("normal");
+    }
+    //显示弹出层
+    function ShowDiv(ele){
+        $("#"+ele).find(".bglayer").css('height',$(document).height());
+        $("#"+ele).fadeIn("normal");
+    }
+
+    $(function(){
+        //显示协议
+        $("#xieyihref").click(function () {
+            ShowDiv('MyDiv_xieyi');
+        });
+    })
+</script>
+
+</html>
+
