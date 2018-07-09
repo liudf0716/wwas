@@ -1,5 +1,5 @@
 # wificoin-wifidog-auth-server
-wifidog auth server for supporting wfc payment
+wwas is a apfree wifidog auther server (it also support original wifidog), which especially supporting wfc payment to surf internet.
 
 ## how to run server side
 
