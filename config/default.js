@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-	port: 8003,
+	port: 8001,
 	url: 'mongodb://localhost:27017/wfc',
 	insightApi: 'https://insight.wificoin.club/insight-api',
 	wfcPayUrl: 'https://wfc.wificoin.club/#/wifiPortal/payment?authServer=',
