@@ -44,4 +44,5 @@ u can change 'wifidog.kunteng.org.cn' to your own wifidog auth server domain
 
 ## contact us
 qq group: 424031785
+
 star our project and support us
