@@ -11,9 +11,20 @@ import requestify	from 'requestify';
 import crypto	from 'crypto';
 
 class Wifidog {
+	constructor() {
+		this.generateMD5 = this.generateMD5.bind(this);
+		this.generateWfcAuthUrl = this.generateWfcAuthUrl.bind(this);
+		this.generateWxAuthUrl	= this.generateWxAuthUrl.bind(this);
+		this.generateTxidRequest	= this.generateTxidRequest.bind(this);
+		this.generateAuthTokenUrl	= this.generateAuthTokenUrl.bind(this);
+		this.login 	= this.login.bind(this);
+		this.authWfc	= this.authWfc.bind(this);
+	}
+
 	async ping(req, res, next){
 		res.send('Pong');
 	}
+
 	async login(req, res, next){
 		var gwAddress = req.query.gw_address;
 		var gwPort	= req.query.gw_port;
@@ -26,6 +37,7 @@ class Wifidog {
 		var	randomValue = Math.floor(Math.random() * (9999 - 1000 - 1)) + 1000;
 		var toAmount = config.toAmount + randomValue/1000000;
 		var orderTime = Math.round(+new Date()/1000);
+		console.log('orderTime is ' + orderTime)
 		const newOrder = {
 			orderNumber,
 			orderTime,
@@ -41,9 +53,28 @@ class Wifidog {
 		}else{
 			await OrderModel.findOneAndUpdate({orderNumber}, {$set: newOrder});	
 		}
-		var wfcAuthUrl = config.wfcPayUrl + config.wfcAuth + '&orderNumber=' + orderNumber + '&toAddress=' + config.toAddress + '&toAmount=' + toAmount;  
-		console.log("wfcAuthUrl is " + wfcAuthUrl);
-		res.render('login', { wfcAuth: wfcAuthUrl });
+		var wfcAuthUrl = this.generateWfcAuthUrl(orderNumber, toAmount);
+		var wxAuthUrl = this.generateWxAuthUrl();
+		console.log("wfcAuthUrl is " + wfcAuthUrl + "\n wxAuthUrl is " + wxAuthUrl);
+		var timestamp = Math.round(+new Date());
+		var tmp = config.wxAppId + config.wxExtend + timestamp + config.wxShopId + wxAuthUrl + staMac + ssid + staMac +  config.wxSecreteKey;
+		var wxSign = this.generateMD5(tmp);
+		console.log("wxSign is " + wxSign);
+		res.render('login', {
+			 wfcAuth: wfcAuthUrl,
+			 gwAddress: gwAddress,
+			 gwPort: gwPort,
+			 appId: config.wxAppId,
+			 extend: config.wxExtend,
+			 timestamp: timestamp,
+			 sign: wxSign,
+			 shopId: config.wxShopId,
+			 authUrl: wxAuthUrl,
+			 mac: staMac,
+			 ssid: ssid,
+			 bssid: staMac});
+	}
+	async loginWeixin(req, res, next){
 	}
 	async auth(req, res, next){
 		var stage = req.query.stage;
@@ -79,6 +110,8 @@ class Wifidog {
 		var gwAddress = order.gwAddress;
 		var	gwId	= order.gwId;
 		var staMac	= order.staMac;
+		var token = this.generateMD5(orderNumber);
+		var authTokenUrl = this.generateAuthTokenUrl(order.gwAddress, order.gwPort, token);
 		console.log('order info : ' + gwAddress + ':' + gwPort + ':' + gwId + ':' + staMac);
 		requestify.get(this.generateTxidRequest(txid))
 			.then (function(response){
@@ -90,12 +123,10 @@ class Wifidog {
 				var addresses = vout.addresses;
 				console.log('value: ' + value);
 				if (order.toAmount == value) {
-					var authTokenUrl = 'http://' + order.gwAddress + ':' + order.gwPort + '/wifidog/auth?token=' + this.generateToken(orderNumber);
-					console.log('redirect to : ' + authTokenUrl);
+					try {
 					res.redirect(authTokenUrl);
 
 					var startTime = Math.round(+new Date()/1000);
-					console.log('' + token + ':' + startTime + ' ====== ' );
 					const newToken = {
 						token,
 						startTime,
@@ -107,16 +138,46 @@ class Wifidog {
 
 					TokenModel.create(newToken);
 					return;
+					} catch(err) {
+						console.log(err.message, err);
+						res.send('pay error');
+					}
 				}
 			};
-			res.send('not pay!');
+			res.send('pay error!');
 		});
 	}
 	async portal(req, res, next){
 		res.redirect("https://talkblock.org/");
 	}
+	
+	generateAuthTokenUrl(gwAddress, gwPort, token) {
+		try {
+			var authTokenUrl = 'http://' + gwAddress + ':' + gwPort + '/wifidog/auth?token=' + token;
+			console.log('authTokenUrl is ' + authTokenUrl);
+			return authTokenUrl;
+		} catch (err) {
+			console.log(err.message, err);
+		}
+	}
 
-	generateToken(seed){
+	generateWxAuthUrl(){
+		var wxAuthUrl = config.authUrl + ':' + config.port + config.wxAuth;
+		return wxAuthUrl;
+	}
+	
+	generateWfcAuthUrl(orderNumber, toAmount){
+		try {
+			var wfcAuthUrl = config.wfcPayUrl + config.authUrl + ':' + config.port + config.wfcAuth;
+				wfcAuthUrl += '&orderNumber=' + orderNumber + '&toAddress=' + config.toAddress + '&toAmount=' + toAmount;  
+		
+			return wfcAuthUrl;
+		} catch (err) {
+			console.log(err.message, err);
+		}
+	}
+	
+	generateMD5(seed){
 		var md5 = crypto.createHash('md5');
 		var token = md5.update(seed).digest('hex');
 		return token;
@@ -124,6 +185,7 @@ class Wifidog {
 
 	generateTxidRequest(txid){
 		var txidRequest = config.insightApi + '/tx/' + txid;
+		console.log('txidRequest is ' + txidRequest);
 		return txidRequest;
 	}
 }
