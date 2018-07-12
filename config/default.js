@@ -13,7 +13,6 @@ module.exports = {
 	wxShopId: '641418',
 	wxSecretKey: 'ca0ddbac646160edfeaf343937f73404',
 	wxAuth: '/wifidog/auth/weixin',
-	wxExtend: 'wificoin',
 	session: {
 		name: 'SID',
 		secret: 'SID',

@@ -12,13 +12,14 @@ import crypto	from 'crypto';
 
 class Wifidog {
 	constructor() {
-		this.generateMD5 = this.generateMD5.bind(this);
+		this.generateMD5 		= this.generateMD5.bind(this);
 		this.generateWfcAuthUrl = this.generateWfcAuthUrl.bind(this);
 		this.generateWxAuthUrl	= this.generateWxAuthUrl.bind(this);
 		this.generateTxidRequest	= this.generateTxidRequest.bind(this);
 		this.generateAuthTokenUrl	= this.generateAuthTokenUrl.bind(this);
-		this.login 	= this.login.bind(this);
+		this.login 		= this.login.bind(this);
 		this.authWfc	= this.authWfc.bind(this);
+		this.authWeixin	= this.authWeixin.bind(this);
 	}
 
 	async ping(req, res, next){
@@ -35,8 +36,8 @@ class Wifidog {
 		var origUrl	= req.query.url
 		var orderNumber = new UniqueNumber(true).generate();
 		var	randomValue = Math.floor(Math.random() * (9999 - 1000 - 1)) + 1000;
-		var toAmount = config.toAmount + randomValue/1000000;
-		var orderTime = Math.round(+new Date()/1000);
+		var toAmount 	= config.toAmount + randomValue/1000000;
+		var orderTime 	= Math.round(+new Date()/1000);
 		console.log('orderTime is ' + orderTime)
 		const newOrder = {
 			orderNumber,
@@ -53,19 +54,18 @@ class Wifidog {
 		}else{
 			await OrderModel.findOneAndUpdate({orderNumber}, {$set: newOrder});	
 		}
-		var wfcAuthUrl = this.generateWfcAuthUrl(orderNumber, toAmount);
-		var wxAuthUrl = this.generateWxAuthUrl();
+		var wfcAuthUrl 	= this.generateWfcAuthUrl(orderNumber, toAmount);
+		var wxAuthUrl 	= this.generateWxAuthUrl();
+		var timestamp 	= Math.round(+new Date());
+		var tmp 	= config.wxAppId + orderNumber + timestamp + config.wxShopId + wxAuthUrl + staMac + ssid + staMac +  config.wxSecretKey;
+		var wxSign 	= this.generateMD5(tmp);
 		console.log("wfcAuthUrl is " + wfcAuthUrl + "\n wxAuthUrl is " + wxAuthUrl);
-		var timestamp = Math.round(+new Date());
-		var tmp = config.wxAppId + config.wxExtend + timestamp + config.wxShopId + wxAuthUrl + staMac + ssid + staMac +  config.wxSecreteKey;
-		var wxSign = this.generateMD5(tmp);
-		console.log("wxSign is " + wxSign);
 		res.render('login', {
 			 wfcAuth: wfcAuthUrl,
 			 gwAddress: gwAddress,
 			 gwPort: gwPort,
 			 appId: config.wxAppId,
-			 extend: config.wxExtend,
+			 extend: orderNumber,
 			 timestamp: timestamp,
 			 sign: wxSign,
 			 shopId: config.wxShopId,
@@ -73,8 +73,6 @@ class Wifidog {
 			 mac: staMac,
 			 ssid: ssid,
 			 bssid: staMac});
-	}
-	async loginWeixin(req, res, next){
 	}
 	async auth(req, res, next){
 		var stage = req.query.stage;
@@ -96,6 +94,39 @@ class Wifidog {
 		} else {
 			res.send("unkown stage");
 		}
+	}
+	async authWeixin(req, res, next){
+		console.log('authWeixin query is ' + JSON.stringify(req.query));
+		var extend 	= req.query.extend;
+		var openId	= req.query.openId;
+		var tid		= req.query.tid;
+		var sign	= req.query.sign;
+		var timestamp	= req.query.timestamp;
+		const order = await OrderModel.findOne({ orderNumber: extend });
+		if (!order) { 
+			res.send('no such wfc order');
+			return;
+		}
+
+		var gwPort		= order.gwPort;
+		var gwAddress	= order.gwAddress;
+		var	gwId		= order.gwId;
+		var staMac		= order.staMac;
+		var token 		= this.generateMD5(extend);
+		var authTokenUrl= this.generateAuthTokenUrl(order.gwAddress, order.gwPort, token);
+		res.redirect(authTokenUrl);
+
+		var startTime = Math.round(+new Date()/1000);
+		const newToken = {
+			token,
+			startTime,
+			gwAddress,
+			gwPort,
+			gwId,
+			tid
+		};
+
+		TokenModel.create(newToken);
 	}
 	async authWfc(req, res, next){
 		console.log("orderNumber is " + req.query.orderNumber);
@@ -148,12 +179,15 @@ class Wifidog {
 		});
 	}
 	async portal(req, res, next){
+		console.log('portal here ' + JSON.stringify(req.query));
 		res.redirect("https://talkblock.org/");
 	}
 	
-	generateAuthTokenUrl(gwAddress, gwPort, token) {
+	generateAuthTokenUrl(gwAddress, gwPort, token, type = "") {
 		try {
 			var authTokenUrl = 'http://' + gwAddress + ':' + gwPort + '/wifidog/auth?token=' + token;
+			if (!type)
+				authTokenUrl += '&type=' + type;
 			console.log('authTokenUrl is ' + authTokenUrl);
 			return authTokenUrl;
 		} catch (err) {
