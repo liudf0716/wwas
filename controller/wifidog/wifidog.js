@@ -183,10 +183,10 @@ class Wifidog {
 		res.redirect("https://talkblock.org/");
 	}
 	
-	generateAuthTokenUrl(gwAddress, gwPort, token, type = "") {
+	generateAuthTokenUrl(gwAddress, gwPort, token, type = '') {
 		try {
 			var authTokenUrl = 'http://' + gwAddress + ':' + gwPort + '/wifidog/auth?token=' + token;
-			if (!type)
+			if (type != '')
 				authTokenUrl += '&type=' + type;
 			console.log('authTokenUrl is ' + authTokenUrl);
 			return authTokenUrl;
