@@ -1,5 +1,5 @@
 # wificoin-wifidog-auth-server
-wwas is a apfree wifidog auther server (it also support original wifidog), which especially supporting wfc payment to surf internet.
+wwas is an [apfree wifidog](https://github.com/liudf0716/apfree_wifidog) auther server (it also support original wifidog), which especially supporting wfc payment to surf internet.
 
 ## how to run server side
 
@@ -46,3 +46,6 @@ u can change 'wifidog.kunteng.org.cn' to your own wifidog auth server domain
 qq group: 424031785
 
 star our project and support us
+
+## donate
+### wfc: weiKbu9DYg26gH2zucSHJHgH5KsuuZd3wW
