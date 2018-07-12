@@ -62,6 +62,13 @@ config mqtt	'mqtt'
 
 u can change 'wifidog.kunteng.org.cn' to your own wifidog auth server domain
 
+## How To Contribute
+
+Feel free to create issues or pull-requests if you have any problems.
+
+**Please read [CONTRIBUTING.md](https://github.com/wificoin-project/wificoin-wifidog-auth-server/blob/master/CONTRIBUTING.md) before pushing any changes.**
+
+
 ## contact us
 qq group: 424031785
 
