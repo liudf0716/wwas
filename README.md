@@ -19,7 +19,7 @@
 
 
 # wificoin-wifidog-auth-server
-wwas is an [apfree wifidog](https://github.com/liudf0716/apfree_wifidog) auther server (it also support original wifidog), which especially supporting wfc payment to surf internet.
+wwas is an [apfree wifidog](https://github.com/liudf0716/apfree_wifidog) auther server (it also support original wifidog), which especially supporting wfc payment  and weixin lian.
 
 ## how to run server side
 
