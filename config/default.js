@@ -7,7 +7,7 @@ module.exports = {
 	authUrl: 'http://wifidog.kunteng.org.cn',
 	wfcPayUrl: 'https://wfc.wificoin.club/#/wifiPortal/payment?authServer=',
 	wfcAuth: '/wifidog/auth/wfc',
-	toAddress: 'wbGexNMs1SCut68CNV1HQzUpVYyL4RPjkf',
+	toAddress: 'weiKbu9DYg26gH2zucSHJHgH5KsuuZd3wW',
 	toAmount: 2,
 	wxAppId: 'wxfb684aa755dffceb',
 	wxShopId: '641418',
