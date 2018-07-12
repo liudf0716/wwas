@@ -10,7 +10,6 @@ module.exports = {
 	toAddress: 'wbGexNMs1SCut68CNV1HQzUpVYyL4RPjkf',
 	toAmount: 2,
 	wxAppId: 'wxfb684aa755dffceb',
-	wxAppSecret: '6fd6d05c49604d3f21104546fd404b28',
 	wxShopId: '641418',
 	wxSecretKey: 'ca0ddbac646160edfeaf343937f73404',
 	wxAuth: '/wifidog/auth/weixin',
