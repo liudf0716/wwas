@@ -2,13 +2,14 @@
 
 import OrderModel from '../../models/wifidog/wfcorder'
 import TokenModel from '../../models/wifidog/token'
+import DeviceModel	from '../../models/wifidog/device'
 import WiFicoinModel	from '../../models/config/wificoin'
 import path from 'path';
 import fs 	from 'fs';
-import UniqueNumber from 'unique-number';
 import config 	from 'config-lite';
-import requestify	from 'requestify';
 import crypto	from 'crypto';
+import requestify	from 'requestify';
+import UniqueNumber from 'unique-number';
 
 class Wifidog {
 	constructor() {
@@ -17,12 +18,56 @@ class Wifidog {
 		this.generateWxAuthUrl	= this.generateWxAuthUrl.bind(this);
 		this.generateTxidRequest	= this.generateTxidRequest.bind(this);
 		this.generateAuthTokenUrl	= this.generateAuthTokenUrl.bind(this);
+		this.updateDeviceClientFromQuery	= this.updateDeviceClientFromQuery.bind(this);
 		this.login 		= this.login.bind(this);
+		this.ping		= this.ping.bind(this);
 		this.authWfc	= this.authWfc.bind(this);
 		this.authWeixin	= this.authWeixin.bind(this);
 	}
 
 	async ping(req, res, next){
+		var gwId		= req.query.gw_id;
+		var	sysUptime	= req.query.sys_uptime;
+		var sysMemfree	= req.query.sys_memfree;
+		var sysLoad		= req.query.sys_load;
+		var	cpuUsage	= req.query.cpu_usage; 
+		var	ssid		= req.query.ssid;
+		var	version		= req.query.version;
+		var	type		= req.query.type; 	// router type
+		var	name		= req.query.name;	// router name
+		var	channelPath			= req.query.channel_path;
+		var	wiredPassed			= req.query.wired_passed;
+		var	wifidogUptime		= req.query.wifidog_uptime;
+		var	onlineClients		= req.query.online_clients;
+		var	offlineClients		= req.query.offline_clients;
+		var	nfConntrackCount	= req.query.nf_conntrack_count;
+		var lastTime			= Math.round(+new Date()/1000);
+		const newDevice = {
+			gwId,
+			sysUptime,
+			sysMemfree,
+			sysLoad,
+			cpuUsage,
+			ssid,
+			version,
+			type,
+			name,
+			channelPath,
+			wiredPassed,
+			wifidogUptime,
+			onlineClients,
+			offlineClients,
+			nfConntrackCount,
+			lastTime
+		}
+
+		const device = await DeviceModel.findOne({gwId: gwId});
+		if(!device){
+			await DeviceModel.create(newDevice);
+		} else {
+			await DeviceModel.findOneAndUpdate({gwId}, {$set: newDevice});
+		}
+
 		res.send('Pong');
 	}
 
@@ -79,18 +124,17 @@ class Wifidog {
 
 		console.log('auth stage is ' + stage);
 		if (stage == 'login') {
-			console.log('query is ' + JSON.stringify(req.query));
 			var token 	= req.query.token;
-			var staMac	= req.query.mac;
 			const tokenObj = await TokenModel.findOne({token});
 			if (!tokenObj) {
-				console.log('no tokenObj');
 				res.send('Auth: 0');
 			} else {
 				res.send('Auth: 1');
 			}
 		} else if (stage == 'counters') {
-			res.send("Auth: 1");
+			var result = this.updateDeviceClientFromQuery(req.query);
+			res.send('Auth: ' + result);
+		} else if (stage == 'logout') {
 		} else {
 			res.send("unkown stage");
 		}
@@ -183,16 +227,69 @@ class Wifidog {
 		res.redirect("https://talkblock.org/");
 	}
 	
-	generateAuthTokenUrl(gwAddress, gwPort, token, type = '') {
+	updateDeviceClientFromQuery(query) {
 		try {
-			var authTokenUrl = 'http://' + gwAddress + ':' + gwPort + '/wifidog/auth?token=' + token;
-			if (type != '')
-				authTokenUrl += '&type=' + type;
-			console.log('authTokenUrl is ' + authTokenUrl);
-			return authTokenUrl;
-		} catch (err) {
-			console.log(err.message, err);
+		var mac 	= query.mac;
+		var ip		= query.ip;
+		var token	= query.token;
+		var wired	= query.wired;
+		var	name	= query.name;
+		var	gwId	= query.gw_id;
+		var incoming	= query.incoming;
+		var outcoming	= query.outcoming;
+		var firstLogin	= query.first_login;
+		var onlineTime	= queyr.online_time;
+		var lastTime	= Math.round(+new Date()/1000);
+		var incomingdelta	= query.incomingdelta;
+		var outcomingdelta	= query.outcomingdelta;
+		var	channelPath		= query.channel_path;
+		
+		const device = await ClientModel.findOne({gwId});
+		if(!device){
+			console.log('impossible: cannot find device: ' + gwId);
+			return 0;
 		}
+		
+		var clients = device.clients;
+		const item = {	
+				mac: 	mac,
+				ip:		ip,
+				token:	token,
+				wired:	wired,
+				name:	name,
+				incoming:	incoming,
+				outcoming:	outcoming,
+				firstLogin:	firstLogin,
+				onlineTime:	onlineTime,
+				lastTime:	lastTime,	
+				incomingdelta:	incomingdelta,
+				outcomingdelta:	outcomingdelta,
+				channelPath:	channelPath,
+			};
+		var index = 0;
+		for(; index < clients.length; index++){
+			if(clients[index].mac == mac){
+				clients[index] = item;
+				break;
+			}
+		});
+		if(index == clients.length)
+			clients.append(item);
+		device.clients = clients;
+		await ClientModel.findOneAndUpdate({gwId}, {$set: device});	
+		return 1;
+		}catch(err){
+			console.log(err);
+			return 0;
+		}
+		
+	}
+
+	generateAuthTokenUrl(gwAddress, gwPort, token, type = '') {
+		var authTokenUrl = 'http://' + gwAddress + ':' + gwPort + '/wifidog/auth?token=' + token;
+		if (type != '')
+			authTokenUrl += '&type=' + type;
+		return authTokenUrl;
 	}
 
 	generateWxAuthUrl(){
@@ -201,14 +298,10 @@ class Wifidog {
 	}
 	
 	generateWfcAuthUrl(orderNumber, toAmount){
-		try {
-			var wfcAuthUrl = config.wfcPayUrl + config.authUrl + ':' + config.port + config.wfcAuth;
-				wfcAuthUrl += '&orderNumber=' + orderNumber + '&toAddress=' + config.toAddress + '&toAmount=' + toAmount;  
+		var wfcAuthUrl = config.wfcPayUrl + config.authUrl + ':' + config.port + config.wfcAuth;
+			wfcAuthUrl += '&orderNumber=' + orderNumber + '&toAddress=' + config.toAddress + '&toAmount=' + toAmount;  
 		
-			return wfcAuthUrl;
-		} catch (err) {
-			console.log(err.message, err);
-		}
+		return wfcAuthUrl;
 	}
 	
 	generateMD5(seed){
