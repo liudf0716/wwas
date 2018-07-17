@@ -1,11 +1,6 @@
 'use strict';
-import MqttPubHandle from '../../controller-mqtt/publish/mqtt_pub.js';
-import MqttSubHandle from "../../controller-mqtt/subscribe/mqtt_sub.js";
-//import MqttSubHandle from '../../controller-mqtt/subscribe/mqtt_sub.js';
-import DB from "../../models/models.js";
 import dtime from 'time-formater';
 import config from "config-lite";
-import logger from '../../logs/logs.js'
 const formidable = require('formidable');
 const fs = require("fs");
 const xlsx = require('node-xlsx');
@@ -16,56 +11,12 @@ const events = require("events");
 
 class DeviceHandle {
     constructor(){
-        //logger.info('init 111');
-    }
-    async sysinfo(req, res, next){
-        logger.info('device sysinfo');
-
-        //获取表单数据，josn
-        var route_macs = req.body['route_mac'];
-        //var operator_name = req.body['operator_name'];
-        //var user_name = req.body['user_name'];
-        //var expired_time = req.body['expired_time'];
-
-        // 参数有效性检查
-        if(typeof(route_macs)==="undefined"){
-            res.send({ret_code: 1002, ret_msg: 'FAILED', extra:'用户输入参数无效'});
-            return;
-        }
-
-        //logger.info('device sysinfo', Array.isArray(macs));
-        //logger.info('device macs', macs);
-        //logger.info('device macs', macs[0]['mac']);
-
-        try{
-            //var taskHandle = MqttPubHandle.createTaskHandle(user_name, operator_name, expired_time, route_macs);
-            var taskHandle = MqttPubHandle.createPublishHandle(route_macs);
-            await MqttPubHandle.CMD_GET.sysinfo(taskHandle);
-            logger.info('uuid', taskHandle.uuid);
-
-            // 监听器 #1
-            var mylistener = function (mac, mqttJosnObj) {
-                //logger.info('Hello :', JSON.stringify(mqttJosnObj));
-                if (mac == -1){
-                    res.send({ret_code: -1, ret_msg: 'FAILED', extra:'timeout'});
-                }
-                else {
-                    res.send({ret_code: 0, ret_msg: 'SUCCESS', extra:mqttJosnObj});
-                }
-            }
-
-            //监听事件some_event
-            //await MqttSubHandle.addTaskListener(uuid, mycars.length, mylistener, 2000);
-            await MqttSubHandle.addOnceListener(taskHandle.uuid, mylistener, 3000);
-        }catch(err){
-            res.send({ret_code: -1, ret_msg: 'FAILED', extra:err});
-            logger.info('获取数据失败');
-        }
+        //console.log('init 111');
     }
 
     async import(req, res, next){
-        logger.info('device import');
-        //logger.info(req.body);
+        console.log('device import');
+        //console.log(req.body);
 
         //获取表单数据，josn
         var route_macs = req.body['route_mac'];
@@ -89,7 +40,7 @@ class DeviceHandle {
             //修改渠道
 		var ill_mac = [];
             for (var i = 0; i < mac_array.length; i++) {
-                logger.info('mac_array:', mac_array[i]);
+                console.log('mac_array:', mac_array[i]);
 
 
                 //去掉空格  //mac 地址合法性检查
@@ -103,11 +54,11 @@ class DeviceHandle {
                 var wherestr = {'mac': mac};
 
                 //如果采用返回值得形式，必须的await
-                var query = await DB.DeviceTable.findOne(wherestr).exec();
+                var query = await DeviceTable.findOne(wherestr).exec();
                 if (query != null){
 			if(query.user_name === ''){
                    	 	var updatestr = {'user_name': user_name};
-                   		 await DB.DeviceTable.findByIdAndUpdate(query['_id'], updatestr).exec();
+                   		 await DeviceTable.findByIdAndUpdate(query['_id'], updatestr).exec();
 			}else{
 				ill_mac.push(mac_array[i]);
 			}
@@ -129,7 +80,7 @@ class DeviceHandle {
                         'update_time':dtime(mytime).format('YYYY-MM-DD HH:mm:ss'),
                         'sort_time':mytime.getTime()
                     };
-                    await DB.DeviceTable.create(updatestr);
+                    await DeviceTable.create(updatestr);
                 }
             }
 
@@ -146,9 +97,9 @@ class DeviceHandle {
     }
 
     async import_excel(req, res, next){
-        logger.info('device import excel');
-        //logger.info(req.body);
-        logger.info(" ########## POST /upload ####### ");
+        console.log('device import excel');
+        //console.log(req.body);
+        console.log(" ########## POST /upload ####### ");
         var user_name = '';
         var fileName = '';
         var uploadedPath = '';
@@ -163,7 +114,7 @@ class DeviceHandle {
 
 
         form.on('field', function (field, value) {
-            logger.info('upload file: ', field, value);
+            console.log('upload file: ', field, value);
             if (field == 'user_name'){
                 user_name = value;
             }
@@ -172,8 +123,8 @@ class DeviceHandle {
         form.on('file', function (field, file) {
             fileName = file.name;
             uploadedPath = file.path
-            //logger.info(file);;
-            logger.info('upload file: ', fileName, uploadedPath);
+            //console.log(file);;
+            console.log('upload file: ', fileName, uploadedPath);
 
             //判断文件类型是否是xlsx
             if (file.type != 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
@@ -183,12 +134,12 @@ class DeviceHandle {
 
         form.on('end', async function () {
             //遍历上传文件
-            logger.info('parse end:' + uploadedPath);
+            console.log('parse end:' + uploadedPath);
 
             //读取文件内容
             var obj = xlsx.parse(uploadedPath);
             var excelObj=obj[0].data;
-            logger.info(excelObj);
+            console.log(excelObj);
 
             var mac_array = [];
             for(var i in excelObj){
@@ -198,12 +149,12 @@ class DeviceHandle {
                 }
             }
 
-            logger.info(mac_array);
+            console.log(mac_array);
             try {
                 //修改渠道
 		var ill_mac = [];
                 for (var i = 0; i < mac_array.length; i++) {
-                    //logger.info('mac_array:', mac_array[i]);
+                    //console.log('mac_array:', mac_array[i]);
 
                     //去掉空格  //mac 地址合法性检查
                     var mac = mac_array[i].trim().toUpperCase();
@@ -216,11 +167,11 @@ class DeviceHandle {
                     var wherestr = {'mac': mac};
 
                     //如果采用返回值得形式，必须的await
-                    var query = await DB.DeviceTable.findOne(wherestr).exec();
+                    var query = await DeviceTable.findOne(wherestr).exec();
                     if (query != null){
 			if(query.user_name === ''){
 				var updatestr = {'user_name': user_name};
-				await DB.DeviceTable.findByIdAndUpdate(query['_id'], updatestr).exec();
+				await DeviceTable.findByIdAndUpdate(query['_id'], updatestr).exec();
 			}else{
 				ill_mac.push(mac_array[i]);
 			}
@@ -242,7 +193,7 @@ class DeviceHandle {
                             'update_time':dtime(mytime).format('YYYY-MM-DD HH:mm:ss'),
                             'sort_time':mytime.getTime()
                         };
-                        await DB.DeviceTable.create(updatestr);
+                        await DeviceTable.create(updatestr);
                     }
                 }
 
@@ -274,7 +225,7 @@ class DeviceHandle {
     }
 
     async leave(req, res, next){
-        logger.info('device leave');
+        console.log('device leave');
 
         //获取表单数据，josn
         var route_mac = req.body['route_mac'];
@@ -289,7 +240,7 @@ class DeviceHandle {
             // 更新DeviceTable, 如果升级ok的话就不更新
             var wherestr = {'mac': route_mac};
             var updatestr = {'user_name': ''};
-            var query = await DB.DeviceTable.findOneAndUpdate(wherestr, updatestr).exec();
+            var query = await DeviceTable.findOneAndUpdate(wherestr, updatestr).exec();
 
             //退出完成
             res.send({ret_code: 0, ret_msg: 'SUCCESS', extra: query});
@@ -301,9 +252,9 @@ class DeviceHandle {
 
 
     async export(req, res,next){
-        logger.info('device export');
+        console.log('device export');
 	var user = req.body.user_account;
-	var query = await DB.DeviceTable.find({'user_name':user}).exec();
+	var query = await DeviceTable.find({'user_name':user}).exec();
 	var macs=[];
 	for(var i =0; i< query.length; i ++){
 		macs.push([query[i].mac]);
@@ -325,7 +276,7 @@ class DeviceHandle {
     ///权限控制
     async permission(req, res, next) {
 
-        logger.info('access_permission list');
+        console.log('access_permission list');
 
         //本地调试
         if (process.env.NODE_ENV == 'local') {
@@ -367,8 +318,8 @@ class DeviceHandle {
 
     async list(req, res, next) {
 
-        logger.info('device list');
-        //logger.info(req.body);
+        console.log('device list');
+        //console.log(req.body);
 
         //获取表单数据，josn
         var page_size = req.body['page_size'];
@@ -378,63 +329,63 @@ class DeviceHandle {
 
         // 如果没有定义排序规则，添加默认排序
         if(typeof(sort)==="undefined"){
-            logger.info('sort undefined');
+            console.log('sort undefined');
             sort = {"sort_time":-1};
         }
 
 
         // 如果没有定义排序规则，添加默认排序
         if(typeof(filter)==="undefined"){
-            logger.info('sort undefined');
+            console.log('sort undefined');
             filter = {};
         }
 
         //参数有效性检查
         if(typeof(page_size)==="undefined" && typeof(current_page)==="undefined"){
-            var count = await DB.DeviceTable.count(filter);
-            var query = await DB.DeviceTable.find(filter).sort(sort).limit(10);
+            var count = await DeviceTable.count(filter);
+            var query = await DeviceTable.find(filter).sort(sort).limit(10);
             res.send({ret_code: 0, ret_msg: 'SUCCESS', extra: {query,count}});
         }
         else if (page_size > 0 && current_page > 0) {
-            //var ret = await DB.DeviceTable.findByPage(filter, page_size, current_page, sort);
+            //var ret = await DeviceTable.findByPage(filter, page_size, current_page, sort);
             var skipnum = (current_page - 1) * page_size;   //跳过数
-            var query = await DB.DeviceTable.find(filter).sort(sort).skip(skipnum).limit(page_size);
+            var query = await DeviceTable.find(filter).sort(sort).skip(skipnum).limit(page_size);
             res.send({ret_code: 0, ret_msg: 'SUCCESS', extra: {query}});
         }
         else{
             res.send({ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入参数无效'});
         }
 
-        logger.info('device list end');
+        console.log('device list end');
     }
 
 
     async onLineList(req, res, next){
 
-        logger.info('device online');
-        //logger.info(req.body);
+        console.log('device online');
+        //console.log(req.body);
 
         DeviceHandle.prototype.listOnOffline(req, res, next, 'online');
 
-        logger.info('device online end');
+        console.log('device online end');
     }
 
 
     async offLineList(req, res, next){
 
-        logger.info('device offline');
-        //logger.info(req.body);
+        console.log('device offline');
+        //console.log(req.body);
 
         DeviceHandle.prototype.listOnOffline(req, res, next, 'offline');
 
-        logger.info('device offline end');
+        console.log('device offline end');
     }
 
 
 
     async listOnOffline(req, res, next, myfilter){
 
-        //logger.info(req.body);
+        //console.log(req.body);
 
         //获取表单数据，josn
         var page_size = req.body['page_size'];
@@ -444,13 +395,13 @@ class DeviceHandle {
 
         // 如果没有定义排序规则，添加默认排序
         if(typeof(sort)==="undefined"){
-            logger.info('sort undefined');
+            console.log('sort undefined');
             sort = {"sort_time":-1};
         }
 
         // 如果没有定义排序规则，添加默认排序
         if(typeof(filter)==="undefined"){
-            logger.info('filter undefined');
+            console.log('filter undefined');
             filter = {'status' : myfilter};
         }
         else{
@@ -459,14 +410,14 @@ class DeviceHandle {
 
         //参数有效性检查
         if(typeof(page_size)==="undefined" && typeof(current_page)==="undefined"){
-            var count = await DB.DeviceTable.count(filter);
-            var query = await DB.DeviceTable.find(filter).sort(sort).limit(10);
+            var count = await DeviceTable.count(filter);
+            var query = await DeviceTable.find(filter).sort(sort).limit(10);
             res.send({ret_code: 0, ret_msg: 'SUCCESS', extra: {query,count}});
         }
         else if (page_size > 0 && current_page > 0) {
-            //var ret = await DB.DeviceTable.findByPage(condition, page_size, current_page, sort);
+            //var ret = await DeviceTable.findByPage(condition, page_size, current_page, sort);
             var skipnum = (current_page - 1) * page_size;   //跳过数
-            var query = await DB.DeviceTable.find(filter).sort(sort).skip(skipnum).limit(page_size);
+            var query = await DeviceTable.find(filter).sort(sort).skip(skipnum).limit(page_size);
             res.send({ret_code: 0, ret_msg: 'SUCCESS', extra: {query}});
         }
         else{
@@ -497,7 +448,7 @@ class DeviceHandle {
             'sort_time':mytime.getTime()
         };
 
-        await DB.DeviceTable.findOneAndUpdate(wherestr, updatestr).exec();
+        await DeviceTable.findOneAndUpdate(wherestr, updatestr).exec();
     }
 
 
@@ -521,7 +472,7 @@ class DeviceHandle {
             'sort_time':mytime.getTime()
         };
 
-        await DB.DeviceTable.findOneAndUpdate(wherestr, updatestr).exec();
+        await DeviceTable.findOneAndUpdate(wherestr, updatestr).exec();
     }
 
 }
@@ -529,88 +480,3 @@ class DeviceHandle {
 
 export default new DeviceHandle();
 
-
-// 监听器 #1
-var updateSysinfo = async function (mac, josnObj) {
-    //logger.info('Hello updateSysinfo:', JSON.stringify(josnObj));
-
-    //更新到设备数据库，sysinfo库
-    //SysinfoTable
-    var wherestr = { 'mac': josnObj['mac']};
-    DB.SysinfoTable.findOneAndUpdate(wherestr, josnObj).exec(function (err, doc) {
-        if (doc == null){
-            //logger.info('query is null');
-            var query = DB.SysinfoTable.create(josnObj);
-        }
-    });
-}
-
-
-// 监听器 #1
-var updateOnlineDevice = async function (mac, josnObj) {
-    //logger.info('Hello updateOnlineDevice:', JSON.stringify(josnObj));
-
-    var mytime = new Date();
-
-    //更新到设备数据库， 设备上线，下线
-    var wherestr = {'mac': mac};
-    var updatestr = {
-        'mac': mac,
-        'status': 'online',
-        'dev_type': josnObj.boardtype,   //设备型号
-        'old_rom_version': '',   //	旧的固件版本
-        'rom_version': josnObj.fwversion,   //	固件版本
-        'printer_status': 'default',   //打印机状态
-        'box51_status': 'default',   //51盒子状态
-        'update_time':dtime(mytime).format('YYYY-MM-DD HH:mm:ss'),
-        'sort_time':mytime.getTime()
-    };
-
-    //如果采用返回值得形式，必须的await
-    var query = await DB.DeviceTable.findOne(wherestr).exec();
-    if (query != null){
-        if (query['rom_version'] != josnObj.fwversion){
-            updatestr['old_rom_version'] = query['rom_version'];
-            await DB.DeviceTable.findByIdAndUpdate(query['_id'], updatestr).exec();
-        }
-        else if (query['dev_type'] != josnObj.boardtype){
-            await DB.DeviceTable.findByIdAndUpdate(query['_id'], {'dev_type': josnObj.boardtype}).exec();
-        }
-    }
-    else{
-        await DB.DeviceTable.create(updatestr);
-    }
-}
-
-// 监听器 #1
-var updatDeviceStatus = async function (mac, status) {
-    //logger.info('Hello updatDeviceStatus:', status);
-    var mytime = new Date();
-
-    //更新到设备数据库
-    var wherestr = {'mac': mac};
-    var updatestr = {
-        'mac': mac,
-        'status': status,
-        'update_time':dtime(mytime).format('YYYY-MM-DD HH:mm:ss'),
-        'sort_time':mytime.getTime(),
-        'logs': [],
-    };
-
-    var query = await DB.DeviceTable.findOne(wherestr).exec();
-    if (query != null){
-        //复制数组，logs记录上下线日志
-        updatestr['logs'] = query['logs'].slice();
-        updatestr['logs'].push(updatestr['update_time'] + ' ' + status);
-        if (updatestr['logs'].length > 10){
-            updatestr['logs'].shift();  //删除数组第一个元素
-        }
-        await DB.DeviceTable.findByIdAndUpdate(query['_id'], updatestr).exec();
-    }
-}
-
-
-//监听事件some_event
-MqttSubHandle.addLoopListener('sysinfo', updateSysinfo);
-MqttSubHandle.addLoopListener('sysinfo', updateOnlineDevice);
-MqttSubHandle.addLoopListener('$SYS', updatDeviceStatus);

@@ -1,7 +1,7 @@
 'use strict';
 
 import express from 'express'
-import Admin from '../controller-http/admin/admin'
+import Admin from '../controller/admin/admin'
 import Check from '../middlewares/check'
 const router = express.Router()
 
