@@ -1,6 +1,7 @@
 'use strict';
 import dtime from 'time-formater';
 import config from "config-lite";
+import {DeviceTable} from '../../models/device/device'
 const formidable = require('formidable');
 const fs = require("fs");
 const xlsx = require('node-xlsx');
