@@ -6,21 +6,23 @@ const Schema = mongoose.Schema;
 
 const deviceSchema = new Schema({
 	gwId: 		String,
-	sysUptime:	Number,
-	sysMemfree: Number,
-	sysLoad: 	Number,
-	cpuUsage: 	Number,
-	ssid:		String,
-	version: 	String,
-	type:		String,
-	name:		String,
-	channelPath:	String,
-	wiredPassed:	String,
-	wifidogUptime:	String,
-	onlineClients:	String,
-	offlineClients:	String,
-	nfConntrackCount:	String,
-	auth: {type: Number, default: 0} // is the device authorized by us
+	sysUptime:	{type: Number, default: 0},
+	sysMemfree: {type: Number, default: 0},
+	sysLoad: 	{type: Number, default: 0},
+	cpuUsage: 	{type: Number, default: 0},
+	ssid:		{type: String, default: ''},
+	version: 	{type: String, default: ''},
+	type:		{type: String, default: 'unknown'},
+	name:		{type: String, default: 'unknown'},
+	channelPath:	{type: String, default: 'wificoin'},
+	wiredPassed:	{type: Number, default: 0},
+	wifidogUptime:	{type: Number, default: 0},
+	onlineClients:	{type: Number, default: 0},
+	offlineClients:	{type: Number, default: 0},
+	nfConntrackCount:	{type: Number, default: 0},
+	auth: {type: Number, default: 0}, // is the device authorized by us
+	ip:	{type: String, defautl: ''} // internet ip
+	lastTime: {type: Number, default: 0}
 })
 
 deviceSchema.index({gwId: 1});

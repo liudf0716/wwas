@@ -15,9 +15,6 @@ class DeviceHandle {
     constructor(){
     }
 
-    async sysinfo(req, res, next){
-    }
-
     async import(req, res, next){
         //获取表单数据，josn
         var route_macs = req.body['route_mac'];
@@ -49,34 +46,25 @@ class DeviceHandle {
                 }
 
                 // 更新DeviceTable, 如果升级ok的话就不更新
-                var wherestr = {'mac': mac};
+                var wherestr = {'gwId': mac};
 
                 //如果采用返回值得形式，必须的await
                 var query = await DeviceModel.findOne(wherestr).exec();
                 if (query != null){
-					if(query.user_name === ''){
-                   	 	var updatestr = {'user_name': user_name};
+					if(query.channelPath === ''){
+                   	 	var updatestr = {'channelPath': user_name};
                    		 await DeviceModel.findByIdAndUpdate(query['_id'], updatestr).exec();
 					}else{
 						ill_mac.push(mac_array[i]);
 					}
-                }
-                else{
+                }else{
                     //如果没有，就直接添加一个新的mac
                     var mytime = new Date();
                     var updatestr = {
-                        'mac': mac,
-                        'user_name': user_name,
-                        'status': 'inactive',
-                        'dev_type': '',   //设备型号
-                        'old_rom_version': '',   //	旧的固件版本
-                        'rom_version': '',   //	固件版本
-                        'printer_status': 'default',   //打印机状态
-                        'box51_status': 'default',   //51盒子状态
-                        'location': '',
-                        'inet_ip': '',
-                        'update_time':dtime(mytime).format('YYYY-MM-DD HH:mm:ss'),
-                        'sort_time':mytime.getTime()
+						'gwId': mac,
+						'channelPath': user_name,
+						'auth': 1,
+                        'lastTime':mytime.getTime()
                     };
                     await DeviceModel.create(updatestr);
                 }
@@ -142,7 +130,6 @@ class DeviceHandle {
                 //修改渠道
 				var ill_mac = [];
                 for (var i = 0; i < mac_array.length; i++) {
-
                     //去掉空格  //mac 地址合法性检查
                     var mac = mac_array[i].trim().toUpperCase();
                       if (mac.length != 12 || mac.search(/[^0-9A-F]/gi) >= 0){
@@ -151,13 +138,13 @@ class DeviceHandle {
                     }
 
                     // 更新DeviceTable, 如果升级ok的话就不更新
-                    var wherestr = {'mac': mac};
+                    var wherestr = {'gwId': mac};
 
                     //如果采用返回值得形式，必须的await
                     var query = await DeviceModel.findOne(wherestr).exec();
                     if (query != null){
 						if(query.user_name === ''){
-							var updatestr = {'user_name': user_name};
+							var updatestr = {'channelPath': user_name};
 							await DeviceModel.findByIdAndUpdate(query['_id'], updatestr).exec();
 						}else{
 							ill_mac.push(mac_array[i]);
@@ -166,20 +153,13 @@ class DeviceHandle {
                     else{
                         //如果没有，就直接添加一个新的mac
                         var mytime = new Date();
-                        var updatestr = {
-                            'mac': mac,
-                            'user_name': user_name,
-                            'status': 'inactive',
-                            'dev_type': '',   //设备型号
-                            'old_rom_version': '',   //	旧的固件版本
-                            'rom_version': '',   //	固件版本
-                            'printer_status': 'default',   //打印机状态
-                            'box51_status': 'default',   //51盒子状态
-                            'location': '',
-                            'inet_ip': '',
-                            'update_time':dtime(mytime).format('YYYY-MM-DD HH:mm:ss'),
-                            'sort_time':mytime.getTime()
-                        };
+						var updatestr = {
+							'gwId': mac,
+							'channelPath': user_name,
+							'auth': 1,
+                        	'lastTime':mytime.getTime()
+                    	};
+
                         await DeviceModel.create(updatestr);
                     }
                 }
@@ -238,7 +218,7 @@ class DeviceHandle {
 
     async export(req, res,next){
 		var user = req.body.user_account;
-		var query = await DeviceModel.find({'user_name':user}).exec();
+		var query = await DeviceModel.find({'channelPath':user}).exec();
 		var macs=[];
 		for(var i =0; i< query.length; i ++){
 			macs.push([query[i].mac]);
@@ -305,7 +285,7 @@ class DeviceHandle {
 
         // 如果没有定义排序规则，添加默认排序
         if(typeof(sort)==="undefined"){
-            sort = {"sort_time":-1};
+            sort = {"lastTime":-1};
         }
 
 
@@ -321,7 +301,6 @@ class DeviceHandle {
             res.send({ret_code: 0, ret_msg: 'SUCCESS', extra: {query,count}});
         }
         else if (page_size > 0 && current_page > 0) {
-            //var ret = await DeviceModel.findByPage(filter, page_size, current_page, sort);
             var skipnum = (current_page - 1) * page_size;   //跳过数
             var query = await DeviceModel.find(filter).sort(sort).skip(skipnum).limit(page_size);
             res.send({ret_code: 0, ret_msg: 'SUCCESS', extra: {query}});
@@ -352,7 +331,7 @@ class DeviceHandle {
 
         // 如果没有定义排序规则，添加默认排序
         if(typeof(sort)==="undefined"){
-            sort = {"sort_time":-1};
+            sort = {"lastTime":-1};
         }
 
         // 如果没有定义排序规则，添加默认排序
