@@ -13,9 +13,12 @@ const events = require("events");
 
 class DeviceHandle {
     constructor(){
+        //console.log('init 111');
     }
 
     async import(req, res, next){
+        console.log('device import');
+
         //获取表单数据，josn
         var route_macs = req.body['route_mac'];
         var user_name = req.body['user_name'];  //当前渠道名称
@@ -126,6 +129,7 @@ class DeviceHandle {
                 }
             }
 
+            console.log(mac_array);
             try {
                 //修改渠道
 				var ill_mac = [];
@@ -203,8 +207,8 @@ class DeviceHandle {
 
         try {
             // 更新DeviceTable, 如果升级ok的话就不更新
-            var wherestr = {'mac': route_mac};
-            var updatestr = {'user_name': ''};
+            var wherestr = {'gwId': route_mac};
+            var updatestr = {'channelPath': ''};
             var query = await DeviceModel.findOneAndUpdate(wherestr, updatestr).exec();
 
             //退出完成
@@ -285,12 +289,14 @@ class DeviceHandle {
 
         // 如果没有定义排序规则，添加默认排序
         if(typeof(sort)==="undefined"){
-            sort = {"lastTime":-1};
+            console.log('sort undefined');
+            sort = {"sort_time":-1};
         }
 
 
         // 如果没有定义排序规则，添加默认排序
         if(typeof(filter)==="undefined"){
+            console.log('sort undefined');
             filter = {};
         }
 
@@ -308,6 +314,8 @@ class DeviceHandle {
         else{
             res.send({ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入参数无效'});
         }
+
+        console.log('device list end');
     }
 
 
@@ -331,11 +339,13 @@ class DeviceHandle {
 
         // 如果没有定义排序规则，添加默认排序
         if(typeof(sort)==="undefined"){
-            sort = {"lastTime":-1};
+            console.log('sort undefined');
+            sort = {"sort_time":-1};
         }
 
         // 如果没有定义排序规则，添加默认排序
         if(typeof(filter)==="undefined"){
+            console.log('filter undefined');
             filter = {'status' : myfilter};
         }
         else{
@@ -359,74 +369,10 @@ class DeviceHandle {
         }
 
     }
-
-
-
-    /**
-     * 更新设备数据库, 如果没有找到对应记录，不新增
-     *
-     * @param {String} [newJsonMsg] - message to publish
-     * @returns {MqttClient} this - for chaining
-     * @api public
-     *
-     * @example updateTaskContent(uuid, mac, topic, newJsonMsg);
-     */
-    async updat51boxStatus(mac, status){
-
-        var mytime = new Date();
-        var wherestr = {'mac':mac};
-        var updatestr = {
-            'mac': mac,
-            'box51_status': status,
-            'update_time':dtime(mytime).format('YYYY-MM-DD HH:mm:ss'),
-            'sort_time':mytime.getTime()
-        };
-
-        await DeviceModel.findOneAndUpdate(wherestr, updatestr).exec();
-    }
-
-
-    /**
-     * 更新设备数据库, 如果没有找到对应记录，不新增
-     *
-     * @param {String} [newJsonMsg] - message to publish
-     * @returns {MqttClient} this - for chaining
-     * @api public
-     *
-     * @example updateTaskContent(uuid, mac, topic, newJsonMsg);
-     */
-    async updatPrinterStatus(mac, status){
-
-        var mytime = new Date();
-        var wherestr = {'mac':mac};
-        var updatestr = {
-            'mac': mac,
-            'printer_status': status,
-            'update_time':dtime(mytime).format('YYYY-MM-DD HH:mm:ss'),
-            'sort_time':mytime.getTime()
-        };
-
-        await DeviceModel.findOneAndUpdate(wherestr, updatestr).exec();
-    }
-
 }
 
 
 export default new DeviceHandle();
-
-
-// 监听器 #1
-var updateSysinfo = async function (mac, josnObj) {
-
-    //更新到设备数据库，sysinfo库
-    //SysinfoTable
-    var wherestr = { 'mac': josnObj['mac']};
-    DB.SysinfoTable.findOneAndUpdate(wherestr, josnObj).exec(function (err, doc) {
-        if (doc == null){
-            var query = DB.SysinfoTable.create(josnObj);
-        }
-    });
-}
 
 
 // 监听器 #1

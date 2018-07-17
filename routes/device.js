@@ -1,7 +1,7 @@
 'use strict';
 
 import express from 'express'
-import DeviceHandle from '../controller-http/device/device.js'
+import DeviceHandle from '../controller/device/device.js'
 import Check from '../middlewares/check'
 
 const router = express.Router();
@@ -10,10 +10,6 @@ const router = express.Router();
 console.log("enter route of device");
 
 
-//根据设备MAC,获取设备信息
-router.all('/sysinfo', DeviceHandle.sysinfo);
-//router.post('/sysinfo', DeviceHandle.sysinfo);
-//router.get('/sysinfo', DeviceHandle.sysinfo);
 
 //给渠道导入要管理的设备（根据mac地址或者特定格式的文件）
 router.all('/import', Check.checkSuperAdmin, DeviceHandle.import);
