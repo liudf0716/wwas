@@ -2,7 +2,7 @@
 
 import OrderModel from '../../models/wifidog/wfcorder'
 import TokenModel from '../../models/wifidog/token'
-import DeviceModel	from '../../models/wifidog/device'
+import DeviceModel	from '../../models/device/device'
 import WiFicoinModel	from '../../models/config/wificoin'
 import path from 'path';
 import fs 	from 'fs';
@@ -227,7 +227,7 @@ class Wifidog {
 		res.redirect("https://talkblock.org/");
 	}
 	
-	updateDeviceClientFromQuery(query) {
+	async updateDeviceClientFromQuery(query) {
 		try {
 		var mac 	= query.mac;
 		var ip		= query.ip;
@@ -272,7 +272,7 @@ class Wifidog {
 				clients[index] = item;
 				break;
 			}
-		});
+		}
 		if(index == clients.length)
 			clients.append(item);
 		device.clients = clients;

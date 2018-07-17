@@ -2,7 +2,6 @@
 
 import AdminModel from '../../models/admin/admin'
 import {DeviceTable} from '../../models/device/device'
-import logger from '../../logs/logs.js'
 import crypto from 'crypto'
 import dtime from 'time-formater'
 const schedule = require('node-schedule');
@@ -45,12 +44,10 @@ class admin {
                             'user_online_count': 0
                         };
 
-                        logger.info('local 用户添加');
                         AdminModel.create(newAdmin);
                     }
                 });
             } catch (err) {
-                logger.info('local 用户添加失败');
             }
 
             try {
@@ -72,13 +69,11 @@ class admin {
                             'user_device_count': 0,
                             'user_online_count': 0
                         };
-                        logger.info('iotks 用户添加');
                         AdminModel.create(newAdmin);
                     }
                 });
 
             } catch (err) {
-                logger.info('iotks 用户添加失败');
             }
         }
 	}
@@ -92,7 +87,6 @@ class admin {
 				throw new Error('密码参数错误');
 			}
 		}catch(err) {
-			logger.info(err.message, err);
 			res.send({
 				ret_code: 1,
 				ret_msg: 'GET_ERROR_PARAM',
@@ -104,14 +98,12 @@ class admin {
 		try {
 			const admin = await AdminModel.findOne({user_account});
 			if(!admin) {
-				logger.info('该用户不存在');
 				res.send({
 					ret_code: 1,
 					ret_msg: 'USER_NOT_EXIST',
 					extra: '用户不存在'
 				});
 			}else if(newpassword.toString() != admin.user_password.toString()) {
-				logger.info('管理员登录密码错误');
 				res.send({
 					ret_code: 1,
 					ret_msg: 'ERROR_PASSWORD',
@@ -119,7 +111,6 @@ class admin {
 				});
 			}else{
 				if(admin.user_status === 1){
-					logger.info('管理员被冻结');
 					res.send({
 						ret_code:1011,
 						ret_msg: 'ADMIN_REVOKED',
@@ -129,7 +120,6 @@ class admin {
 				}
 				req.session.user_account = admin.user_account;
 				req.session.user_type = (admin.user_type === 0) ? 0 : 1;
-				logger.info('登录成功');
 				res.send({
 					ret_code: 0,
 					ret_msg: 'SUCCESS',
@@ -137,7 +127,6 @@ class admin {
 				});
 			}
 		}catch(err) {
-			logger.info('登录管理员失败', err);
 			res.send({
 				ret_code: 1,
 				ret_msg: 'LOGIN_ADMIN_FAILED',
@@ -161,7 +150,6 @@ class admin {
 				throw new Error('密码错误');
 			}
 		}catch(err){
-			logger.info(err.message, err);
 			res.send({
 				ret_code: 1,
 				ret_msg: 'GET_ERROR_PARAM',
@@ -172,7 +160,6 @@ class admin {
 		try{
 			const admin = await AdminModel.findOne({user_account});
 			if(admin) {
-				logger.info('管理员已经存在');
 				res.send({
 					ret_code: 1,
 					ret_msg: 'USER_HAS_EXIST',
@@ -203,7 +190,6 @@ class admin {
 					})
 				}
 			}catch(err){
-				logger.info('注册管理员失败', err);
 				res.send({
 					ret_code: 1,
 					ret_msg: 'REGISTER_ADMIN_FAILED',
@@ -218,42 +204,38 @@ class admin {
 				throw new Error('请输入用户账号');
 			}
 		}catch(err){
-			logger.info(err.message, err);
-                        res.send({
-                                ret_code: 1,
-                                ret_msg: 'GET_ERROR_PARAM',
-                                extra: err.message
-                        });
-                        return;
+        	res.send({
+           		ret_code: 1,
+            	ret_msg: 'GET_ERROR_PARAM',
+            	extra: err.message
+        	});
+        	return;
 		}
 		const password = this.encryption(user_account);
-                try{
-                        const admin = await AdminModel.findOne({user_account});
-                        if(!admin){
-                                logger.info('用户不存在');
-                                res.send({
-                                        ret_code: 1,
-                                        ret_msg: 'USER_NOT_EXIST',
-                                        extra: '用户不存在'
-                                });
+        try{
+        	const admin = await AdminModel.findOne({user_account});
+        	if(!admin){
+            	res.send({
+                	ret_code: 1,
+                    ret_msg: 'USER_NOT_EXIST',
+                    extra: '用户不存在'
+            	});
 			}else{
 				await AdminModel.findOneAndUpdate({user_account: user_account},{$set: {user_password: password}});
-                                logger.info('重置密码成功');
-                                res.send({
-                                        ret_code: 0,
-                                        ret_msg: 'SUCCESS',
-                                        extra: '重置密码成功'
-                                });
+            	res.send({
+                	ret_code: 0,
+                	ret_msg: 'SUCCESS',
+                    extra: '重置密码成功'
+            	});
 			}
 		}catch(err){
-                        logger.info('重置用户密码失败');
-                        res.send({
-                                ret_code: 1,
-                                ret_msg: 'ERROR_RESET_PASSWORD',
-                                extra: '重置用户密码失败'
-                        });
-                        return;
-                }
+            res.send({
+            	ret_code: 1,
+                ret_msg: 'ERROR_RESET_PASSWORD',
+                extra: '重置用户密码失败'
+           	});
+            return;
+        }
 	}
 	async changePassword(req, res, next){
 	//	var user_account = req.body.user_account;
@@ -267,7 +249,6 @@ class admin {
 				throw new Error('请输入用户密码');
 			}
 		}catch(err){
-			logger.info(err.message, err);
 			res.send({
 				ret_code: 1,
 				ret_msg: 'GET_ERROR_PARAM',
@@ -279,14 +260,12 @@ class admin {
 		try{
 			const admin = await AdminModel.findOne({user_account});
 			if(!admin){
-				logger.info('用户不存在');
 				res.send({
 					ret_code: 1,
 					ret_msg: 'USER_NOT_EXIST',
 					extra: '用户不存在'
 				});
 			}else if(password.toString() != admin.user_password.toString()){
-				logger.info('密码错误');
 				res.send({
 					ret_code: 1,
 					ret_msg: 'ERROR_PASSWORD',
@@ -295,7 +274,6 @@ class admin {
 			}else {
 				const changed_password = this.encryption(user_new_password);
 				await AdminModel.findOneAndUpdate({user_account: user_account},{$set: {user_password: changed_password}});
-				logger.info('修改密码成功');
 				res.send({
 					ret_code: 0,
 					ret_msg: 'SUCCESS',
@@ -303,7 +281,6 @@ class admin {
 				});
 			}
 		}catch(err){
-			logger.info('修改用户密码失败');
 			res.send({
 				ret_code: 1,
 				ret_msg: 'ERROR_CHANGE_PASSWORD',
@@ -319,7 +296,6 @@ class admin {
 				throw new Error('请输入用户账号');
 			}
 		}catch(err){
-			logger.info(err.message, err);
 			res.send({
 				ret_code: 1,
 				ret_msg: 'GET_ERROR_PARAM',
@@ -330,14 +306,12 @@ class admin {
 		try{
 			const admin = await AdminModel.findOne({user_account});
 			if(!admin){
-				logger.info('用户不存在');
 				res.send({
 					ret_code: 1,
 					ret_msg: 'USER_NOT_EXIST',
 					extra: '用户不存在'
 				})
 			}else if(admin.user_type === 0){
-				logger.info('超级管理员不能冻结');
 				res.send({
 					ret_code: 1,
 					ret_msg: 'SUPER_ADMIN_CAN_NOT_REVOKE',
@@ -345,7 +319,6 @@ class admin {
 				});
 			}else{
 				await AdminModel.findOneAndUpdate({user_account:user_account},{$set:{user_status:1}});
-				logger.info('用户已冻结');
 				res.send({
 					ret_code: 0,
 					ret_msg: 'SUCCESS',
@@ -353,7 +326,6 @@ class admin {
 				});
 			}
 		}catch(err){
-			logger.info('冻结用户失败');
 			res.send({
 				ret_code: 1,
 				ret_msg: 'ERROR_USER_REVOKE',
@@ -369,7 +341,6 @@ class admin {
 				throw new Error('请输入用户账号');
 			}
 		}catch(err){
-			logger.info(err.message, err);
 			res.send({
 				ret_code: 1,
 				ret_msg: 'GET_ERROR_PARAM',
@@ -380,21 +351,18 @@ class admin {
 		try{
 			const admin = await AdminModel.findOne({user_account});
 			if(!admin){
-				logger.info('用户不存在');
 				res.send({
 					ret_code: 1,
 					ret_msg: 'USER_NOT_EXIST',
 					extra: '用户不存在'
 				});
 			}else if(admin.user_type === 0){
-				logger.info('超级管理员不需要解冻');
 				res.send({
 					ret_code:1,
 					ret_msg:'SUPER_ADMIN_NOT_NEED_RESTORE',
 					extra:'超级管理员不需要解冻'});
 			}else{
 				await AdminModel.findOneAndUpdate({user_account:user_account},{$set:{user_status:0}});
-				logger.info('用户已解冻');
 				res.send({
 					ret_code: 0,
 					ret_msg: 'SUCCESS',
@@ -402,7 +370,6 @@ class admin {
 				});
 			}
 		}catch(err){
-			logger.info('解冻用户失败')
 			res.send({
 				ret_code: 1,
 				ret_msg: 'ERROR_USER_RESTORE',
@@ -429,7 +396,6 @@ class admin {
 				extra: '退出成功'
 			});
 		}catch(err){
-			logger.info('退出失败', err);
 			res.send({
 				ret_code: 1,
 				ret_msg: 'FAILED',
@@ -473,7 +439,6 @@ class admin {
 				return;
 			}
 		}catch(err){
-			logger.info('获取管理员列表失败', err);
 			res.send({
 				ret_code: 1,
 				ret_msg: 'ERROR_GET_ADMIN_LIST',
@@ -485,14 +450,12 @@ class admin {
 		var user = req.body.user;
 		try {
 			const allAdmin = await AdminModel.find({$or:[{user_account: user},{user_name: user}]});
-			logger.info('allAdmin='+allAdmin);
 			res.send({
 				ret_code: 0,
 				ret_msg: 'SUCCESS',
 				data: allAdmin,
 			});
 		}catch(err){
-			logger.info('查询管理员失败', err);
 			res.send({
 				ret_code: 1,
 				ret_msg: 'ERROR_QUERY_ADMIN',
@@ -508,7 +471,6 @@ class admin {
 				data: count
 			});
 		}catch(err){
-			logger.info('获取管理员数量失败',err);
 			res.send({
 				ret_code: 1,
 				ret_msg: 'ERROR_GET_ADMIN_COUNT',
@@ -519,7 +481,6 @@ class admin {
 	async getAdminInfo(req,res, next){
 		const user_account = req.session.user_account;
 		if(!user_account) {
-			logger.info('获取管理员信息的session失效');
 			res.send({
 				ret_code: 1,
 				ret_msg: 'ERROR_SESSION',
@@ -532,7 +493,6 @@ class admin {
 			if(!admin){
 				throw new Error('未找到当前管理员');
 			}else{
-				logger.info('获取管理员信息成功');
 				res.send({
 					ret_code: 0,
 					ret_msg : (admin.user_type === 0) ? 0 : 1,
@@ -540,7 +500,6 @@ class admin {
 				});
 			}
 		}catch(err){
-			logger.info('获取管理员信息失败');
 			res.send({
 				ret_code: 1,
 				ret_msg: 'GET_ADMIN_INFO_FAILED',
@@ -577,7 +536,6 @@ class admin {
 				return;
 			}
 		}catch(err){
-			logger.info('获取管理员状态列表失败', err);
 			res.send({
 				ret_code: 1,
 				ret_msg: 'ERROR_GET_ADMIN_STATUS_LIST',
@@ -588,7 +546,6 @@ class admin {
 	async switchAdmin(req, res, next){
 		var user_account = req.body.user_account;
 		if(!user_account){
-			logger.info('参数错误');
 			res.send({
 				ret_code: 1,
 				ret_msg: 'ERROR_ADMIN_ACCOUNT',
@@ -597,11 +554,8 @@ class admin {
 			return;
 		}
 		try{
-			//delete req.session.user_account;
-			//delete req.session.user_type;
 			const admin = await AdminModel.findOne({user_account});
 			if(!admin) {
-				logger.info('该用户不存在');
 				res.send({
 					ret_code: 1,
 					ret_msg: 'USER_NOT_EXIST',
@@ -609,7 +563,6 @@ class admin {
 				});
 			}else{
 				if(admin.user_status === 1){
-					logger.info('管理员被冻结');
 					res.send({
 						ret_code:1011,
 						ret_msg: 'ADMIN_REVOKED',
@@ -621,7 +574,6 @@ class admin {
 				delete req.session.user_type;
 				req.session.user_account = user_account;
 				req.session.user_type = (admin.user_type === 0) ? 0 : 1;
-				logger.info('切换用户成功');
 				res.send({
 					ret_code: 0,
 					ret_msg: 'SUCCESS',
@@ -629,7 +581,6 @@ class admin {
 				});
 			}
 		}catch(err){
-			logger.info('切换管理员失败', err);
 			res.send({
 				ret_code: 1,
 				ret_msg: 'SWITCH_ADMIN_FAILED',
