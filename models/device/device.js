@@ -5,25 +5,25 @@ import mongoose from 'mongoose'
 const Schema = mongoose.Schema;
 
 const deviceSchema = new Schema({
-	gwId: 		String,
-	sysUptime:	{type: Number, default: 0},
-	sysMemfree: {type: Number, default: 0},
-	sysLoad: 	{type: Number, default: 0},
-	cpuUsage: 	{type: Number, default: 0},
-	ssid:		{type: String, default: ''},
-	version: 	{type: String, default: ''},
-	type:		{type: String, default: 'unknown'},
-	name:		{type: String, default: 'unknown'},
-	channelPath:	{type: String, default: 'wificoin'},
-	wiredPassed:	{type: Number, default: 0},
-	wifidogUptime:	{type: Number, default: 0},
-	onlineClients:	{type: Number, default: 0},
-	offlineClients:	{type: Number, default: 0},
-	nfConntrackCount:	{type: Number, default: 0},
-	lastTime: {type: Number, default: 0},
-	deviceStatus: {type: String, default: 0},
-	remoteAddress:	{type: String, default: ''}, // internet ip
-	auth: {type: Number, default: 0}, // is the device authorized by us
+	gwId: 		String, // 设备ID
+	sysUptime:	{type: Number, default: 0}, // 系统运行时长
+	sysMemfree: {type: Number, default: 0}, // 剩余内存
+	sysLoad: 	{type: Number, default: 0}, // 系统负载
+	cpuUsage: 	{type: Number, default: 0}, // cpu利用率
+	ssid:		{type: String, default: ''}, // 无线名称
+	version: 	{type: String, default: ''}, // 版本
+	type:		{type: String, default: 'unknown'}, // 设备类型
+	name:		{type: String, default: 'unknown'}, // 设备名称
+	channelPath:	{type: String, default: 'wificoin'}, // 渠道
+	wiredPassed:	{type: Number, default: 0}, // 有线免认证
+	wifidogUptime:	{type: Number, default: 0}, // wifidog运行时长
+	onlineClients:	{type: Number, default: 0}, // 认证终端
+	offlineClients:	{type: Number, default: 0}, // 未认证终端
+	nfConntrackCount:	{type: Number, default: 0}, // 系统会话数
+	lastTime: {type: Number, default: 0}, // 最近上线时间
+	deviceStatus: {type: String, default: 0}, // 状态， 0 不在线 1 在线
+	remoteAddress:	{type: String, default: ''}, // 设备ip
+	auth: {type: Number, default: 0}, // 平台认证， 0 非平台认证设备 1 平台认证设备
 })
 
 deviceSchema.index({gwId: 1});
