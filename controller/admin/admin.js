@@ -1,7 +1,7 @@
 'use strict';
 
 import AdminModel from '../../models/admin/admin'
-import {DeviceTable} from '../../models/device/device'
+import DeviceTable from '../../models/device/device'
 import crypto from 'crypto'
 import dtime from 'time-formater'
 const schedule = require('node-schedule');
@@ -21,9 +21,8 @@ class admin {
 		this.statusQuery = this.statusQuery.bind(this);
 		this.switchAdmin = this.switchAdmin.bind(this);
 
-
         //本地调试, 使用 add by chenzejun
-        if (process.env.NODE_ENV == 'local') {
+        if (process.env.NODE_ENV == 'development') {
             try {
                 const  user_account = 'local';
                 const  user_password = this.encryption('local');
@@ -48,11 +47,12 @@ class admin {
                     }
                 });
             } catch (err) {
+                console.log('local 用户添加失败');
             }
 
             try {
-                const  user_account = 'iotks';
-                const  user_password = this.encryption('iotks');
+                const  user_account = 'wificoin';
+                const  user_password = this.encryption('wificoin');
                 AdminModel.findOne({user_account: user_account}).exec(function (err, res) {
                     if (res == null) {
                         var newAdmin = {
@@ -75,14 +75,16 @@ class admin {
                 });
 
             } catch (err) {
-                console.log('iotks 用户添加失败');
+                console.log('wificoin 用户添加失败');
             }
         }
 	}
 	async login(req, res, next){
-		var user_account = req.body.user_account;
-		var user_password = req.body.user_password;
+		var user_account;
+		var user_password;
 		try {
+			user_account = req.body.user_account;
+			user_password = req.body.user_password;
 			if(!user_account) {
 				throw new Error('用户名参数错误');
 			}else if(!user_password) {
@@ -623,13 +625,13 @@ class admin {
 	}
 	async update_admin_device(){
 		var Admin = await AdminModel.find();
-                for(var i=0; i < Admin.length; i++){
-                        Admin[i].user_device_count = await DeviceTable.count({'user_name':Admin[i].user_account});
-                        Admin[i].user_online_count = await DeviceTable.count({'user_name':Admin[i].user_account,'status':'online'});
-                        await AdminModel.findOneAndUpdate({user_account: Admin[i].user_account},
-                                                {$set: {'user_device_count' : Admin[i].user_device_count,
-                                                        'user_online_count' : Admin[i].user_online_count}});
-                }
+       	for(var i=0; i < Admin.length; i++){
+           	Admin[i].user_device_count = await DeviceTable.count({'channelPath':Admin[i].user_account});
+           	Admin[i].user_online_count = await DeviceTable.count({'channelPath':Admin[i].user_account,'deviceStatus':1});
+        	await AdminModel.findOneAndUpdate({user_account: Admin[i].user_account},
+               	{$set: {'user_device_count' : Admin[i].user_device_count,
+               	'user_online_count' : Admin[i].user_online_count}});
+        }
 	}
 }
 

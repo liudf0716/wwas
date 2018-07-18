@@ -8,6 +8,8 @@ import connectMongo from 'connect-mongo';
 import path from 'path';
 import history from 'connect-history-api-fallback';
 import chalk from 'chalk';
+import bodyParser from 'body-parser';
+
 // import Statistic from './middlewares/statistic'
 
 const app = express();
@@ -24,6 +26,9 @@ app.all('*', (req, res, next) => {
 	    next();
 	}
 });
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // app.use(Statistic.apiRecord)
 const MongoStore = connectMongo(session);

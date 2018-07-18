@@ -1,6 +1,6 @@
 'use strict';
 
-import DeviceModel	from '../../model/device/device'
+import DeviceModel	from '../../models/device/device'
 import dtime from 'time-formater';
 import config from "config-lite";
 const formidable = require('formidable');
@@ -42,9 +42,10 @@ class DeviceHandle {
 			var ill_mac = [];
             for (var i = 0; i < mac_array.length; i++) {
                 //去掉空格  //mac 地址合法性检查
-                var mac = mac_array[i].trim().toUpperCase();;
+                var mac = mac_array[i].trim().toUpperCase();
                 if (mac.length != 12 || mac.search(/[^0-9A-F]/gi) >= 0){
                     //不合法， 不导入
+					console.log('illegal mac ' + mac);
                     continue;	
                 }
 
@@ -290,7 +291,7 @@ class DeviceHandle {
         // 如果没有定义排序规则，添加默认排序
         if(typeof(sort)==="undefined"){
             console.log('sort undefined');
-            sort = {"sort_time":-1};
+            sort = {"lastTime":-1};
         }
 
 
@@ -320,36 +321,34 @@ class DeviceHandle {
 
 
     async onLineList(req, res, next){
-        DeviceHandle.prototype.listOnOffline(req, res, next, 'online');
+        DeviceHandle.prototype.listOnOffline(req, res, next, 1);
     }
 
 
     async offLineList(req, res, next){
-        DeviceHandle.prototype.listOnOffline(req, res, next, 'offline');
+        DeviceHandle.prototype.listOnOffline(req, res, next, 0);
     }
 
 
 
     async listOnOffline(req, res, next, myfilter){
         //获取表单数据，josn
-        var page_size = req.body['page_size'];
-        var current_page = req.body['current_page'];
-        var sort = req.body['sort'];
-        var filter = req.body['filter'];
+        var page_size 		= req.body['page_size'];
+        var current_page 	= req.body['current_page'];
+        var sort 	= req.body['sort'];
+        var filter 	= req.body['filter'];
 
         // 如果没有定义排序规则，添加默认排序
         if(typeof(sort)==="undefined"){
-            console.log('sort undefined');
-            sort = {"sort_time":-1};
+            sort = {"lastTime":-1};
         }
 
         // 如果没有定义排序规则，添加默认排序
         if(typeof(filter)==="undefined"){
-            console.log('filter undefined');
-            filter = {'status' : myfilter};
+            filter = {'deviceStatus' : myfilter};
         }
         else{
-            filter['status'] = myfilter;
+            filter['deviceStatus'] = myfilter;
         }
 
         //参数有效性检查
@@ -359,12 +358,10 @@ class DeviceHandle {
             res.send({ret_code: 0, ret_msg: 'SUCCESS', extra: {query,count}});
         }
         else if (page_size > 0 && current_page > 0) {
-            //var ret = await DeviceModel.findByPage(condition, page_size, current_page, sort);
             var skipnum = (current_page - 1) * page_size;   //跳过数
             var query = await DeviceModel.find(filter).sort(sort).skip(skipnum).limit(page_size);
             res.send({ret_code: 0, ret_msg: 'SUCCESS', extra: {query}});
-        }
-        else{
+        }else{
             res.send({ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入参数无效'});
         }
 
@@ -373,65 +370,3 @@ class DeviceHandle {
 
 
 export default new DeviceHandle();
-
-
-// 监听器 #1
-var updateOnlineDevice = async function (mac, josnObj) {
-    var mytime = new Date();
-
-    //更新到设备数据库， 设备上线，下线
-    var wherestr = {'mac': mac};
-    var updatestr = {
-        'mac': mac,
-        'status': 'online',
-        'dev_type': josnObj.boardtype,   //设备型号
-        'old_rom_version': '',   //	旧的固件版本
-        'rom_version': josnObj.fwversion,   //	固件版本
-        'printer_status': 'default',   //打印机状态
-        'box51_status': 'default',   //51盒子状态
-        'update_time':dtime(mytime).format('YYYY-MM-DD HH:mm:ss'),
-        'sort_time':mytime.getTime()
-    };
-
-    //如果采用返回值得形式，必须的await
-    var query = await DeviceModel.findOne(wherestr).exec();
-    if (query != null){
-        if (query['rom_version'] != josnObj.fwversion){
-            updatestr['old_rom_version'] = query['rom_version'];
-            await DeviceModel.findByIdAndUpdate(query['_id'], updatestr).exec();
-        }
-        else if (query['dev_type'] != josnObj.boardtype){
-            await DeviceModel.findByIdAndUpdate(query['_id'], {'dev_type': josnObj.boardtype}).exec();
-        }
-    }
-    else{
-        await DeviceModel.create(updatestr);
-    }
-}
-
-// 监听器 #1
-var updatDeviceStatus = async function (mac, status) {
-    var mytime = new Date();
-
-    //更新到设备数据库
-    var wherestr = {'mac': mac};
-    var updatestr = {
-        'mac': mac,
-        'status': status,
-        'update_time':dtime(mytime).format('YYYY-MM-DD HH:mm:ss'),
-        'sort_time':mytime.getTime(),
-        'logs': [],
-    };
-
-    var query = await DeviceModel.findOne(wherestr).exec();
-    if (query != null){
-        //复制数组，logs记录上下线日志
-        updatestr['logs'] = query['logs'].slice();
-        updatestr['logs'].push(updatestr['update_time'] + ' ' + status);
-        if (updatestr['logs'].length > 10){
-            updatestr['logs'].shift();  //删除数组第一个元素
-        }
-        await DeviceModel.findByIdAndUpdate(query['_id'], updatestr).exec();
-    }
-}
-

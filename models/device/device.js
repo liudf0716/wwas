@@ -20,32 +20,27 @@ const deviceSchema = new Schema({
 	onlineClients:	{type: Number, default: 0},
 	offlineClients:	{type: Number, default: 0},
 	nfConntrackCount:	{type: Number, default: 0},
+	lastTime: {type: Number, default: 0},
+	deviceStatus: {type: String, default: 0},
+	remoteAddress:	{type: String, default: ''}, // internet ip
 	auth: {type: Number, default: 0}, // is the device authorized by us
-	ip:	{type: String, defautl: ''} // internet ip
-	lastTime: {type: Number, default: 0}
 })
 
 deviceSchema.index({gwId: 1});
 
 deviceSchema.statics.findByPage = function (condition, page_size, current_page, sort){
     return new Promise(async (resolve, reject) => {
-
-        console.log("page_size:" + page_size);
         var skipnum = (current_page - 1) * page_size;   //跳过数
 
         try{
             await this.find(condition).skip(skipnum).limit(page_size).sort(sort).exec(function (err, res) {
                 if (err) {
-                    //console.log("Error:" + err);
                     resolve(err)
                 }
                 else{
-                    //console.log("query:" + res);
                     resolve(res);
                 }
             });
-            //console.log('task status 111');
-            //resolve('done');
         }catch(err){
             reject({name: 'ERROR_DATA', message: '查找数据失败'});
             console.error(err);
