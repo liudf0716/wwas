@@ -4,6 +4,7 @@ import OrderModel from '../../models/wifidog/wfcorder'
 import TokenModel from '../../models/wifidog/token'
 import DeviceModel	from '../../models/device/device'
 import SettingModel	from '../../models/setting/setting'
+import ClientModel 	from '../../models/client/client'
 import path from 'path';
 import fs 	from 'fs';
 import config 	from 'config-lite';
