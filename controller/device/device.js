@@ -4,14 +4,15 @@ import DeviceModel	from '../../models/device/device'
 import dtime from 'time-formater';
 import config from "config-lite";
 const formidable = require('formidable');
-const fs = require("fs");
-const xlsx = require('node-xlsx');
-const moment = require('moment');
+const fs    = require("fs");
+const xlsx  = require('node-xlsx');
+const moment    = require('moment');
+const schedule  = require('node-schedule');
 
 //引入事件模块
 const events = require("events");
 
-class DeviceHandle {
+class eviceHandle {
     constructor(){
         //console.log('init 111');
     }
@@ -329,8 +330,6 @@ class DeviceHandle {
         DeviceHandle.prototype.listOnOffline(req, res, next, 0);
     }
 
-
-
     async listOnOffline(req, res, next, myfilter){
         //获取表单数据，josn
         var page_size 		= req.body['page_size'];
@@ -364,9 +363,20 @@ class DeviceHandle {
         }else{
             res.send({ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入参数无效'});
         }
-
+    }
+    
+    async update_device_status(){
+        var currentTime = Math.round(+new Date()/1000);
+        var devices = await DeviceModel.find();
+        for(var i = 0; i < devices.length; i++){
+            var device = devices[i];
+            if((currentTime - device.lastTime) > 120)
+                
+        }
     }
 }
 
+const DeviceHandle = new deviceHandle();
 
-export default new DeviceHandle();
+export default DeviceHandle;
+schedule.scheduleJob('0 0 * * * *', DeviceHandle.update_device_status);
