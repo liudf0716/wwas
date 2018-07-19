@@ -13,7 +13,7 @@ const schedule  = require('node-schedule');
 //引入事件模块
 const events = require("events");
 
-class eviceHandle {
+class deviceHandle {
     constructor(){
         //console.log('init 111');
     }
