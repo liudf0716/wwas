@@ -1,8 +1,9 @@
 'use strict';
 
 import DeviceModel	from '../../models/device/device'
-import dtime from 'time-formater';
-import config from "config-lite";
+import dtime    from 'time-formater';
+import config   from "config-lite";
+import devClient    from '../client/client'
 const formidable = require('formidable');
 const fs    = require("fs");
 const xlsx  = require('node-xlsx');
@@ -370,8 +371,10 @@ class eviceHandle {
         var devices = await DeviceModel.find();
         for(var i = 0; i < devices.length; i++){
             var device = devices[i];
-            if((currentTime - device.lastTime) > 120)
-                
+            if((currentTime - device.lastTime) > config.offlineInterval){
+                await DeviceModel.update({gwId: device.gwId}, {deviceStatus: 0});
+                devClient.update_device_clients_status(device.gwId, 0);
+            }
         }
     }
 }
@@ -379,4 +382,5 @@ class eviceHandle {
 const DeviceHandle = new deviceHandle();
 
 export default DeviceHandle;
-schedule.scheduleJob('0 0 * * * *', DeviceHandle.update_device_status);
+var scheduleTime = '';
+schedule.scheduleJob(scheduleTime, DeviceHandle.update_device_status);
