@@ -10,10 +10,10 @@ class Setting {
     /*
      * configure router's login and portal by gwid
      */
-    async gwidConfig(req, res, next){
+    async gwidSetting(req, res, next){
         try {
             var gwId = req.body.gwId;
-            var gwidConfig = {
+            var gwidSetting = {
                 'gwId': gwId,
                 weixin: {
                     appId: req.body.weixin.appId,
@@ -28,9 +28,9 @@ class Setting {
                 portalUrl:  req.body.portalUrl,
                 duration:   req.body.duration
             };
-            const result = await GatewayIdModel.findOneAndUpdate({'gwId': gwId}, gwidConfig, {new:true});
+            const result = await GatewayIdModel.findOneAndUpdate({'gwId': gwId}, gwidSetting, {new:true});
             if(!result){
-                await GatewayIdModel.create(gwidConfig);
+                await GatewayIdModel.create(gwidSetting);
             }
         }catch(err){
             console.log(err);
@@ -40,7 +40,7 @@ class Setting {
      /*
      * configure router's login and portal by channelPath
      */
-    async channelpathConfig(req, res, next){
+    async channelpathSetting(req, res, next){
         try {
             var channelPath = req.body.channelPath;
             var channelPathConfig = {
@@ -58,9 +58,9 @@ class Setting {
                 portalUrl:  req.body.portalUrl,
                 duration:   req.body.duration
             };
-            const result = await ChannelPathModel.findOneAndUpdate({'channelPath': channelPath}, channelPathConfig, {new:true});
+            const result = await ChannelPathModel.findOneAndUpdate({'channelPath': channelPath}, channelpathSetting, {new:true});
             if(!result){
-                await ChannelPathModel.create(channelPathConfig);
+                await ChannelPathModel.create(channelpathSetting);
             }
         }catch(err){
             console.log(err);
