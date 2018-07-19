@@ -34,7 +34,9 @@ class Setting {
             }
         }catch(err){
             console.log(err);
+            res.send({ret_code: 1002, ret_msg: 'FAILED', extra:'用户输入参数无效'});
         }
+        res.send({ret_code: 0, ret_msg: 'SUCCESS', extra: []});
     }
     
      /*
@@ -64,7 +66,9 @@ class Setting {
             }
         }catch(err){
             console.log(err);
+            res.send({ret_code: 1002, ret_msg: 'FAILED', extra:'用户输入参数无效'});
         }
+        res.send({ret_code: 0, ret_msg: 'SUCCESS', extra: []});
     }
 }
 
