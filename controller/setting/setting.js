@@ -14,7 +14,7 @@ class Setting {
         try {
             var gwId = req.body.gwId;
             var gwidSetting = {
-                'gwId': gwId,
+                gwId: gwId,
                 weixin: {
                     appId: req.body.weixin.appId,
                     shopId: req.body.weixin.shopId,
@@ -44,7 +44,7 @@ class Setting {
         try {
             var channelPath = req.body.channelPath;
             var channelPathConfig = {
-                'channelPath': channelPath,
+                channelPath: channelPath,
                 weixin: {
                     appId: req.body.weixin.appId,
                     shopId: req.body.weixin.shopId,
