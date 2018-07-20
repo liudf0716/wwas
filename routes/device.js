@@ -25,10 +25,6 @@ router.all('/export',Check.checkSuperAdmin, DeviceHandle.export);
 //获取渠道下的设备信息列表
 router.all('/list', DeviceHandle.permission, DeviceHandle.list);
 
-
-//根据设备的MAC地址，查询设备在线状态
-router.all('/status', DeviceHandle.status);
-
 //获取渠道下的在线设备信息列表
 router.all('/list/online', DeviceHandle.permission, DeviceHandle.onLineList);
 

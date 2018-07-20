@@ -22,19 +22,41 @@ class Wifidog {
 		this.generateWxAuthUrl	= this.generateWxAuthUrl.bind(this);
 		this.generateTxidRequest	= this.generateTxidRequest.bind(this);
 		this.generateAuthTokenUrl	= this.generateAuthTokenUrl.bind(this);
-		this.getDeviceSetting		= this.getDeviceSetting.bind(this);
 		this.login 		= this.login.bind(this);
 		this.ping		= this.ping.bind(this);
 		this.authWfc	= this.authWfc.bind(this);
 		this.authWeixin	= this.authWeixin.bind(this);
 	}
+	
+	async checkPingParam(req, res, next){
+		var gwId = req.query.gw_id;
+		if(typeof(gwId) === 'undefined'){
+			res.send({ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入参数无效'});
+			return;
+		}
+		next();		
+	}
 
 	async ping(req, res, next){
-		client.updateDeviceFromPing(req);
+		device.updateDeviceFromPing(req);
 		res.send('Pong');
+	}
+	
+	async checkLoginParam(req, res, next){
+		var gwId		= req.query.gw_id;
+		var	gwAddress	= req.query.gw_address;
+		var gwPort		= req.query.gw_port;
+		
+		if(typeof(gwId) === 'undefined' || typeof(gwAddress) === 'undefined' || typeof(gwPort) === 'undefined'){
+			res.send({ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入参数无效'});
+			return;
+		}
+
+		next(); 		
 	}
 
 	async login(req, res, next){
+		try{
 		var gwAddress = req.query.gw_address;
 		var gwPort	= req.query.gw_port;
 		var gwId	= req.query.gw_id;
@@ -48,6 +70,7 @@ class Wifidog {
 		const deviceSetting 	= device.deviceSetting(gwId);
         if(deviceSetting == null)
             deviceSetting = device.deviceSetting(gwId);
+		console.log(deviceSetting);
 		var toAmount	= deviceSetting.wificoin.toAmount + randomValue/1000000;
 		const newOrder = {
 			orderNumber,
@@ -83,6 +106,19 @@ class Wifidog {
 			 mac: staMac,
 			 ssid: ssid,
 			 bssid: staMac});
+	}catch(err){
+		console.log(err);
+	}
+	}
+	
+	async checkAuthParam(req, res, next){
+		var stage = req.query.stage;
+		if(typeof(stage) === 'undefined'){
+			res.send({ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入参数无效'});
+			return;
+		}
+		
+		next();
 	}
 
 	async auth(req, res, next){
@@ -103,6 +139,23 @@ class Wifidog {
 			res.send("illegal stage");
 		}
 	}
+	
+	async checkAuthWeixinParam(req, res, next){
+		var extend	= req.query.extend;
+		var openId	= req.query.openid;
+		var tid		= req.query.tid;
+		var	sign	= req.query.sing;
+		var timestamp	= req.query.timestamp;
+		
+		if(typeof(extend) === 'undefined' || typeof(openId) === 'undefined' ||
+		   typeof(tid) === 'undefined' || typeof(sign) === 'undefined' || typeof(timestamp) === 'undefined'){
+			res.send({ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入参数无效'});
+			return;
+		}
+
+		next();
+	}
+
 	async authWeixin(req, res, next){
 		console.log('authWeixin query is ' + JSON.stringify(req.query));
 		var extend 	= req.query.extend;
@@ -135,6 +188,17 @@ class Wifidog {
 		};
 
 		TokenModel.create(newToken);
+	}
+	
+	async checkAuthWfcParam(req, res, next){
+		var orderNumber = req.query.orderNumber;
+		var txid		= req.query.txid;
+		if(typeof(orderNumber) === 'undefined' || typeof(txid) === 'undefined'){
+			res.send({ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入参数无效'});
+			return;
+		}
+
+		next();
 	}
 	async authWfc(req, res, next){
 		console.log("orderNumber is " + req.query.orderNumber);
@@ -185,6 +249,16 @@ class Wifidog {
 			res.send('pay error!');
 		});
 	}
+	
+	async checkPortalParam(req, res, next){
+		var gwId = req.query.gw_id;
+		if(typeof(gwId) === 'undefined'){
+			res.send({ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入参数无效'});
+			return;
+		}
+		next();
+	}	
+
 	async portal(req, res, next){
 		var gwId 		= req.query.gw_id;
 		var channelPath	= req.query.channel_path;

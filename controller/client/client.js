@@ -98,3 +98,7 @@ class client {
 		}
 	}
 }
+
+const Client = new client();
+
+export default Client;

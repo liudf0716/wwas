@@ -1,10 +1,10 @@
 'use strict';
 
 import express from 'express'
-import Client from '../controller/setting/client'
-import Check from '../middlewares/check'
+import client from '../controller/client/client'
+import check from '../middlewares/check'
 const router = express.Router();
 
-router.all('/list', Client.list); // list client of the router
+router.all('/list', client.list); // list client of the router
 
 export default router
