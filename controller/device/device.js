@@ -1,6 +1,8 @@
 'use strict';
 
-import DeviceModel	from '../../models/device/device'
+import DeviceModel	    from '../../models/device/device'
+import GatewayIdModel   from '../../models/setting/gatewayid'
+import ChannelPathModel from '../../models/setting/channelpath'
 import dtime    from 'time-formater';
 import config   from "config-lite";
 import devClient    from '../client/client'
@@ -240,10 +242,6 @@ class deviceHandle {
 		res.send({ret_code:0, ret_msg:'SUCCESS',extra: file_path});
     }
 
-    async status(req, res, next) {
-
-    }
-
     ///权限控制
     async permission(req, res, next) {
         //本地调试
@@ -366,7 +364,87 @@ class deviceHandle {
         }
     }
     
-    async update_device_status(){
+    async updateDeviceFromPing(req){
+        try{
+            var gwId		= req.query.gw_id;
+            var	sysUptime	= req.query.sys_uptime;
+            var sysMemfree	= req.query.sys_memfree;
+            var sysLoad		= req.query.sys_load;
+            var	cpuUsage	= req.query.cpu_usage; 
+            var	ssid		= req.query.ssid;
+            var	version		= req.query.version;
+            var	type		= req.query.type; 	// router type
+            var	name		= req.query.name;	// router name
+            var	channelPath			= req.query.channel_path;
+            var	wiredPassed			= req.query.wired_passed;
+            var	wifidogUptime		= req.query.wifidog_uptime;
+            var	onlineClients		= req.query.online_clients;
+            var	offlineClients		= req.query.offline_clients;
+            var	nfConntrackCount	= req.query.nf_conntrack_count;
+            var lastTime			= Math.round(+new Date()/1000);
+            var	remoteAddress		= req.connection.remoteAddress;
+            var deviceStatus		= 1;
+            const newDevice = {
+                gwId,
+                sysUptime,
+                sysMemfree,
+                sysLoad,
+                cpuUsage,
+                ssid,
+                version,
+                type,
+                name,
+                channelPath,
+                wiredPassed,
+                wifidogUptime,
+                onlineClients,
+                offlineClients,
+                nfConntrackCount,
+                lastTime,
+                remoteAddress,
+                deviceStatus
+            }
+
+            const device = await DeviceModel.findOne({gwId: gwId});
+            if(!device){
+                await DeviceModel.create(newDevice);
+            } else {
+                await DeviceModel.findOneAndUpdate({gwId}, {$set: newDevice});
+            }
+        }catch(err){
+            console.log(err);
+        }
+    }
+    
+    async deviceSetting(gwId) {
+		try{
+            var channelPath;
+			const channel = await GatewayIdModel.findOne({gwId: gwId});
+			if(channel){
+                channelPath = await ChannelPathModel.findOne({channelPath: channel.channelPath});
+                if(channelPath)
+                    return channelPath;
+                else{
+                    return null;
+                }
+            }else{
+                var gwSetting = {gwId: gwId,channelPath:"wificoin"};
+                await GatewayIdModel.create(gwSetting);
+                const channelPath = await ChannelPathModel.findOne({channelPath: "wificoin"});
+                if(!channelPath) {
+                    await ChannelPathModel.create({channelPath: "wificoin"});
+                    return null
+                }else{
+                    return channelPath;
+                }
+            }
+		}catch(err){
+			console.log(err);
+		}
+        return null;
+	}
+    
+    async updateDeviceStatus(){
         var currentTime = Math.round(+new Date()/1000);
         var devices = await DeviceModel.find();
         for(var i = 0; i < devices.length; i++){
@@ -383,4 +461,4 @@ const DeviceHandle = new deviceHandle();
 
 export default DeviceHandle;
 var scheduleTime = '';
-schedule.scheduleJob(scheduleTime, DeviceHandle.update_device_status);
+schedule.scheduleJob(scheduleTime, DeviceHandle.updateDeviceStatus);
