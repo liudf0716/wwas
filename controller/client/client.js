@@ -22,7 +22,7 @@ class client {
         res.send({ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入参数无效'});
     }
     
-    async updateDeviceClientFromQuery(query) {
+    async updateDeviceClientFromCounter(query) {
 		try {
 			var mac 	= query.mac;
 			var ip		= query.ip;
