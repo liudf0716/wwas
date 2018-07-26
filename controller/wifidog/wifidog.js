@@ -46,8 +46,9 @@ class Wifidog {
 		var gwId		= req.query.gw_id;
 		var	gwAddress	= req.query.gw_address;
 		var gwPort		= req.query.gw_port;
-		
-		if(typeof(gwId) === 'undefined' || typeof(gwAddress) === 'undefined' || typeof(gwPort) === 'undefined'){
+		var mac			= req.query.mac;
+		if(typeof(gwId) === 'undefined' || typeof(gwAddress) === 'undefined' || 
+		     typeof(gwPort) === 'undefined' || typeof(mac) === 'undefined'){
 			res.send({ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入参数无效'});
 			return;
 		}
@@ -70,7 +71,7 @@ class Wifidog {
 		const deviceSetting 	= device.deviceSetting(gwId);
         if(deviceSetting == null)
             deviceSetting = device.deviceSetting(gwId);
-		console.log(deviceSetting);
+		console.log('deviceSetting is ' + JSON.stringify(deviceSetting));
 		var toAmount	= deviceSetting.wificoin.toAmount + randomValue/1000000;
 		const newOrder = {
 			orderNumber,

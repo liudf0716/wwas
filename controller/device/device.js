@@ -422,6 +422,7 @@ class deviceHandle {
 			const channel = await GatewayIdModel.findOne({gwId: gwId});
 			if(channel){
                 channelPath = await ChannelPathModel.findOne({channelPath: channel.channelPath});
+				console.log(channelPath);
                 if(channelPath)
                     return channelPath;
                 else{
