@@ -31,7 +31,6 @@ function createIframe(){
 //注册回调函数
 function jsonpCallback(result){  
   if(result && result.success){
-      alert('WeChat will call up : ' + result.success + '  data:' + result.data);			    
       var ua=navigator.userAgent;              
     if (ua.indexOf("iPhone") != -1 ||ua.indexOf("iPod")!=-1||ua.indexOf("iPad") != -1) {   //iPhone             
       document.location = result.data;

@@ -4,10 +4,9 @@ module.exports = {
 	port: 8001,
 	url: 'mongodb://localhost:27017/wfc',
 	insightApi: 'https://insight.wificoin.club/insight-api',
+	authUrl: 'http://wifidog.kunteng.org.cn',
 	wfcPayUrl: 'https://wfc.wificoin.club/#/wifiPortal/payment?authServer=',
-	wfcAuth: 'http://wifidog.kunteng.org.cn:8001/wifidog/auth/wfc',
-	toAddress: 'wbGexNMs1SCut68CNV1HQzUpVYyL4RPjkf',
-	toAmount: 2,
+	wfcAuth: '/wifidog/auth/wfc',
 	session: {
 		name: 'SID',
 		secret: 'SID',

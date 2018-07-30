@@ -11,6 +11,7 @@
     <![endif]>-->
     <title></title>
     <script src="/static/js/jquery-1.9.0.min.js"></script>
+    <script src="/static/js/weixin.js"></script>
     <style>
         *{margin:0;padding:0;}
         html,body{height:100%;}
@@ -184,6 +185,8 @@
 </body>
 
 <script type="text/javascript">
+	document.addEventListener('visibilitychange', putNoResponse, false);
+
     //关闭弹出层
     function CloseDiv(ele) {
 //        document.getElementById(ele).style.display = 'none';
@@ -194,6 +197,11 @@
         $("#"+ele).find(".bglayer").css('height',$(document).height());
         $("#"+ele).fadeIn("normal");
     }
+	
+	function startWeChatAuth(){
+		Wechat_GotoRedirect("<%= appId %>", "<%= extend %>", "<%= timestamp %>", "<%= sign %>", "<%= shopId %>", 
+			"<%= authUrl %>", "<%= mac %>", "<%= ssid %>", "<%= bssid %>");
+	}
 
     $(function(){
         //显示协议
@@ -201,6 +209,19 @@
             ShowDiv('MyDiv_xieyi');
         });
     })
+
+	$("#weixin").click(function(){
+		var linshiUrl = 'http://' + "<%= gwAddress %>" + ':' + "<%= gwPort %>" + '/wifidog/temporary_pass?mac=' + "<%= mac %>";
+		$.ajax({
+			type:'GET',
+			url: linshiUrl,
+			dataType: 'jsonp',
+			success: function(res){
+				//alert(res.body);
+			}
+		})
+		
+	});
 </script>
 
 </html>
