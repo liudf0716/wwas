@@ -284,7 +284,7 @@ class Wifidog {
 	}
 
 	generateAuthTokenUrl(gwAddress, gwPort, token, type = '') {
-		var authTokenUrl = 'http://' + gwAddress + ':' + gwPort + '/wifidog/auth?stage=login&token=' + token;
+		var authTokenUrl = 'http://' + gwAddress + ':' + gwPort + '/wifidog/auth?token=' + token;
 		if (type != '')
 			authTokenUrl += '&type=' + type;
 		return authTokenUrl;
