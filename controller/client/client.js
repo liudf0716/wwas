@@ -33,7 +33,7 @@ class client {
 			var incoming	= query.incoming;
 			var outcoming	= query.outcoming;
 			var firstLogin	= query.first_login;
-			var onlineTime	= queyr.online_time;
+			var onlineTime	= query.online_time;
 			var lastTime	= Math.round(+new Date()/1000);
 			var incomingdelta	= query.incomingdelta;
 			var outcomingdelta	= query.outcomingdelta;
