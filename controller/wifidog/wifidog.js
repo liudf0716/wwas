@@ -29,12 +29,12 @@ class Wifidog {
         this.authWfc = this.authWfc.bind(this);
         this.authWeixin = this.authWeixin.bind(this);
     }
-		/**
-		 * express middleware to check wifidog ping request parameters
-		 * @param {*} req 
-		 * @param {*} res 
-		 * @param {*} next 
-		 */
+    /**
+     * express middleware to check wifidog ping request parameters
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
     async checkPingParam(req, res, next) {
         var gwId = req.query.gw_id;
         if (typeof (gwId) === 'undefined') {
@@ -43,22 +43,22 @@ class Wifidog {
         }
         next();
     }
-		/**
-		 * response function for wifidog ping request
-		 * @param {*} req 
-		 * @param {*} res 
-		 * @param {*} next 
-		 */
+    /**
+     * response function for wifidog ping request
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
     async ping(req, res, next) {
         device.updateDeviceFromPing(req);
         res.send('Pong');
     }
-		/**
-		 * express middleware to check wifidog login request parameters
-		 * @param {*} req 
-		 * @param {*} res 
-		 * @param {*} next 
-		 */
+    /**
+     * express middleware to check wifidog login request parameters
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
     async checkLoginParam(req, res, next) {
         var gwId = req.query.gw_id;
         var gwAddress = req.query.gw_address;
@@ -135,16 +135,16 @@ class Wifidog {
                 wfcAmount: wfcAmount
             });
         } catch (err) {
-						console.log(err);
-						res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '系统错误' });
+            console.log(err);
+            res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '系统错误' });
         }
     }
-		/**
-		 * express middleware to check wifidog auth request parameters
-		 * @param {*} req 
-		 * @param {*} res 
-		 * @param {*} next 
-		 */
+    /**
+     * express middleware to check wifidog auth request parameters
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
     async checkAuthParam(req, res, next) {
         var stage = req.query.stage;
         if (typeof (stage) === 'undefined') {
@@ -154,12 +154,12 @@ class Wifidog {
 
         next();
     }
-		/**
-		 * response function for wifidog auth request
-		 * @param {*} req 
-		 * @param {*} res 
-		 * @param {*} next 
-		 */
+    /**
+     * response function for wifidog auth request
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
     async auth(req, res, next) {
         var stage = req.query.stage;
 
@@ -179,12 +179,12 @@ class Wifidog {
             res.send("illegal stage");
         }
     }
-		/**
-		 * express middleware to check weixin auth 
-		 * @param {*} req 
-		 * @param {*} res 
-		 * @param {*} next 
-		 */
+    /**
+     * express middleware to check weixin auth 
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
     async checkAuthWeixinParam(req, res, next) {
         var extend = req.query.extend;
         var openId = req.query.openid;
@@ -233,12 +233,12 @@ class Wifidog {
         };
         TokenModel.create(newToken);
     }
-		/**
-		 * check for wificoin auth 
-		 * @param {*} req 
-		 * @param {*} res 
-		 * @param {*} next 
-		 */
+    /**
+     * check for wificoin auth 
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
     async checkAuthWfcParam(req, res, next) {
         var orderNumber = req.query.orderNumber;
         var txid = req.query.txid;
@@ -248,13 +248,13 @@ class Wifidog {
         }
 
         next();
-		}
-		/**
-		 * auth for wificoin callback auth
-		 * @param {*} req 
-		 * @param {*} res 
-		 * @param {*} next 
-		 */
+    }
+    /**
+     * auth for wificoin callback auth
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
     async authWfc(req, res, next) {
         console.log("orderNumber is " + req.query.orderNumber);
         var orderNumber = req.query.orderNumber;
@@ -272,7 +272,7 @@ class Wifidog {
         console.log(`authTokenUrl is ${authTokenUrl}`)
         console.log('order info  gwAddress:' + gwAddress + ',gwPort:' + gwPort + ',gwid:' + gwId + ',staMac:' + staMac);
         requestify.get(this.generateTxidRequest(txid))
-            .then(function(response) {
+            .then(function (response) {
                 var tx = response.getBody();
                 var item;
                 for (item in tx.vout) {
@@ -306,12 +306,12 @@ class Wifidog {
                 res.send(err)
             });
     }
-		/**
-		 * check for protal request
-		 * @param {*} req 
-		 * @param {*} res 
-		 * @param {*} next 
-		 */
+    /**
+     * check for protal request
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
     async checkPortalParam(req, res, next) {
         var gwId = req.query.gw_id;
         if (typeof (gwId) === 'undefined') {
@@ -320,12 +320,12 @@ class Wifidog {
         }
         next();
     }
-		/**
-		 * page for portal request
-		 * @param {*} req 
-		 * @param {*} res 
-		 * @param {*} next 
-		 */
+    /**
+     * page for portal request
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
     async portal(req, res, next) {
         var gwId = req.query.gw_id;
         var channelPath = req.query.channel_path;
@@ -335,51 +335,51 @@ class Wifidog {
         else
             res.redirect("https://talkblock.org/");
     }
-		/**
-		 * generrate auth token url 
-		 * @param {*} gwAddress 
-		 * @param {*} gwPort 
-		 * @param {*} token 
-		 * @param {*} type 
-		 */
+    /**
+     * generrate auth token url 
+     * @param {*} gwAddress 
+     * @param {*} gwPort 
+     * @param {*} token 
+     * @param {*} type 
+     */
     generateAuthTokenUrl(gwAddress, gwPort, token, type = '') {
         var authTokenUrl = 'http://' + gwAddress + ':' + gwPort + '/wifidog/auth?token=' + token;
         if (type != '')
             authTokenUrl += '&type=' + type;
         return authTokenUrl;
     }
-		/**
-		 * generate weixin auth url
-		 */
+    /**
+     * generate weixin auth url
+     */
     generateWxAuthUrl() {
         var wxAuthUrl = config.authDomain + ':' + config.port + config.wxAuth;
         return wxAuthUrl;
     }
-		/**
-		 * generate wificoin auth url
-		 * @param {*} orderNumber 
-		 * @param {*} toAddress 
-		 * @param {*} toAmount 
-		 */
+    /**
+     * generate wificoin auth url
+     * @param {*} orderNumber 
+     * @param {*} toAddress 
+     * @param {*} toAmount 
+     */
     generateWfcAuthUrl(orderNumber, toAddress, toAmount) {
         var wfcAuthUrl = config.wfcPayUrl + config.authDomain + ':' + config.port + config.wfcAuthPath;
         wfcAuthUrl += '&orderNumber=' + orderNumber + '&toAddress=' + toAddress + '&toAmount=' + toAmount;
 
         return wfcAuthUrl;
     }
-		/**
-		 * generate md5 string
-		 * @param {*} seed 
-		 */
+    /**
+     * generate md5 string
+     * @param {*} seed 
+     */
     generateMD5(seed) {
         var md5 = crypto.createHash('md5');
         var token = md5.update(seed).digest('hex');
         return token;
     }
-		/**
-		 * generate transaction api url 
-		 * @param {*} txid 
-		 */
+    /**
+     * generate transaction api url 
+     * @param {*} txid 
+     */
     generateTxidRequest(txid) {
         var txidRequest = config.insightApi + '/tx/' + txid;
         return txidRequest;
