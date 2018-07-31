@@ -18,12 +18,12 @@ app.all('*', (req, res, next) => {
 	res.header("Access-Control-Allow-Origin", req.headers.Origin || req.headers.origin || 'https://cangdu.org');
 	res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
 	res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-  	res.header("Access-Control-Allow-Credentials", true); //可以带cookies
+	res.header("Access-Control-Allow-Credentials", true); //可以带cookies
 	res.header("X-Powered-By", '3.2.1')
 	if (req.method == 'OPTIONS') {
-	  	res.send(200);
+		res.send(200);
 	} else {
-	    next();
+		next();
 	}
 });
 
@@ -35,13 +35,13 @@ const MongoStore = connectMongo(session);
 app.use(cookieParser());
 console.log(JSON.stringify(config));
 app.use(session({
-		secret: config.session.secret,
-	  	name: config.session.name,
-		resave: true,
-		saveUninitialized: false,
-		cookie: config.session.cookie,
-		store: new MongoStore({
-	  		url: config.url
+	secret: config.session.secret,
+	name: config.session.name,
+	resave: true,
+	saveUninitialized: false,
+	cookie: config.session.cookie,
+	store: new MongoStore({
+		url: config.mongoUrl
 	})
 }));
 
@@ -71,9 +71,9 @@ router(app);
 //     ]
 // }));
 
-app.set('views',path.join(__dirname , 'views') );
-app.engine('.html', require('ejs').__express);  
-app.set('view engine', 'html'); 
+app.set('views', path.join(__dirname, 'views'));
+app.engine('.html', require('ejs').__express);
+app.set('view engine', 'html');
 
 app.use(history());
 app.use(express.static('./public'));
