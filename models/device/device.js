@@ -9,7 +9,7 @@ const deviceSchema = new Schema({
 	sysUptime:	{type: Number, default: 0}, // 系统运行时长
 	sysMemfree: {type: Number, default: 0}, // 剩余内存
 	sysLoad: 	{type: Number, default: 0}, // 系统负载
-	cpuUsage: 	{type: Number, default: 0}, // cpu利用率
+	cpuUsage: 	{type: String, default: 0}, // cpu利用率
 	ssid:		{type: String, default: ''}, // 无线名称
 	version: 	{type: String, default: ''}, // 版本
 	type:		{type: String, default: 'unknown'}, // 设备类型
