@@ -113,7 +113,7 @@ class Wifidog {
 		var	gwId		= order.gwId;
 		var staMac		= order.staMac;
 		var token 		= this.generateMD5(extend);
-		var authTokenUrl= this.generateAuthTokenUrl(order.gwAddress, order.gwPort, token);
+		var authTokenUrl= this.generateAuthTokenUrl(order.gwAddress, order.gwPort, token, 'weixin');
 		res.redirect(authTokenUrl);
 
 		var startTime = Math.round(+new Date()/1000);
