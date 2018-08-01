@@ -14,7 +14,7 @@ const channelPathSchema = new Schema({
 	},
 	wificoin: {
 		toAddress: {type: String, default: 'wZirordpuoJgmRp6wRPKZjAjVruQr5gF7r'},
-		toAmount: {type: Number, default: 2},
+		toAmount: {type: Number, default: 2000000},
 	},
 	portalUrl: {type: String, default: 'https://talkblock.org/'},
 	duration: {type: Number, default: 3600}
