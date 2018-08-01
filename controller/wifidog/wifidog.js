@@ -72,12 +72,12 @@ class Wifidog {
 
         next();
     }
-	/**
-	 * page for wifidog login request
-	 * @param {req} req 
-	 * @param {res} res 
-	 * @param {next} next 
-	 */
+    /**
+     * page for wifidog login request
+     * @param {req} req 
+     * @param {res} res 
+     * @param {next} next 
+     */
     async login(req, res, next) {
         try {
             var gwAddress = req.query.gw_address;
@@ -151,7 +151,7 @@ class Wifidog {
             res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入参数无效' });
             return;
         }
-
+      
         next();
     }
     /**
@@ -219,7 +219,7 @@ class Wifidog {
         var gwId = order.gwId;
         var staMac = order.staMac;
         var token = this.generateMD5(extend);
-        var authTokenUrl = this.generateAuthTokenUrl(order.gwAddress, order.gwPort, token);
+        var authTokenUrl = this.generateAuthTokenUrl(order.gwAddress, order.gwPort, token, 'weixin');
         res.redirect(authTokenUrl);
 
         var startTime = Math.round(+new Date() / 1000);
