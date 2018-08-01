@@ -22,41 +22,65 @@ class client {
         res.send({ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入参数无效'});
     }
     
-    async updateDeviceClientFromCounter(query) {
+	async updateDeviceClientFromCounter(query) {
 		try {
-			var mac 	= query.mac;
-			var ip		= query.ip;
-			var token	= query.token;
-			var wired	= query.wired;
-			var	name	= query.name;
-			var	gwId	= query.gw_id;
-			var incoming	= query.incoming;
-			var outcoming	= query.outcoming;
-			var firstLogin	= query.first_login;
-			var onlineTime	= query.online_time;
-			var lastTime	= Math.round(+new Date()/1000);
+			var mac 	        = query.mac;
+			var ip		        = query.ip;
+			var token	        = query.token;
+			var wired	        = query.wired;
+			var name	        = query.name;
+			var gwId	        = query.gw_id;
+			var incoming	        = query.incoming;
+			var outcoming	        = query.outcoming;
+			var firstLogin	        = query.first_login;
+			var onlineTime	        = query.online_time;
+			var lastTime	        = Math.round(+new Date()/1000);
 			var incomingdelta	= query.incomingdelta;
 			var outcomingdelta	= query.outcomingdelta;
-			var	channelPath		= query.channel_path;
+			var channelPath		= query.channel_path;
 
+			var newClient = {
+				gwId: gwId,
+				clients:[{
+					'mac': mac,
+					'ip': ip,
+					'token': token,
+					'wired': wired,
+					'name': name,
+					'incoming': incoming,
+					'outcoming': outcoming,
+					'firstLogin': firstLogin,
+					'onlineTime': onlineTime,
+					'incomingdelta': incomingdelta,
+					'outcomingdelta': outcomingdelta,
+					'channelPath': channelPath,
+					'lastTime': lastTime
+				}]
+			};
 			const device = await ClientModel.findOne({gwId:gwId});
 			if(!device){
+				await ClientModel.create(newClient);
 				console.log('impossible: cannot find device: ' + gwId);
 				return 0;
+			}else{
+				await ClientModel.findOneAndUpdate({ gwId }, { $set: newClient });
 			}
             
-            var duration = 0;
-            var cpSetting;
+			var duration = 0;
+			var cpSetting;
 			var gwSetting = await GatewayIdModel.findOne({gwId: gwId});
 			if(!gwSetting){
-                cpSetting   = await ChannelPathModel.findOne({channelPath: channelPath});
-                if(!cpSetting){
-				    console.log('impossible: cannot find setting of ');
-				    return 0;
-                } else
-                    duration = cpSetting.duration;
-			} else 
-                duration = gwSetting.duration;
+				cpSetting = await ChannelPathModel.findOne({channelPath: channelPath});
+				if(!cpSetting){
+					console.log('impossible: cannot find setting of ');
+					return 0;
+				}else{
+					duration = cpSetting.duration;
+				}
+			}else{ 
+				duration = gwSetting.duration;
+			}
+
 			if(duration < (lastTime - firstLogin)){
 				console.log('client timeout ' + mac);
 				return 0;
@@ -78,7 +102,7 @@ class client {
 				outcomingdelta:	outcomingdelta,
 				channelPath:	channelPath,
 			};
-			var index = 0;
+			var index = 0
 			for(; index < clients.length; index++){
 				if(clients[index].mac == mac){
 					clients[index] = item;
@@ -87,8 +111,8 @@ class client {
 			}
 			if(index == clients.length){
 				// cannot find the client
-                return 0;
-            }
+				return 0;
+			}
 			device.clients = clients;
 			await ClientModel.findOneAndUpdate({gwId}, {$set: device});	
 			return 1;
