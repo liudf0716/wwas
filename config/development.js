@@ -2,7 +2,7 @@
 
 module.exports = {
 	port: 8001,
-	mongoUrl: 'mongodb://192.168.1.13:27017/wfc',
+	mongoUrl: 'mongodb://127.0.0.1:27017/wfc',
 	insightApi: 'https://insight.wificoin.club/insight-api',
 	wfcPayUrl: 'https://wfc.wificoin.club/#/wifiPortal/payment?authServer=',
 	authDomain: 'http://localhost',
