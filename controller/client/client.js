@@ -67,12 +67,12 @@ class client {
 			var cpSetting;
 			var gwSetting = await GatewayIdModel.findOne({gwId: gwId});
 			if(!gwSetting){
-				console.log('impossible: cannot find setting of ');
+				console.log('impossible: cannot find setting of gateway');
 				return 0;
 			}else{ 
-				cpSetting = await ChannelPathModel.findOne({channelPath: channelPath});
+				cpSetting = await ChannelPathModel.findOne({channelPath: gwSetting.channelPath});
 				if(!cpSetting){
-					console.log('impossible: cannot find setting of ');
+					console.log('impossible: cannot find setting of channelPath');
 					return 0;
 				}else{
 					duration = cpSetting.duration;
