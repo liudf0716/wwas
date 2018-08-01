@@ -60,16 +60,16 @@ class client {
 			const device = await ClientModel.findOne({gwId:gwId});
 			if(!device){
 				await ClientModel.create(newClient);
-				console.log('impossible: cannot find device: ' + gwId);
 				return 0;
-			}else{
-				await ClientModel.findOneAndUpdate({ gwId }, { $set: newClient });
 			}
             
 			var duration = 0;
 			var cpSetting;
 			var gwSetting = await GatewayIdModel.findOne({gwId: gwId});
 			if(!gwSetting){
+				console.log('impossible: cannot find setting of ');
+				return 0;
+			}else{ 
 				cpSetting = await ChannelPathModel.findOne({channelPath: channelPath});
 				if(!cpSetting){
 					console.log('impossible: cannot find setting of ');
@@ -77,8 +77,6 @@ class client {
 				}else{
 					duration = cpSetting.duration;
 				}
-			}else{ 
-				duration = gwSetting.duration;
 			}
 
 			if(duration < (lastTime - firstLogin)){
