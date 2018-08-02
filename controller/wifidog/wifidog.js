@@ -161,23 +161,25 @@ class Wifidog {
      * @param {*} next 
      */
     async auth(req, res, next) {
-        var stage = req.query.stage;
+	var stage = req.query.stage;
 
-        console.log('auth stage is ' + stage);
-        if (stage == 'login') {
-            var token = req.query.token;
-            const tokenObj = await TokenModel.findOne({ token });
-            if (!tokenObj) { res.send('Auth: 0'); } else {
-                res.send('Auth: 1');
-            }
-        } else if (stage == 'counters') {
-            var result = await client.updateDeviceClientFromCounter(req.query);
-            res.send('Auth: ' + result);
-        } else if (stage == 'logout') {
-            res.send('Auth: 1')
-        } else {
-            res.send("illegal stage");
-        }
+	console.log('auth stage is ' + stage);
+	if (stage == 'login') {
+		var token = req.query.token;
+		const tokenObj = await TokenModel.findOne({ token });
+		if (!tokenObj) { 
+			res.send('Auth: 0'); 
+		} else {
+			res.send('Auth: 1');
+		}
+	} else if (stage == 'counters') {
+		var result = await client.updateDeviceClientFromCounter(req.query);
+		res.send('Auth: ' + result);
+	} else if (stage == 'logout') {
+		res.send('Auth: 1')
+	} else {
+		res.send("illegal stage");
+	}
     }
     /**
      * express middleware to check weixin auth 
@@ -187,9 +189,9 @@ class Wifidog {
      */
     async checkAuthWeixinParam(req, res, next) {
         var extend = req.query.extend;
-        var openId = req.query.openid;
+        var openId = req.query.openId;
         var tid = req.query.tid;
-        var sign = req.query.sing;
+        var sign = req.query.sign;
         var timestamp = req.query.timestamp;
 
         if (typeof (extend) === 'undefined' || typeof (openId) === 'undefined' ||
