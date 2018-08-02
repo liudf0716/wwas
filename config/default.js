@@ -7,6 +7,7 @@ module.exports = {
 	wfcPayUrl: 'https://wfc.wificoin.club/#/wifiPortal/payment?authServer=',
 	authDomain: 'http://wifidog.kunteng.org.cn',
 	wfcAuthPath: '/wifidog/auth/wfc',
+	wxAuthPath: '/wifidog/auth/weixin'
 	session: {
 		name: 'SID',
 		secret: 'SID',

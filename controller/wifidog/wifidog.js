@@ -116,18 +116,18 @@ class Wifidog {
             var wfcAuthUrl = this.generateWfcAuthUrl(orderNumber, channelPath.wificoin.toAddress, wfcAmount);
             var wxAuthUrl = this.generateWxAuthUrl();
             var timestamp = Math.round(+new Date());
-            var tmp = channelPath.weixin.wxAppId + orderNumber + timestamp +
-                channelPath.weixin.wxShopId + wxAuthUrl + staMac + ssid + staMac + channelPath.weixin.wxSecretKey;
+            var tmp = channelPath.weixin.appId + orderNumber + timestamp +
+                channelPath.weixin.shopId + wxAuthUrl + staMac + ssid + staMac + channelPath.weixin.secretKey;
             var wxSign = this.generateMD5(tmp);
             res.render('login', {
                 wfcAuth: wfcAuthUrl,
                 gwAddress: gwAddress,
                 gwPort: gwPort,
-                appId: channelPath.weixin.wxAppId,
+                appId: channelPath.weixin.appId,
                 extend: orderNumber,
                 timestamp: timestamp,
                 sign: wxSign,
-                shopId: channelPath.weixin.wxShopId,
+                shopId: channelPath.weixin.shopId,
                 authUrl: wxAuthUrl,
                 mac: staMac,
                 ssid: ssid,
@@ -352,7 +352,7 @@ class Wifidog {
      * generate weixin auth url
      */
     generateWxAuthUrl() {
-        var wxAuthUrl = config.authDomain + ':' + config.port + config.wxAuth;
+        var wxAuthUrl = config.authDomain + ':' + config.port + config.wxAuthPath;
         return wxAuthUrl;
     }
     /**
