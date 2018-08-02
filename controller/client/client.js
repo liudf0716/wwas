@@ -57,7 +57,7 @@ class client {
 					'lastTime': lastTime
 				}]
 			};
-			const device = await ClientModel.findOne({gwId:gwId});
+			const device = await ClientModel.findOne({'clients.mac': mac});
 			if(!device){
 				await ClientModel.create(newClient);
 				return 0;
@@ -112,7 +112,7 @@ class client {
 				return 0;
 			}
 			device.clients = clients;
-			await ClientModel.findOneAndUpdate({gwId}, {$set: device});	
+			await ClientModel.findOneAndUpdate({'clients.mac': mac}, {$set: device});	
 			return 1;
 		}catch(err){
 			console.log(err);
