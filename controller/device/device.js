@@ -384,6 +384,12 @@ class deviceHandle {
             var lastTime = Math.round(+new Date() / 1000);
             var remoteAddress = req.connection.remoteAddress;
             var deviceStatus = 1;
+	    if(channelPath === 'null'){
+		var gw = await GatewayIdModel.findOne({ gwId: gwId });
+		if(gw){
+			channelPath = gw.channelPath;
+		}
+	    }
             const newDevice = {
                 gwId,
                 sysUptime,
