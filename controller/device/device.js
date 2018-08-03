@@ -57,24 +57,21 @@ class deviceHandle {
                 var wherestr = { 'gwId': mac };
 
                 //如果采用返回值得形式，必须的await
-                var query = await DeviceModel.findOne(wherestr).exec();
+                var query = await GatewayIdModel.findOne(wherestr).exec();
                 if (query != null) {
                     if (query.channelPath === '') {
                         var updatestr = { 'channelPath': user_name };
-                        await DeviceModel.findByIdAndUpdate(query['_id'], updatestr).exec();
+                        await GatewayIdModel.findByIdAndUpdate(query['_id'], updatestr).exec();
                     } else {
                         ill_mac.push(mac_array[i]);
                     }
                 } else {
                     //如果没有，就直接添加一个新的mac
-                    var mytime = new Date();
                     var updatestr = {
                         'gwId': mac,
                         'channelPath': user_name,
-                        'auth': 1,
-                        'lastTime': mytime.getTime()
                     };
-                    await DeviceModel.create(updatestr);
+                    await GatewayIdModel.create(updatestr);
                 }
             }
 
@@ -150,26 +147,23 @@ class deviceHandle {
                     var wherestr = { 'gwId': mac };
 
                     //如果采用返回值得形式，必须的await
-                    var query = await DeviceModel.findOne(wherestr).exec();
+                    var query = await GatewayIdModel.findOne(wherestr).exec();
                     if (query != null) {
                         if (query.user_name === '') {
                             var updatestr = { 'channelPath': user_name };
-                            await DeviceModel.findByIdAndUpdate(query['_id'], updatestr).exec();
+                            await GatewayIdModel.findByIdAndUpdate(query['_id'], updatestr).exec();
                         } else {
                             ill_mac.push(mac_array[i]);
                         }
                     }
                     else {
                         //如果没有，就直接添加一个新的mac
-                        var mytime = new Date();
                         var updatestr = {
                             'gwId': mac,
                             'channelPath': user_name,
-                            'auth': 1,
-                            'lastTime': mytime.getTime()
                         };
 
-                        await DeviceModel.create(updatestr);
+                        await GatewayIdModel.create(updatestr);
                     }
                 }
 
@@ -213,8 +207,8 @@ class deviceHandle {
         try {
             // 更新DeviceTable, 如果升级ok的话就不更新
             var wherestr = { 'gwId': route_mac };
-            var updatestr = { 'channelPath': '' };
-            var query = await DeviceModel.findOneAndUpdate(wherestr, updatestr).exec();
+            var updatestr = { 'channelPath': 'wificoin' };
+            var query = await GatewayIdModel.findOneAndUpdate(wherestr, updatestr).exec();
 
             //退出完成
             res.send({ ret_code: 0, ret_msg: 'SUCCESS', extra: query });
