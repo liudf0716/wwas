@@ -8,6 +8,7 @@ module.exports = {
 	authDomain: 'http://wifidog.kunteng.org.cn',
 	wfcAuthPath: '/wifidog/auth/wfc',
 	wxAuthPath: '/wifidog/auth/weixin',
+	device_dir: './public/device',
 	session: {
 		name: 'SID',
 		secret: 'SID',

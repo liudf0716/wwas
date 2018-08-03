@@ -9,8 +9,15 @@ import path from 'path';
 import history from 'connect-history-api-fallback';
 import chalk from 'chalk';
 import bodyParser from 'body-parser';
-
+const fs = require("fs");
 // import Statistic from './middlewares/statistic'
+
+//excel导出文件存放位置， 不存在则创建
+fs.exists(config.device_dir, function(exists) {
+    console.log(exists ? "设备excel目录存在" : "设备excel目录不存在", config.device_dir);
+    if (!exists) fs.mkdirSync(config.device_dir);
+});
+
 
 const app = express();
 
