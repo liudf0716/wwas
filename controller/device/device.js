@@ -297,13 +297,13 @@ class deviceHandle {
 
         //参数有效性检查
         if (typeof (page_size) === "undefined" && typeof (current_page) === "undefined") {
-            var count = await GatewayIdModel.count(filter);
-            var query = await GatewayIdModel.find(filter).sort(sort).limit(10);
+            var count = await DeviceModel.count(filter);
+            var query = await DeviceModel.find(filter).sort(sort).limit(10);
             res.send({ ret_code: 0, ret_msg: 'SUCCESS', extra: { query, count } });
         }
         else if (page_size > 0 && current_page > 0) {
             var skipnum = (current_page - 1) * page_size;   //跳过数
-            var query = await GatewayIdModel.find(filter).sort(sort).skip(skipnum).limit(page_size);
+            var query = await DeviceModel.find(filter).sort(sort).skip(skipnum).limit(page_size);
             res.send({ ret_code: 0, ret_msg: 'SUCCESS', extra: { query } });
         }
         else {
