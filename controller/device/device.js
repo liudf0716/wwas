@@ -321,12 +321,12 @@ class deviceHandle {
 
 
     async onLineList(req, res, next) {
-        DeviceHandle.prototype.listOnOffline(req, res, next, 1);
+        deviceHandle.prototype.listOnOffline(req, res, next, 1);
     }
 
 
     async offLineList(req, res, next) {
-        DeviceHandle.prototype.listOnOffline(req, res, next, 0);
+        deviceHandle.prototype.listOnOffline(req, res, next, 0);
     }
 
     async listOnOffline(req, res, next, myfilter) {
