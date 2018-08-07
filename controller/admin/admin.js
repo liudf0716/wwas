@@ -27,7 +27,7 @@ class admin {
             try {
                 const  user_account = 'local';
                 const  user_password = this.encryption('local');
-                AdminModel.findOne({user_account: user_account}).exec(function (err, res) {
+                ChannelPathModel.findOne({channelPath: user_account}).exec(function (err, res) {
                     if (res == null) {
                         var newAdmin = {
                             'channelPath': user_account,
@@ -37,7 +37,7 @@ class admin {
                             'user_last_login_time': dtime().format('YYYY-MM-DD HH:mm'),
                             'user_admin': '管理员',
                             'user_type': 1,
-                            'user_name': '',
+                            'user_name': '测试账号',
                             'user_status': 0,
                             'user_city': 'beijing',
                             'user_device_count': 0,
@@ -66,7 +66,7 @@ class admin {
             try {
                 const  user_account = 'wificoin';
                 const  user_password = this.encryption('wificoin');
-                AdminModel.findOne({user_account: user_account}).exec(function (err, res) {
+                ChannelPathModel.findOne({channelPath: user_account}).exec(function (err, res) {
                     if (res == null) {
                         var newAdmin = {
                             'channelPath': user_account,
@@ -76,7 +76,7 @@ class admin {
                             'user_last_login_time': dtime().format('YYYY-MM-DD HH:mm'),
                             'user_admin': '超级管理员',
                             'user_type': 0,
-                            'user_name': '',
+                            'user_name': '超级账号',
                             'user_status': 0,
                             'user_city': 'beijing',
                             'user_device_count': 0,
