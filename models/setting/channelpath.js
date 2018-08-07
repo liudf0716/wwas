@@ -5,7 +5,7 @@ import mongoose from 'mongoose'
 const Schema = mongoose.Schema;
 
 const channelPathSchema = new Schema({
-	channelPath: 	String,
+	channelPath: {type: String, default: 'wificoin'},
 	weixin: {
 		appId: {type: String, default: 'wxfb684aa755dffceb'},
 		shopId: {type: Number, default: '641418'},

@@ -1,7 +1,7 @@
 'use strict'
 
 import ClientModel      from '../../models/client/client'
-import GatewayIdModel   from '../../models/setting/gatewayid'
+import DeviceModel      from '../../models/device/device'
 import ChannelPathModel from '../../models/setting/channelpath'
 
 class client {
@@ -65,7 +65,7 @@ class client {
             
 			var duration = 0;
 			var cpSetting;
-			var gwSetting = await GatewayIdModel.findOne({gwId: gwId});
+			var gwSetting = await DeviceModel.findOne({gwId: gwId});
 			if(!gwSetting){
 				console.log('impossible: cannot find setting of gateway');
 				return 0;

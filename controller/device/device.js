@@ -57,21 +57,24 @@ class deviceHandle {
                 var wherestr = { 'gwId': mac };
 
                 //如果采用返回值得形式，必须的await
-                var query = await GatewayIdModel.findOne(wherestr).exec();
+                var query = await DeviceModel.findOne(wherestr).exec();
                 if (query != null) {
                     if (query.channelPath === '') {
                         var updatestr = { 'channelPath': user_name };
-                        await GatewayIdModel.findByIdAndUpdate(query['_id'], updatestr).exec();
+                        await DeviceModel.findByIdAndUpdate(query['_id'], updatestr).exec();
                     } else {
                         ill_mac.push(mac_array[i]);
                     }
                 } else {
                     //如果没有，就直接添加一个新的mac
+		    var mytime = new Date();
                     var updatestr = {
                         'gwId': mac,
                         'channelPath': user_name,
+			'auth': 1,
+			'lastTime': mytime.getTime()
                     };
-                    await GatewayIdModel.create(updatestr);
+                    await DeviceModel.create(updatestr);
                 }
             }
 
@@ -147,23 +150,26 @@ class deviceHandle {
                     var wherestr = { 'gwId': mac };
 
                     //如果采用返回值得形式，必须的await
-                    var query = await GatewayIdModel.findOne(wherestr).exec();
+                    var query = await DeviceModel.findOne(wherestr).exec();
                     if (query != null) {
                         if (query.user_name === '') {
                             var updatestr = { 'channelPath': user_name };
-                            await GatewayIdModel.findByIdAndUpdate(query['_id'], updatestr).exec();
+                            await DeviceModel.findByIdAndUpdate(query['_id'], updatestr).exec();
                         } else {
                             ill_mac.push(mac_array[i]);
                         }
                     }
                     else {
                         //如果没有，就直接添加一个新的mac
+			var mytime = new Date();
                         var updatestr = {
                             'gwId': mac,
                             'channelPath': user_name,
+			    'auth': 1,
+			    'lastTime': mytime.getTime()
                         };
 
-                        await GatewayIdModel.create(updatestr);
+                        await DeviceModel.create(updatestr);
                     }
                 }
 
@@ -208,7 +214,7 @@ class deviceHandle {
             // 更新DeviceTable, 如果升级ok的话就不更新
             var wherestr = { 'gwId': route_mac };
             var updatestr = { 'channelPath': 'wificoin' };
-            var query = await GatewayIdModel.findOneAndUpdate(wherestr, updatestr).exec();
+            var query = await DeviceModel.findOneAndUpdate(wherestr, updatestr).exec();
 
             //退出完成
             res.send({ ret_code: 0, ret_msg: 'SUCCESS', extra: query });
@@ -378,72 +384,70 @@ class deviceHandle {
             var lastTime = Math.round(+new Date() / 1000);
             var remoteAddress = req.connection.remoteAddress;
             var deviceStatus = 1;
-	    if(channelPath === 'null'){
-		var gw = await GatewayIdModel.findOne({ gwId: gwId });
-		if(gw){
-			channelPath = gw.channelPath;
-		}
-	    }
-            const newDevice = {
-                gwId,
-                sysUptime,
-                sysMemfree,
-                sysLoad,
-                cpuUsage,
-                ssid,
-                version,
-                type,
-                name,
-                channelPath,
-                wiredPassed,
-                wifidogUptime,
-                onlineClients,
-                offlineClients,
-                nfConntrackCount,
-                lastTime,
-                remoteAddress,
-                deviceStatus
-            }
+	    const device = await DeviceModel.findOne({ gwId: gwId });
+	    if(device){
+		channelPath = device.channelPath;
 
-            const device = await DeviceModel.findOne({ gwId: gwId });
-            if (!device) {
-                await DeviceModel.create(newDevice);
-            } else {
-                await DeviceModel.findOneAndUpdate({ gwId }, { $set: newDevice });
-            }
+		const newDevice = {
+			gwId,
+			sysUptime,
+			sysMemfree,
+			sysLoad,
+			cpuUsage,
+			ssid,
+			version,
+			type,
+			name,
+			channelPath,
+			wiredPassed,
+			wifidogUptime,
+			onlineClients,
+			offlineClients,
+			nfConntrackCount,
+			lastTime,
+			remoteAddress,
+			deviceStatus
+		}
+
+		await DeviceModel.findOneAndUpdate({ gwId }, { $set: newDevice });
+	    }
         } catch (err) {
             console.log(err);
         }
     }
 
     async deviceSetting(gwId) {
-        try {
-            let channelPath;
-            const gateway = await GatewayIdModel.findOne({ gwId: gwId });
-            console.log(gateway)
-            if (gateway) {
-                channelPath = await ChannelPathModel.findOne({ channelPath: gateway.channelPath });
-                console.log(channelPath);
-                if (channelPath)
-                    return channelPath;
-                else {
-                    return null;
-                }
-            } else {
-                var gwSetting = { gwId: gwId, channelPath: "wificoin" };
-                await GatewayIdModel.create(gwSetting);
-                channelPath = await ChannelPathModel.findOne({ channelPath: "wificoin" });
-                if (!channelPath) {
-                    channelPath = await ChannelPathModel.create({ channelPath: "wificoin" });
-                    return channelPath;
-                } else {
-                    return channelPath;
-                }
-            }
-        } catch (err) {
-            console.log(err);
-        }
-        return null;
+	try {
+		let channelPath;
+		const gateway = await DeviceModel.findOne({ gwId: gwId });
+		if (gateway) {
+			channelPath = await ChannelPathModel.findOne({ channelPath: gateway.channelPath });
+			if (channelPath)
+				return channelPath;
+			else {
+				return null;
+			}
+		} else {
+			var mytime = new Date();
+			var gwSetting = { 
+					'gwId': gwId, 
+					'channelPath': "wificoin",
+					'auth': 1,
+					'lastTime':mytime.getTime()
+			};
+			await DeviceModel.create(gwSetting);
+			channelPath = await ChannelPathModel.findOne({ channelPath: "wificoin" });
+			if (!channelPath) {
+				channelPath = await ChannelPathModel.create({ channelPath: "wificoin" });
+				return channelPath;
+			} else {
+				return channelPath;
+			}
+		}
+	} catch (err) {
+		console.log(err);
+	}
+	return null;
     }
 
     async updateDeviceStatus() {
