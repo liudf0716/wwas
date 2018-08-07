@@ -1,7 +1,6 @@
 'use strict';
 
-import AdminModel from '../models/admin/admin'
-
+import ChannelPathModel from '../../models/setting/channelpath'
 class Check {
 	constructor(){
 		
@@ -17,7 +16,7 @@ class Check {
 			});
 			return;
 		}else{
-			const admin = await AdminModel.findOne({user_account: user});
+			const admin = await ChannelPathModel.findOne({channelPath: user});
 			if (!admin || admin.user_type != 0) {
 				res.send({
 					ret_code: 1010,
@@ -39,7 +38,7 @@ class Check {
 			});
 			return;
 		}else{
-			const admin = await AdminModel.findOne({user_account: user});
+			const admin = await ChannelPathModel.findOne({channelPath: user});
 			if (!admin || admin.user_status != 0) {
 				res.send({
 					ret_code: 1011,
