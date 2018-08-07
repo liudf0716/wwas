@@ -230,7 +230,7 @@ class deviceHandle {
         var query = await DeviceModel.find({ 'channelPath': user }).exec();
         var macs = [];
         for (var i = 0; i < query.length; i++) {
-            macs.push([query[i].mac]);
+            macs.push([query[i].gwId]);
         }
         var datas = xlsx.build([
             { name: user, data: macs }

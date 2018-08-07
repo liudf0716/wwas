@@ -10,8 +10,8 @@ const deviceSchema = new Schema({
 	sysMemfree: {type: Number, default: 0}, // 剩余内存
 	sysLoad: 	{type: Number, default: 0}, // 系统负载
 	cpuUsage: 	{type: String, default: 0}, // cpu利用率
-	ssid:		{type: String, default: ''}, // 无线名称
-	version: 	{type: String, default: ''}, // 版本
+	ssid:		{type: String, default: 'unknown'}, // 无线名称
+	version: 	{type: String, default: 'unknown'}, // 版本
 	type:		{type: String, default: 'unknown'}, // 设备类型
 	name:		{type: String, default: 'unknown'}, // 设备名称
 	channelPath:	{type: String, default: 'wificoin'}, // 渠道
