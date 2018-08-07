@@ -198,18 +198,26 @@ class admin {
 				const adminTip = user_type == 1 ?  '管理员'　: '超级管理员';
 				const newpassword = this.encryption(user_password);
 				const newAdmin = {
-					channelPath: user_account,
-					user_password: newpassword,
-					user_name,
-					user_phone,
-					user_create_time: dtime().format('YYYY-MM-DD HH:mm'),
-					user_last_login_time: dtime().format('YYYY-MM-DD HH:mm'),
-					user_admin: adminTip,
-					user_type,
-					user_status,
-					user_city,
-					user_device_count: 0,
-					user_online_count: 0
+					'channelPath': user_account,
+					'user_password': newpassword,
+					'user_name':user_name,
+					'user_phone':user_phone,
+					'user_create_time': dtime().format('YYYY-MM-DD HH:mm'),
+					'user_last_login_time': dtime().format('YYYY-MM-DD HH:mm'),
+					'user_admin': adminTip,
+					'user_type':user_type,
+					'user_status':user_status,
+					'user_city':user_city,
+					'user_device_count': 0,
+					'user_online_count': 0
+					'weixin.appId':'wxfb684aa755dffceb',
+					'weixin.shopId':'641418',
+					'weixin.secretKey':'ca0ddbac646160edfeaf343937f73404',
+					'weixin.ssid':'ApFreeWiFiDog',
+					'wificoin.toAddress':'wZirordpuoJgmRp6wRPKZjAjVruQr5gF7r',
+					'wificoin.toAmount':'2000000',
+					'portalUrl':'https://talkblock.org/',
+					'duration':'3600'
 				};
 				await ChannelPathModel.create(newAdmin);
 					res.send({
