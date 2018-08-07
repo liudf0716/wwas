@@ -1,6 +1,7 @@
 'use strict';
 
 import AdminModel from '../../models/admin/admin'
+import ChannelPathModel from '../../models/setting/channelpath'
 import DeviceTable from '../../models/device/device'
 import crypto from 'crypto'
 import dtime from 'time-formater'
@@ -29,7 +30,7 @@ class admin {
                 AdminModel.findOne({user_account: user_account}).exec(function (err, res) {
                     if (res == null) {
                         var newAdmin = {
-                            'user_account': user_account,
+                            'channelPath': user_account,
                             'user_password': user_password,
                             'user_phone': '18211122333',
                             'user_create_time': dtime().format('YYYY-MM-DD HH:mm'),
@@ -40,10 +41,22 @@ class admin {
                             'user_status': 0,
                             'user_city': 'beijing',
                             'user_device_count': 0,
-                            'user_online_count': 0
+                            'user_online_count': 0,
+			    weixin: {
+			    	'appId':'wxfb684aa755dffceb',
+				'shopId':'641418',
+				'secretKey':'ca0ddbac646160edfeaf343937f73404',
+				'ssid':'ApFreeWiFiDog'
+			    },
+			    wificoin: {
+				'toAddress':'wZirordpuoJgmRp6wRPKZjAjVruQr5gF7r',
+				'toAmount':'2000000'
+			    },
+			    'portalUrl':'https://talkblock.org/',
+			    'duration':'3600'
                         };
 
-                        AdminModel.create(newAdmin);
+                        ChannelPathModel.create(newAdmin);
                     }
                 });
             } catch (err) {
@@ -56,7 +69,7 @@ class admin {
                 AdminModel.findOne({user_account: user_account}).exec(function (err, res) {
                     if (res == null) {
                         var newAdmin = {
-                            'user_account': user_account,
+                            'channelPath': user_account,
                             'user_password': user_password,
                             'user_phone': '18211122222',
                             'user_create_time': dtime().format('YYYY-MM-DD HH:mm'),
@@ -68,9 +81,21 @@ class admin {
                             'user_city': 'beijing',
                             'user_device_count': 0,
                             'user_online_count': 0
+			    weixin: {
+			    	'appId':'wxfb684aa755dffceb',
+				'shopId':'641418',
+				'secretKey':'ca0ddbac646160edfeaf343937f73404',
+				'ssid':'ApFreeWiFiDog'
+			    },
+			    wificoin: {
+				'toAddress':'wZirordpuoJgmRp6wRPKZjAjVruQr5gF7r',
+				'toAmount':'2000000'
+			    },
+			    'portalUrl':'https://talkblock.org/',
+			    'duration':'3600'
                         };
                         console.log('iotks 用户添加');
-                        AdminModel.create(newAdmin);
+                        ChannelPathModel.create(newAdmin);
                     }
                 });
 
@@ -101,7 +126,7 @@ class admin {
 		}
 		const newpassword = this.encryption(user_password);
 		try {
-			const admin = await AdminModel.findOne({user_account});
+			const admin = await ChannelPathModel.findOne({channelPath:user_account});
 			if(!admin) {
 				console.log('该用户不存在');
 				res.send({
@@ -169,7 +194,7 @@ class admin {
 			return;
 		}
 		try{
-			const admin = await AdminModel.findOne({user_account});
+			const admin = await ChannelPathModel.findOne({channelPath:user_account});
 			if(admin) {
 				console.log('管理员已经存在');
 				res.send({
@@ -181,7 +206,7 @@ class admin {
 				const adminTip = user_type == 1 ?  '管理员'　: '超级管理员';
 				const newpassword = this.encryption(user_password);
 				const newAdmin = {
-					user_account,
+					channelPath: user_account,
 					user_password: newpassword,
 					user_name,
 					user_phone,
@@ -194,7 +219,7 @@ class admin {
 					user_device_count: 0,
 					user_online_count: 0
 				};
-				await AdminModel.create(newAdmin);
+				await ChannelPathModel.create(newAdmin);
 					res.send({
 						ret_code: 0,
 						ret_msg: 'SUCCESS',
@@ -226,7 +251,7 @@ class admin {
 		}
 		const password = this.encryption(user_account);
         try{
-        	const admin = await AdminModel.findOne({user_account});
+        	const admin = await ChannelPathModel.findOne({channelPath: user_account});
         	if(!admin){
             	res.send({
                 	ret_code: 1,
@@ -234,7 +259,7 @@ class admin {
                     extra: '用户不存在'
             	});
 			}else{
-				await AdminModel.findOneAndUpdate({user_account: user_account},{$set: {user_password: password}});
+				await ChannelPathModel.findOneAndUpdate({channelPath: user_account},{$set: {user_password: password}});
             	res.send({
                 	ret_code: 0,
                 	ret_msg: 'SUCCESS',
@@ -272,7 +297,7 @@ class admin {
 		}
 		const password = this.encryption(user_password);
 		try{
-			const admin = await AdminModel.findOne({user_account});
+			const admin = await ChannelPathModel.findOne({channelPath:user_account});
 			if(!admin){
 				console.log('用户不存在');
 				res.send({
@@ -289,7 +314,7 @@ class admin {
 				});
 			}else {
 				const changed_password = this.encryption(user_new_password);
-				await AdminModel.findOneAndUpdate({user_account: user_account},{$set: {user_password: changed_password}});
+				await ChannelPathModel.findOneAndUpdate({channelPath: user_account},{$set: {user_password: changed_password}});
 				console.log('修改密码成功');
 				res.send({
 					ret_code: 0,
@@ -323,7 +348,7 @@ class admin {
 			return;
 		}
 		try{
-			const admin = await AdminModel.findOne({user_account});
+			const admin = await ChannelPathModel.findOne({channelPath: user_account});
 			if(!admin){
 				console.log('用户不存在');
 				res.send({
@@ -339,7 +364,7 @@ class admin {
 					extra:'超级管理员不能冻结'
 				});
 			}else{
-				await AdminModel.findOneAndUpdate({user_account:user_account},{$set:{user_status:1}});
+				await ChannelPathModel.findOneAndUpdate({channelPath:user_account},{$set:{user_status:1}});
 				console.log('用户已冻结');
 				res.send({
 					ret_code: 0,
@@ -373,7 +398,7 @@ class admin {
 			return;
 		}
 		try{
-			const admin = await AdminModel.findOne({user_account});
+			const admin = await ChannelPathModel.findOne({channelPath:user_account});
 			if(!admin){
 				console.log('用户不存在');
 				res.send({
@@ -388,7 +413,7 @@ class admin {
 					ret_msg:'SUPER_ADMIN_NOT_NEED_RESTORE',
 					extra:'超级管理员不需要解冻'});
 			}else{
-				await AdminModel.findOneAndUpdate({user_account:user_account},{$set:{user_status:0}});
+				await ChannelPathModel.findOneAndUpdate({channelPath:user_account},{$set:{user_status:0}});
 				console.log('用户已解冻');
 				res.send({
 					ret_code: 0,
@@ -437,8 +462,8 @@ class admin {
 		var current_page = req.body.current_page;
 		try {
 			if(typeof(page_size) === 'undefined' && typeof(current_page) === 'undefined'){
-				var count = await AdminModel.count();
-				var allAdmin = await AdminModel.find().sort({id: -1}).limit(10);
+				var count = await ChannelPathModel.count();
+				var allAdmin = await ChannelPathModel.find().sort({id: -1}).limit(10);
 				res.send({
 					ret_code: 0,
 					ret_msg: 'SUCCESS',
@@ -446,7 +471,7 @@ class admin {
 				});
 				return;
 			}else if(page_size > 0 && current_page > 0){
-				var allAdmin = await AdminModel.find().sort({id: -1})
+				var allAdmin = await ChannelPathModel.find().sort({id: -1})
 					.skip(Number((current_page - 1)*page_size))
 					.limit(Number(page_size));
 				res.send({
@@ -471,7 +496,7 @@ class admin {
 	async getQueryAdmin(req, res, next) {
 		var user = req.body.user;
 		try {
-			const allAdmin = await AdminModel.find({$or:[{user_account: user},{user_name: user}]});
+			const allAdmin = await ChannelPathModel.find({$or:[{channelPath: user},{user_name: user}]});
 			console.log('allAdmin='+allAdmin);
 			res.send({
 				ret_code: 0,
@@ -489,7 +514,7 @@ class admin {
 	}
 	async getAdminCount(req, res, next){
 		try{
-			const count = await AdminModel.count();
+			const count = await ChannelPathModel.count();
 			res.send({
 				ret_code: 0,
 				data: count
@@ -515,7 +540,7 @@ class admin {
 			return;
 		} 
 		try {
-			const admin = await AdminModel.findOne({user_account: user_account});
+			const admin = await ChannelPathModel.findOne({channelPath: user_account});
 			if(!admin){
 				throw new Error('未找到当前管理员');
 			}else{
@@ -541,8 +566,8 @@ class admin {
 		var current_page = req.body.current_page;
 		try {
 			if(typeof(page_size) === 'undefined' && typeof(current_page) === 'undefined'){
-				var count = await AdminModel.count({'user_status':query});
-				var allAdmin = await AdminModel.find({'user_status':query}).sort({id: -1}).limit(10);
+				var count = await ChannelPathModel.count({'user_status':query});
+				var allAdmin = await ChannelPathModel.find({'user_status':query}).sort({id: -1}).limit(10);
 				res.send({
 					ret_code: 0,
 					ret_msg: 'SUCCESS',
@@ -550,7 +575,7 @@ class admin {
 				});
 				return;
 			}else if(page_size > 0 && current_page > 0){
-				var allAdmin = await AdminModel.find({'user_status':query}).sort({id: -1})
+				var allAdmin = await ChannelPathModel.find({'user_status':query}).sort({id: -1})
 					.skip(Number((current_page - 1)*page_size))
 					.limit(Number(page_size));
 				res.send({
@@ -584,7 +609,7 @@ class admin {
 			return;
 		}
 		try{
-			const admin = await AdminModel.findOne({user_account});
+			const admin = await ChannelPathModel.findOne({channelPath:user_account});
 			if(!admin) {
 				console.log('该用户不存在');
 				res.send({
@@ -624,11 +649,11 @@ class admin {
 		}
 	}
 	async update_admin_device(){
-		var Admin = await AdminModel.find();
+		var Admin = await ChannelPathModel.find();
        	for(var i=0; i < Admin.length; i++){
-           	Admin[i].user_device_count = await DeviceTable.count({'channelPath':Admin[i].user_account});
-           	Admin[i].user_online_count = await DeviceTable.count({'channelPath':Admin[i].user_account,'deviceStatus':1});
-        	await AdminModel.findOneAndUpdate({user_account: Admin[i].user_account},
+           	Admin[i].user_device_count = await DeviceTable.count({'channelPath':Admin[i].channelPath});
+           	Admin[i].user_online_count = await DeviceTable.count({'channelPath':Admin[i].channelPath,'deviceStatus':1});
+        	await ChannelPathModel.findOneAndUpdate({channelPath: Admin[i].channelPath},
                	{$set: {'user_device_count' : Admin[i].user_device_count,
                	'user_online_count' : Admin[i].user_online_count}});
         }
