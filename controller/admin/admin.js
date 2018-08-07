@@ -42,16 +42,12 @@ class admin {
                             'user_city': 'beijing',
                             'user_device_count': 0,
                             'user_online_count': 0,
-			    weixin: {
-			    	'appId':'wxfb684aa755dffceb',
-				'shopId':'641418',
-				'secretKey':'ca0ddbac646160edfeaf343937f73404',
-				'ssid':'ApFreeWiFiDog'
-			    },
-			    wificoin: {
-				'toAddress':'wZirordpuoJgmRp6wRPKZjAjVruQr5gF7r',
-				'toAmount':'2000000'
-			    },
+			    'weixin.appId':'wxfb684aa755dffceb',
+			    'weixin.shopId':'641418',
+			    'weixin.secretKey':'ca0ddbac646160edfeaf343937f73404',
+			    'weixin.ssid':'ApFreeWiFiDog',
+			    'wificoin.toAddress':'wZirordpuoJgmRp6wRPKZjAjVruQr5gF7r',
+			    'wificoin.toAmount':'2000000',
 			    'portalUrl':'https://talkblock.org/',
 			    'duration':'3600'
                         };
@@ -80,17 +76,13 @@ class admin {
                             'user_status': 0,
                             'user_city': 'beijing',
                             'user_device_count': 0,
-                            'user_online_count': 0
-			    weixin: {
-			    	'appId':'wxfb684aa755dffceb',
-				'shopId':'641418',
-				'secretKey':'ca0ddbac646160edfeaf343937f73404',
-				'ssid':'ApFreeWiFiDog'
-			    },
-			    wificoin: {
-				'toAddress':'wZirordpuoJgmRp6wRPKZjAjVruQr5gF7r',
-				'toAmount':'2000000'
-			    },
+                            'user_online_count': 0,
+			    'weixin.appId':'wxfb684aa755dffceb',
+			    'weixin.shopId':'641418',
+		            'weixin.secretKey':'ca0ddbac646160edfeaf343937f73404',
+			    'weixin.ssid':'ApFreeWiFiDog',
+			    'wificoin.toAddress':'wZirordpuoJgmRp6wRPKZjAjVruQr5gF7r',
+			    'wificoin.toAmount':'2000000',
 			    'portalUrl':'https://talkblock.org/',
 			    'duration':'3600'
                         };
