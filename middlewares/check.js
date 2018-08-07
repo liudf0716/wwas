@@ -1,6 +1,6 @@
 'use strict';
 
-import ChannelPathModel from '../../models/setting/channelpath'
+import ChannelPathModel from '../models/setting/channelpath'
 class Check {
 	constructor(){
 		
