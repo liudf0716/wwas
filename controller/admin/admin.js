@@ -209,7 +209,7 @@ class admin {
 					'user_status':user_status,
 					'user_city':user_city,
 					'user_device_count': 0,
-					'user_online_count': 0
+					'user_online_count': 0,
 					'weixin.appId':'wxfb684aa755dffceb',
 					'weixin.shopId':'641418',
 					'weixin.secretKey':'ca0ddbac646160edfeaf343937f73404',
