@@ -12,7 +12,7 @@ class Setting {
      */
     async wfcSetting(req, res, next){
         try {
-            var channelPath = req.body.channelPath;
+            var channelPath = req.body.user_account;
             var gwidSetting = {
                 channelPath: channelPath,
                 wificoin: {
@@ -38,7 +38,7 @@ class Setting {
      */
     async weiXinSetting(req, res, next){
         try {
-            var channelPath = req.body.channelPath;
+            var channelPath = req.body.user_account;
             var channelPathConfig = {
                 channelPath: channelPath,
                 weixin: {
