@@ -41,7 +41,7 @@ class client {
 
 			var newClient = {
 				gwId: gwId,
-				clients:[{
+				clients:{
 					'mac': mac,
 					'ip': ip,
 					'token': token,
@@ -55,7 +55,7 @@ class client {
 					'outcomingdelta': outcomingdelta,
 					'channelPath': channelPath,
 					'lastTime': lastTime
-				}]
+				}
 			};
 			const device = await ClientModel.findOne({'clients.mac': mac});
 			if(!device){
