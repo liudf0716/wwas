@@ -12,7 +12,7 @@ class client {
     async list(req, res, next){
         try{
             var gwId = req.body.gwId;
-            const gwClients = await ClientModel.findOne({gwId: gwId});    
+            const gwClients = await ClientModel.find({gwId: gwId});    
             res.send({ret_code: 0, ret_msg: 'SUCCESS', extra: {gwClients}});
             return;
         }catch(err){
