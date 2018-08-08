@@ -8,7 +8,7 @@ const channelPathSchema = new Schema({
 	channelPath: {type: String, default: 'wificoin'},
 	weixin: {
 		appId: {type: String, default: 'wxfb684aa755dffceb'},
-		shopId: {type: Number, default: '641418'},
+		shopId: {type: String, default: '641418'},
 		secretKey: {type: String, default: 'ca0ddbac646160edfeaf343937f73404'},
 		ssid: {type: String, default: 'ApFreeWiFiDog'}
 	},
