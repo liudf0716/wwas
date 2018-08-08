@@ -67,7 +67,9 @@ class Setting {
 			shopId: channelPath.weixin.shopId,
 			ssid: channelPath.weixin.ssid,
 			toAmount: channelPath.wificoin.toAmount,
-			toAddress: channelPath.wificoin.toAddress
+			toAddress: channelPath.wificoin.toAddress,
+			portalUrl: channelPath.portalUrl,
+			duration: channelPath.duration
 		};
 		if(!channelPath){
 			res.send({ret_code: 1002, ret_msg: 'FAILED', extra:'获取设置失败'});
