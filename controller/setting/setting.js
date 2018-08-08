@@ -56,6 +56,28 @@ class Setting {
         }
         res.send({ret_code: 0, ret_msg: 'SUCCESS', extra:'微信设置成功'});
     }
+
+    async getSetting(req, res, next){
+	try{
+		var admin = req.body.user_account;
+		var channelPath = await ChannelPathModel.findOne({'channelPath': admin});
+		var result = {
+			appId: channelPath.weixin.appId,
+			secretKey: channelPath.weixin.secretKey,
+			shopId: channelPath.weixin.shopId,
+			ssid: channelPath.weixin.ssid,
+			toAmount: channelPath.wificoin.toAmount,
+			toAddress: channelPath.wificoin.toAddress
+		};
+		if(!channelPath){
+			res.send({ret_code: 1002, ret_msg: 'FAILED', extra:'获取设置失败'});
+		}else{
+			res.send({ret_code: 0, ret_msg: 'SUCCESS', extra: result});
+		}
+	}catch(err){
+		res.send({ret_code: 1002, ret_msg: 'FAILED', extra: err.message});
+	}
+    }
 }
 
 export default new Setting()
