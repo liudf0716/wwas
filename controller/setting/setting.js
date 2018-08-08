@@ -15,10 +15,8 @@ class Setting {
             var channelPath = req.body.user_account;
             var gwidSetting = {
                 channelPath: channelPath,
-                wificoin: {
-                    toAddress:  req.body.toAddress,
-                    toAmount:   req.body.toAmount
-                },
+                wificoin.toAddress:  req.body.toAddress,
+                wificoin.toAmount:   req.body.toAmount,
                 portalUrl:  req.body.portalUrl,
                 duration:   req.body.duration
             };
@@ -41,12 +39,10 @@ class Setting {
             var channelPath = req.body.user_account;
             var channelPathSetting = {
                 channelPath: channelPath,
-                weixin: {
-                    appId: req.body.appId,
-                    shopId: req.body.shopId,
-                    secretKey: req.body.secretKey,
-                    ssid:   req.body.ssid
-                },
+                weixin.appId: req.body.appId,
+                weixin.shopId: req.body.shopId,
+                weixin.secretKey: req.body.secretKey,
+                weixin.ssid:   req.body.ssid,
                 portalUrl:  req.body.portalUrl,
                 duration:   req.body.duration
             };
