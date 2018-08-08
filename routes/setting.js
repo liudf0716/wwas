@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.post('/wfcSetting', Setting.wfcSetting);
 router.post('/weiXinSetting', Setting.weiXinSetting);
-router.get('/getSetting', Setting.getSetting);
+router.all('/getSetting', Setting.getSetting);
 
 export default router
