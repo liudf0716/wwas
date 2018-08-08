@@ -297,7 +297,7 @@ class deviceHandle {
 
         // 如果没有定义排序规则，添加默认排序
         if (typeof (filter) === "undefined") {
-            console.log('sort undefined');
+            console.log('filter undefined');
             filter = {};
         }
 
