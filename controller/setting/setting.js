@@ -14,11 +14,11 @@ class Setting {
         try {
             var channelPath = req.body.user_account;
             var gwidSetting = {
-                channelPath: channelPath,
-                wificoin.toAddress:  req.body.toAddress,
-                wificoin.toAmount:   req.body.toAmount,
-                portalUrl:  req.body.portalUrl,
-                duration:   req.body.duration
+                'channelPath': channelPath,
+                'wificoin.toAddress':  req.body.wificoin.toAddress,
+                'wificoin.toAmount':   req.body.wificoin.toAmount,
+                'portalUrl':  req.body.portalUrl,
+                'duration':   req.body.duration
             };
             const result = await ChannelPathModel.findOneAndUpdate({'channelPath': channelPath}, gwidSetting, {new:true});
             if(!result){
@@ -38,13 +38,13 @@ class Setting {
         try {
             var channelPath = req.body.user_account;
             var channelPathSetting = {
-                channelPath: channelPath,
-                weixin.appId: req.body.appId,
-                weixin.shopId: req.body.shopId,
-                weixin.secretKey: req.body.secretKey,
-                weixin.ssid:   req.body.ssid,
-                portalUrl:  req.body.portalUrl,
-                duration:   req.body.duration
+                'channelPath': channelPath,
+                'weixin.appId': req.body.weixin.appId,
+                'weixin.shopId': req.body.weixin.shopId,
+                'weixin.secretKey': req.body.weixin.secretKey,
+                'weixin.ssid':   req.body.weixin.ssid,
+                'portalUrl':  req.body.portalUrl,
+                'duration':   req.body.duration
             };
             const result = await ChannelPathModel.findOneAndUpdate({'channelPath': channelPath}, channelPathSetting, {new:true});
             if(!result){
