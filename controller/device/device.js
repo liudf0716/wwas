@@ -266,7 +266,7 @@ class deviceHandle {
                 return;
             }
 
-            if (filter['user_name'] == req.session.user_account) {
+            if (filter['channelPath'] == req.session.user_account) {
                 next();
                 return;
             } else {
