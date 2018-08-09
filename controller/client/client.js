@@ -60,7 +60,7 @@ class client {
 			const device = await ClientModel.findOne({'gwId': gwId,'clients.mac': mac});
 			if(!device){
 				await ClientModel.create(newClient);
-				return 0;
+				return 1;
 			}
             
 			var duration = 0;
