@@ -13,11 +13,11 @@ const clientSchema = new Schema({
 			wired:		Number, // 是否有线设备
 			name:		String, // 终端名称
 			incoming:	Number, // 下行流量
-			outcoming:	Number, // 上行流量
+			outgoing:	Number, // 上行流量
 			firstLogin:	Number, // 通过认证时间
 			onlineTime:	Number, // 在线时长
 			incomingdelta:	Number, 
-			outcomingdelta:	Number,
+			outgoingdelta:	Number,
 			channelPath:	String, 
 			lastTime:	Number // 最近访问时间
 		}
