@@ -152,7 +152,7 @@ class deviceHandle {
                     //如果采用返回值得形式，必须的await
                     var query = await DeviceModel.findOne(wherestr).exec();
                     if (query != null) {
-                        if (query.user_name === '') {
+                        if (query.channelPath === ''|| query.channelPath === 'wificoin') {
                             var updatestr = { 'channelPath': user_name };
                             await DeviceModel.findByIdAndUpdate(query['_id'], updatestr).exec();
                         } else {
