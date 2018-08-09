@@ -65,7 +65,7 @@ class client {
             
 			var duration = 0;
 			var cpSetting;
-			var gwSetting = await DeviceModel.findOne({'gwId': gwId, 'clients.mac': mac});
+			var gwSetting = await DeviceModel.findOne({'gwId': gwId});
 			if(!gwSetting){
 				console.log('impossible: cannot find setting of gateway');
 				return 0;
