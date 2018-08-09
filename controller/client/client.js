@@ -65,7 +65,7 @@ class client {
             
 			var duration = 0;
 			var cpSetting;
-			var gwSetting = await DeviceModel.findOne({gwId: gwId});
+			var gwSetting = await DeviceModel.findOne({'gwId': gwId, 'clients.mac': mac});
 			if(!gwSetting){
 				console.log('impossible: cannot find setting of gateway');
 				return 0;
@@ -112,7 +112,7 @@ class client {
 				return 0;
 			}
 			device.clients = clients;
-			await ClientModel.findOneAndUpdate({'clients.mac': mac}, {$set: device});	
+			await ClientModel.findOneAndUpdate({'gwId': gwId,'clients.mac': mac}, {$set: device});	
 			return 1;
 		}catch(err){
 			console.log(err);
