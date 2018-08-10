@@ -51,8 +51,8 @@ class client {
 					'outgoing': outgoing,
 					'firstLogin': firstLogin,
 					'onlineTime': onlineTime,
-					'incomingdelta': incomingdelta,
-					'outgoingdelta': outgoingdelta,
+				//	'incomingdelta': incomingdelta,
+				//	'outgoingdelta': outgoingdelta,
 					'channelPath': channelPath,
 					'lastTime': lastTime
 				}
@@ -84,7 +84,7 @@ class client {
 				return 0;
 			}
 
-			var clients = device.clients;
+		/*	var clients = device.clients;
 			const item = {	
 				mac: 	mac,
 				ip:		ip,
@@ -112,7 +112,8 @@ class client {
 				return 0;
 			}
 			device.clients = clients;
-			await ClientModel.findOneAndUpdate({'gwId': gwId,'clients.mac': mac}, {$set: device});	
+			await ClientModel.findOneAndUpdate({'gwId': gwId,'clients.mac': mac}, {$set: device});	*/
+			await ClientModel.findOneAndUpdate({'gwId': gwId,'clients.mac': mac}, {$set: newClient});
 			return 1;
 		}catch(err){
 			console.log(err);

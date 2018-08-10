@@ -52,12 +52,6 @@ app.use(session({
 	})
 }));
 
-app.use(function(req, res, next){
-        req.session._garbage = Date();
-        req.session.touch();
-        next();
-});
-
 // app.use(expressWinston.logger({
 //     transports: [
 //         new (winston.transports.Console)({
