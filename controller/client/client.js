@@ -51,7 +51,7 @@ class client {
 					'name': name,
 					'incoming': incoming,
 					'outgoing': outgoing,
-					'firstLogin': firstLogin,
+					'firstLogin': nowTime-onlineTime*1000,
 					'onlineTime': onlineTime,
 				//	'incomingdelta': incomingdelta,
 				//	'outgoingdelta': outgoingdelta,
