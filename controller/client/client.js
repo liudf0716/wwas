@@ -34,7 +34,8 @@ class client {
 			var outgoing	        = query.outgoing;
 			var firstLogin	        = query.first_login;
 			var onlineTime	        = query.online_time;
-			var lastTime	        = Math.round(+new Date()/1000);
+			var now                 = new Date();
+			var lastTime	        = now.getTime();
 			var incomingdelta	= query.incomingdelta;
 			var outgoingdelta	= query.outgoingdelta;
 			var channelPath		= query.channel_path;
