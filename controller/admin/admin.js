@@ -435,13 +435,20 @@ class admin {
 		
 	}
 	encryption(password){
+		var Buffer = require("buffer").Buffer;
+		var buf = new Buffer(password);
+		var str = buf.toString("binary");
+	//	var crypto = require("crypto");
+		return crypto.createHash("md5WithRSAEncryption").update(str).digest("hex");
+	}
+	/*encryption(password){
 		const newpassword = this.Md5(this.Md5(password).substr(2,7) + this.Md5(password));
 		return newpassword
 	}
 	Md5(password) {
 		const md5 = crypto.createHash('md5')
 		return md5.update(password).digest('base64')
-	}
+	}*/
 	async singout(req, res, next){
 		try{
 			delete req.session.user_account;
