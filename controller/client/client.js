@@ -35,7 +35,8 @@ class client {
 			var firstLogin	        = query.first_login;
 			var onlineTime	        = query.online_time;
 			var now                 = new Date();
-			var lastTime	        = now.getTime();
+			var nowTime	        = now.getTime();
+			var lastTime            = Math.round(+new Date()/1000);
 			var incomingdelta	= query.incomingdelta;
 			var outgoingdelta	= query.outgoingdelta;
 			var channelPath		= query.channel_path;
@@ -55,7 +56,7 @@ class client {
 				//	'incomingdelta': incomingdelta,
 				//	'outgoingdelta': outgoingdelta,
 					'channelPath': channelPath,
-					'lastTime': lastTime
+					'lastTime': nowTime
 				}
 			};
 			const device = await ClientModel.findOne({'gwId': gwId,'clients.mac': mac});
