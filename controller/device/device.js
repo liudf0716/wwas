@@ -381,7 +381,8 @@ class deviceHandle {
             var onlineClients = req.query.online_clients;
             var offlineClients = req.query.offline_clients;
             var nfConntrackCount = req.query.nf_conntrack_count;
-            var lastTime = Math.round(+new Date() / 1000);
+	    var now = new Date();
+            var lastTime = now.getTime();
             var remoteAddress = req.connection.remoteAddress;
             var deviceStatus = 1;
 	    const device = await DeviceModel.findOne({ gwId: gwId });
