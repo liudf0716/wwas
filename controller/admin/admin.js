@@ -118,7 +118,7 @@ class admin {
 			});
 			return;
 		}
-		const newpassword = this.encryption(user_password);
+		//const newpassword = this.encryption(user_password);
 		try {
 			const admin = await ChannelPathModel.findOne({user_account});
 			if(!admin) {
@@ -128,7 +128,7 @@ class admin {
 					ret_msg: 'USER_NOT_EXIST',
 					extra: '用户不存在'
 				});
-			}else if(newpassword.toString() != admin.user_password.toString()) {
+			}else if(user_password.toString() != admin.user_password.toString()) {
 				console.log('管理员登录密码错误');
 				res.send({
 					ret_code: 1,
@@ -198,10 +198,10 @@ class admin {
 				});
 			}else{
 				const adminTip = user_type == 1 ?  '管理员'　: '超级管理员';
-				const newpassword = this.encryption(user_password);
+		//		const newpassword = this.encryption(user_password);
 				const newAdmin = {
 					'user_account': user_account,
-					'user_password': newpassword,
+					'user_password': user_password,
 					'user_name':user_name,
 					'user_phone':user_phone,
 					'user_create_time': dtime().format('YYYY-MM-DD HH:mm'),
@@ -298,7 +298,7 @@ class admin {
 			});
 			return;
 		}
-		const password = this.encryption(user_password);
+//		const password = this.encryption(user_password);
 		try{
 			const admin = await ChannelPathModel.findOne({user_account});
 			if(!admin){
@@ -308,7 +308,7 @@ class admin {
 					ret_msg: 'USER_NOT_EXIST',
 					extra: '用户不存在'
 				});
-			}else if(password.toString() != admin.user_password.toString()){
+			}else if(user_password.toString() != admin.user_password.toString()){
 				console.log('密码错误');
 				res.send({
 					ret_code: 1,
@@ -316,8 +316,8 @@ class admin {
 					extra: '密码错误'
 				});
 			}else {
-				const changed_password = this.encryption(user_new_password);
-				await ChannelPathModel.findOneAndUpdate({user_account: user_account},{$set: {user_password: changed_password}});
+			//	const changed_password = this.encryption(user_new_password);
+				await ChannelPathModel.findOneAndUpdate({user_account: user_account},{$set: {user_password: user_new_password}});
 				console.log('修改密码成功');
 				res.send({
 					ret_code: 0,
