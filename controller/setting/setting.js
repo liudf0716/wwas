@@ -16,7 +16,7 @@ class Setting {
             var gwidSetting = {
                 'channelPath': channelPath,
                 'wificoin.toAddress':  req.body.wificoin.toAddress,
-                'wificoin.toAmount':   req.body.wificoin.toAmount,
+                'wificoin.toAmount':   req.body.wificoin.toAmount*1000000,
                 'portalUrl':  req.body.portalUrl,
                 'duration':   req.body.duration
             };
@@ -66,7 +66,7 @@ class Setting {
 			secretKey: channelPath.weixin.secretKey,
 			shopId: channelPath.weixin.shopId,
 			ssid: channelPath.weixin.ssid,
-			toAmount: channelPath.wificoin.toAmount,
+			toAmount: channelPath.wificoin.toAmount/1000000,
 			toAddress: channelPath.wificoin.toAddress,
 			portalUrl: channelPath.portalUrl,
 			duration: channelPath.duration
