@@ -18,7 +18,7 @@ class Setting {
                 'wificoin.toAddress':  req.body.wificoin.toAddress,
                 'wificoin.toAmount':   req.body.wificoin.toAmount*1000000,
                 'portalUrl':  req.body.portalUrl,
-                'duration':   req.body.duration
+                'duration':   req.body.duration*3600
             };
             const result = await ChannelPathModel.findOneAndUpdate({'channelPath': channelPath}, gwidSetting, {new:true});
             if(!result){
@@ -44,7 +44,7 @@ class Setting {
                 'weixin.secretKey': req.body.weixin.secretKey,
                 'weixin.ssid':   req.body.weixin.ssid,
                 'portalUrl':  req.body.portalUrl,
-                'duration':   req.body.duration
+                'duration':   req.body.duration*3600
             };
             const result = await ChannelPathModel.findOneAndUpdate({'channelPath': channelPath}, channelPathSetting, {new:true});
             if(!result){
@@ -69,7 +69,7 @@ class Setting {
 			toAmount: channelPath.wificoin.toAmount/1000000,
 			toAddress: channelPath.wificoin.toAddress,
 			portalUrl: channelPath.portalUrl,
-			duration: channelPath.duration
+			duration: channelPath.duration/3600
 		};
 		if(!channelPath){
 			res.send({ret_code: 1002, ret_msg: 'FAILED', extra:'获取设置失败'});

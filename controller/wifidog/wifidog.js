@@ -97,6 +97,7 @@ class Wifidog {
             }
             console.log('channelPath is ' + JSON.stringify(channelPath));
             var toAmount = channelPath.wificoin.toAmount + randomValue;
+	    var duration = channelPath.duration/3600;
             const newOrder = {
                 orderNumber,
                 orderTime,
@@ -132,7 +133,8 @@ class Wifidog {
                 mac: staMac,
                 ssid: ssid,
                 bssid: staMac,
-                wfcAmount: wfcAmount
+                wfcAmount: wfcAmount,
+		duration: duration
             });
         } catch (err) {
             console.log(err);
@@ -281,7 +283,7 @@ class Wifidog {
                     var vout = tx.vout[item];
                     var value = vout.value;
                     var addresses = vout.addresses;
-                    if (order.toAmount == value * 1000000) { //wfc scale change
+                    if (Math.abs(order.toAmount - value * 1000000) < 0.001) { //wfc scale change
                         try {
                             res.redirect(authTokenUrl);
                             var startTime = Math.round(+new Date() / 1000);
