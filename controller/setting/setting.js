@@ -26,13 +26,13 @@ class Setting {
             };
             const result = await ChannelPathModel.findOneAndUpdate({'channelPath': channelPath}, gwidSetting, {new:true});
             if(!result){
-		res.send({ret_code: 1002, ret_msg: 'FAILED', extra:'WFC设置失败'});
+		res.send({ret_code: 1002, ret_msg: 'FAILED', extra:'设置失败'});
             }
         }catch(err){
             console.log(err);
-            res.send({ret_code: 1002, ret_msg: 'FAILED', extra:'WFC设置失败'});
+            res.send({ret_code: 1002, ret_msg: 'FAILED', extra:'设置失败'});
         }
-        res.send({ret_code: 0, ret_msg: 'SUCCESS', extra: 'WFC设置更新成功'});
+        res.send({ret_code: 0, ret_msg: 'SUCCESS', extra: '设置更新成功'});
     }
     
      /*
@@ -54,13 +54,13 @@ class Setting {
             };
             const result = await ChannelPathModel.findOneAndUpdate({'channelPath': channelPath}, channelPathSetting, {new:true});
             if(!result){
-		res.send({ret_code: 1002, ret_msg: 'FAILED', extra:'微信设置失败'});
+		res.send({ret_code: 1002, ret_msg: 'FAILED', extra:'设置失败'});
             }
         }catch(err){
             console.log(err);
-            res.send({ret_code: 1002, ret_msg: 'FAILED', extra:'微信设置失败'});
+            res.send({ret_code: 1002, ret_msg: 'FAILED', extra:'设置失败'});
         }
-        res.send({ret_code: 0, ret_msg: 'SUCCESS', extra:'微信设置成功'});
+        res.send({ret_code: 0, ret_msg: 'SUCCESS', extra:'设置成功'});
     }
 
     async getSetting(req, res, next){
