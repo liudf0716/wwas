@@ -17,6 +17,10 @@ class Setting {
                 'channelPath': channelPath,
                 'wificoin.toAddress':  req.body.wificoin.toAddress,
                 'wificoin.toAmount':   req.body.wificoin.toAmount*1000000,
+		'weixin.appId': req.body.weixin.appId,
+                'weixin.shopId': req.body.weixin.shopId,
+                'weixin.secretKey': req.body.weixin.secretKey,
+                'weixin.ssid':   req.body.weixin.ssid,
                 'portalUrl':  req.body.portalUrl,
                 'duration':   req.body.duration*3600
             };
@@ -39,6 +43,8 @@ class Setting {
             var channelPath = req.body.user_account;
             var channelPathSetting = {
                 'channelPath': channelPath,
+		'wificoin.toAddress':  req.body.wificoin.toAddress,
+                'wificoin.toAmount':   req.body.wificoin.toAmount*1000000,
                 'weixin.appId': req.body.weixin.appId,
                 'weixin.shopId': req.body.weixin.shopId,
                 'weixin.secretKey': req.body.weixin.secretKey,
