@@ -84,9 +84,9 @@ app.set('view engine', 'html');
 
 app.use(history());
 app.use(express.static('./public'));
-app.use(express.static(path.join(__dirname,'../public/dist')))
+app.use(express.static(path.join(__dirname,'./public/dist')))
 app.get('*',function(req,res){
-        const html = fs.readFileSync(path.resolve(__dirname,'../public/dist/index.html'),'utf8');
+        const html = fs.readFileSync(path.resolve(__dirname,'./public/dist/index.html'),'utf8');
         res.send(html);
 });
 app.listen(config.port,'0.0.0.0', () => {

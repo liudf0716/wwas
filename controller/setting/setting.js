@@ -13,6 +13,9 @@ class Setting {
     async wfcSetting(req, res, next){
         try {
             var channelPath = req.body.user_account;
+	    if(req.body.weixin.ssid == null){
+		req.body.weixin.ssid = 'ApFreeWiFiDog';
+	    }
             var gwidSetting = {
                 'channelPath': channelPath,
                 'wificoin.toAddress':  req.body.wificoin.toAddress,
