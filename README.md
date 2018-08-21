@@ -30,7 +30,7 @@ cd wificoin-wifidog-auth-server
 
 npm install 
 
-npm run dev
+npm start
 
 ```
 
