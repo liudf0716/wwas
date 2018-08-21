@@ -83,7 +83,7 @@ app.engine('.html', require('ejs').__express);
 app.set('view engine', 'html');
 
 app.use(history());
-app.use(express.static('./public/dist'));
+app.use(express.static('./public'));
 app.listen(config.port,'0.0.0.0', () => {
 	console.log(
 		chalk.green(`成功监听端口：${config.port}`)
