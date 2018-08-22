@@ -81,3 +81,8 @@ qq group: 424031785
 
 ## donate
 ### wfc: [weiKbu9DYg26gH2zucSHJHgH5KsuuZd3wW](https://wfc.xyblock.net/#/wifiPortal/donate)
+
+
+## 部分截图
+
+![image](https://github.com/heartache1987/images/blob/master/rz.jpg)
