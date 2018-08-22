@@ -24,7 +24,9 @@ wwas is an [apfree wifidog](https://github.com/liudf0716/apfree_wifidog) auther 
 ## how to run server side
 
 ```
-install nodejs and mongodb
+install nodejs （https://nodejs.org/en/download/package-manager/）
+
+install mongodb (https://docs.mongodb.com/guides/server/install/)
 
 git clone https://github.com/wificoin-project/wificoin-wifidog-auth-server
 
