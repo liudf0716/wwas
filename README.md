@@ -85,7 +85,7 @@ qq group: 424031785
 
 ## 部分截图
 
-![image](https://github.com/heartache1987/images/blob/master/renz.jpg)
+![image](https://github.com/heartache1987/images/blob/master/renz1.jpg)
 
 ## 相关视频
 
