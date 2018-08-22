@@ -24,6 +24,8 @@ wwas is an [apfree wifidog](https://github.com/liudf0716/apfree_wifidog) auther 
 ## how to run server side
 
 ```
+install nodejs and mongodb
+
 git clone https://github.com/wificoin-project/wificoin-wifidog-auth-server
 
 cd wificoin-wifidog-auth-server
