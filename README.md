@@ -59,6 +59,7 @@ config mqtt	'mqtt'
   	option	mqtt_topic		''
 
 ```
+![image](https://github.com/heartache1987/images/blob/master/11111.png)
 
 u can change 'wifidog.kunteng.org.cn' to your own wifidog auth server domain
 
