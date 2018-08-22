@@ -6,13 +6,13 @@
 
 
 [1]: https://img.shields.io/badge/license-GPLV3-brightgreen.svg?style=plastic
-[2]: https://github.com/wificoin-project/wwas/edit/master/COPYING
+[2]: https://github.com/wificoin-project/wwas/edit/master/LICENSE
 [3]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=plastic
-[4]: https://github.com/wificoin-project/wificoin-wifidog-auth-server/pulls
+[4]: https://github.com/wificoin-project/wwas/pulls
 [5]: https://img.shields.io/badge/Issues-welcome-brightgreen.svg?style=plastic
-[6]: https://github.com/wificoin-project/wificoin-wifidog-auth-server/issues/new
-[7]: https://img.shields.io/badge/release-2.10.1437-red.svg?style=plastic
-[8]: https://github.com/liudf0716/apfree_wifidog/releases
+[6]: https://github.com/wificoin-project/wwas/issues/new
+[7]: https://img.shields.io/badge/release-0.8.150-red.svg?style=plastic
+[8]: https://github.com/wificoin-project/wwas/releases
 [11]: https://img.shields.io/badge/Platform-%20OpenWRT%7C%20LEDE%20-brightgreen.svg?style=plastic
 [12]: https://github.com/KunTengRom/kunteng-lede-17.01.4
 
