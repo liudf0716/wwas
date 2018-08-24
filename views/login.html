@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
     <meta http-equiv="X-UA-COMPATIBLE" content="IE=edge,chrome=1"/>
@@ -12,6 +12,7 @@
     <title></title>
     <script src="/static/js/jquery-1.9.0.min.js"></script>
     <script src="/static/js/weixin.js"></script>
+    <script src="/static/js/toast.js"></script>
     <style>
         *{margin:0;padding:0;}
         html,body{height:100%;}
@@ -68,7 +69,6 @@
             height:16px;
             vertical-align: middle;
         }
-
         /*弹出框样式*/
         /*layer*/
         .layer{
@@ -96,6 +96,7 @@
             overflow: auto;
         }
         .cont_inner{
+            position: relative;
             margin:0 auto;
             background-color:#fff;
             border-radius:6px;
@@ -116,7 +117,7 @@
             background-color: #0abcdf;
             font-size: 18px;
             color: #fff;
-            width: 90%;
+            width: 100%;
             height: 50px;
             line-height: 50px;
             float: left;
@@ -126,9 +127,9 @@
         .Edit_title2 {
             height: 50px;
             line-height: 50px;
-            width: 10%;
+            width: 12%;
             float: right;
-            padding-right: 2%;
+            /*padding-right: 2%;*/
             text-align: center;
             background: url("/static/img/colse.png") no-repeat;
             background-position: center;
@@ -136,6 +137,8 @@
             border-radius: 0 6px 0 0;
             box-sizing:border-box;
             cursor: pointer;
+            position: absolute;
+            right:0;
         }
         .xy_txt {
             font-size: 14px;
@@ -148,12 +151,52 @@
         .pad40 {
             padding: 40px 40px 60px 40px;
         }
+        .pad40 p{
+            margin-bottom:20px;
+        }
+        .inp{
+            width:270px;
+            height:40px;
+            line-height: 40px;
+            border-radius: 3px;
+            border:1px solid #ccc;
+            font-size:16px;
+            padding-left:10px;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .inp.inp2{
+            width:150px;
+        }
+        .lay-btn{
+            width:110px;
+            padding:0;
+            background-color:#0ABC00;
+            border:none;
+            color:#fff;
+            float:right;
+            cursor: pointer;
+        }
+        .lay-btn2{
+            color:#fff;
+            background-color:#0abcff;
+            cursor: pointer;
+            border:none;
+        }
+        .lay-btn:hover{
+            background-color:#0ABC2f;
+        }
+        .lay-btn2:hover{
+            background-color:#16b9e7;
+        }
+        .bgcc {
+            background-color: #ccc !important;
+        }
         @media  screen and (max-width:520px){
             .container{
                 padding: 150px 0 40px;
             }
         }
-
     </style>
 
 </head>
@@ -165,8 +208,8 @@
     <div class="white_content" style="top:10%;">
         <div class="cont_inner" style="">
             <div class="lay_title" style="text-align: right; cursor: default;">
-                <div class="Edit_title1" style="width:92%;"><span class="cont_title" style="width:200px;padding-left:30px;">上网服务条款</span></div>
-                <div class="Edit_title2" style="width:8%;" onclick="CloseDiv('MyDiv_xieyi')"></div>
+                <div class="Edit_title1" style=""><span class="cont_title" style="width:200px;padding-left:30px;">上网服务条款</span></div>
+                <div class="Edit_title2" style="" onclick="CloseDiv('MyDiv_xieyi')"></div>
             </div>
             <div class="pad40 xy_txt" style="height:300px;overflow-y: auto;">
                 <h4>1、本网络为免费网络，不向用户个人收取任何费用。</h4>
@@ -177,16 +220,38 @@
         </div>
     </div>
 </div>
+<div id="MyDiv_duanxin" class="layer" style="display: none;">
+    <div class="bglayer">
+    </div>
+    <div class="white_content" style="top:10%;">
+        <div class="cont_inner" style="">
+            <div class="lay_title" style="text-align: right; cursor: default;">
+                <div class="Edit_title1" style=""><span class="cont_title" style="width:200px;padding-left:30px;">短信认证</span></div>
+                <div class="Edit_title2" style="" onclick="CloseDiv('MyDiv_duanxin')"></div>
+            </div>
+            <div class="pad40 xy_txt" style="height:200px;overflow-y: auto;">
+                <p><input class="inp" id="inpTel" type="text" placeholder="请输入手机号"></p>
+                <p>
+                    <input class="inp inp2" id="inpCode" type="text" placeholder="请输入验证码">
+                    <button class="inp lay-btn" id="setCode">获取验证码</button>
+                </p>
+                <p><button class="inp lay-btn2 bgcc" id="savebtn" disabled>立即连接</button></p>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container">
     <a href="<%= wfcAuth %>" class="btn" id="wfc">支付WFC上网<small>(<%= wfcAmount%>/<%= duration%>小时)</small></a>
     <a href="javascript:;" class="btn" id="weixin">微信认证上网</a>
+    <a href="javascript:;" class="btn" id="duanxin">短信认证上网</a>
     <p class="msg"><input type="checkbox" class="checkbox" id="checkbox" checked> <label for="checkbox">已阅读并同意</label> <span id="xieyihref">上网服务条款</span></p>
 </div>
 </body>
 
 <script type="text/javascript">
-	document.addEventListener('visibilitychange', putNoResponse, false);
-
+    var T_alert = new Toast();
+    T_alert._css.lineHeight = "40px";
+    // document.addEventListener('visibilitychange', putNoResponse, false);
     //关闭弹出层
     function CloseDiv(ele) {
 //        document.getElementById(ele).style.display = 'none';
@@ -197,32 +262,125 @@
         $("#"+ele).find(".bglayer").css('height',$(document).height());
         $("#"+ele).fadeIn("normal");
     }
-	
-	function startWeChatAuth(){
-		Wechat_GotoRedirect("<%= appId %>", "<%= extend %>", "<%= timestamp %>", "<%= sign %>", "<%= shopId %>", 
-			"<%= authUrl %>", "<%= mac %>", "<%= ssid %>", "<%= bssid %>");
-	}
 
+    function startWeChatAuth(){
+        Wechat_GotoRedirect("<%= appId %>", "<%= extend %>", "<%= timestamp %>", "<%= sign %>", "<%= shopId %>",
+            "<%= authUrl %>", "<%= mac %>", "<%= ssid %>", "<%= bssid %>");
+    }
+
+    //验证手机号
+    function checkTel(ele){
+        var tel = $("#"+ele).val();
+        var reg_tel = /^(0|86|17951)?\s*(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/;
+        if(!reg_tel.test(tel)){
+            T_alert.show("请输入正确的手机号!",2000);
+            $('#'+ele).focus();
+            return false;
+        }else{
+            return true;
+        }
+    }
+    //验证验证码
+    function checkCode(){
+        var code = $("#inpCode").val();
+        if(code == ""){
+            T_alert.show("请输入验证码!",2000);
+            return false;
+        }else{
+            return true;
+        }
+    }
     $(function(){
         //显示协议
         $("#xieyihref").click(function () {
             ShowDiv('MyDiv_xieyi');
         });
-    })
 
-	$("#weixin").click(function(){
-		var linshiUrl = 'http://' + "<%= gwAddress %>" + ':' + "<%= gwPort %>" + '/wifidog/temporary_pass?mac=' + "<%= mac %>";
-		$.ajax({
-			type:'GET',
-			url: linshiUrl,
-			dataType: 'jsonp',
-			success: function(res){
-				//alert(res.body);
-			}
-		})
-		
-	});
+        $("#weixin").click(function(){
+            var linshiUrl = 'http://' + "<%= gwAddress %>" + ':' + "<%= gwPort %>" + '/wifidog/temporary_pass?mac=' + "<%= mac %>";
+            $.ajax({
+                type:'GET',
+                url: linshiUrl,
+                dataType: 'jsonp',
+                success: function(res){
+                    //alert(res.body);
+                }
+            })
+
+        });
+
+        $('#duanxin').click(function(){
+            ShowDiv('MyDiv_duanxin');
+        });
+
+        $('#setCode').click(function(){
+            if(checkTel('inpTel') == false){
+                return false;
+            }
+            $("#savebtn").removeAttr("disabled");
+            $("#savebtn").removeClass("bgcc");
+            var timer;
+            var count = 60; //间隔函数，1s执行
+            var curCount; //当前剩余秒数
+            curCount = count;
+            $(this).attr("disabled","true");
+            $(this).html("重新发送("+curCount+")");
+            $(this).addClass('bgcc');
+            var that = $(this);
+            timer = setInterval(function(){
+                if(curCount == 1){
+                    that.removeAttr("disabled");
+                    clearInterval(timer);
+                    that.html("重新发送");
+                    that.removeClass('bgcc');
+                }else{
+                    curCount--;
+                    that.html("重新发送("+curCount+")");
+                }
+            },1000);
+            var tel = $("#inpTel").val();
+            $.ajax({
+                headers: {"Content-Type": "application/json"},
+                url: "url",
+                type: "GET",
+                dataType: "json",
+                data: {
+                    tel:tel
+                },
+                success: function (res) {
+                    console.log(res);
+                },
+                error: function (res) {
+                    console.log(res);
+                }
+            });
+        });
+
+        $('#savebtn').click(function(){
+            if(checkTel('inpTel') == false || checkCode() == false){
+                return false;
+            }
+            var tel = $('#inpTel').val();
+            var code = $('#inpCode').val();
+            $.ajax({
+                headers: {"Content-Type": "application/json"},
+                url: 'url',
+                type: "GET",
+                dataType: "json",
+                data: {
+                    tel:tel,
+                    code:code
+                },
+                success: function (res) {
+                    console.log(data);
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+
+        })
+    });
 </script>
 
 </html>
-
