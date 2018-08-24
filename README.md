@@ -70,6 +70,14 @@ config mqtt	'mqtt'
 
 u can change 'wifidog.kunteng.org.cn' to your own wifidog auth server domain
 
+## demo picture
+
+![image](https://github.com/heartache1987/images/blob/master/renz1.png)
+
+## demo video
+
+http://www.iqiyi.com/w_19s09zie6t.html
+
 ## How To Contribute
 
 Feel free to create issues or pull-requests if you have any problems.
@@ -85,10 +93,4 @@ qq group: 424031785
 ### wfc: [weiKbu9DYg26gH2zucSHJHgH5KsuuZd3wW](https://wfc.xyblock.net/#/wifiPortal/donate)
 
 
-## 部分截图
 
-![image](https://github.com/heartache1987/images/blob/master/renz1.png)
-
-## 相关视频
-
-http://www.iqiyi.com/w_19s09zie6t.html
