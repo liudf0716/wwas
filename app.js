@@ -12,6 +12,9 @@ import bodyParser from 'body-parser';
 const fs = require("fs");
 // import Statistic from './middlewares/statistic'
 
+const cluster = require('cluster');
+const numCPUs = require('os').cpus().length;
+
 //excel导出文件存放位置， 不存在则创建
 fs.exists(config.device_dir, function(exists) {
     console.log(exists ? "设备excel目录存在" : "设备excel目录不存在", config.device_dir);
@@ -89,8 +92,23 @@ app.get('*',function(req,res){
         const html = fs.readFileSync(path.resolve(__dirname,'./public/dist/index.html'),'utf8');
         res.send(html);
 });
-app.listen(config.port,'0.0.0.0', () => {
-	console.log(
-		chalk.green(`成功监听端口：${config.port}`)
-	)
-});
+
+if (cluster.isMaster) {
+    console.log(`主进程 ${process.pid} 正在运行`);
+
+    // 衍生工作进程。
+    for (let i = 0; i < numCPUs; i++) {
+        cluster.fork();
+    }
+
+    cluster.on('exit', (worker, code, signal) => {
+        console.log(`工作进程 ${worker.process.pid} 已退出`);
+    });
+} else {
+    app.listen(config.port,'0.0.0.0', () => {
+        console.log(
+            chalk.green(`成功监听端口：${config.port}`)
+        )
+    });
+    console.log(`工作进程 ${process.pid} 已启动`);
+}
