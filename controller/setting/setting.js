@@ -12,6 +12,16 @@ class Setting {
      */
     async wfcSetting(req, res, next){
         try {
+        //检测此用户session是否超时
+        const user = req.session.user_account;
+	if (!user) {
+	    res.send({
+				ret_code: 1001,
+				ret_msg: 'ERROR_SESSION',
+				extra: '亲，您还没有登录',
+	    });
+	    return;
+	}
             var channelPath = req.body.user_account;
 	    if(req.body.weixin.ssid == null){
 		req.body.weixin.ssid = 'ApFreeWiFiDog';
@@ -43,6 +53,16 @@ class Setting {
      */
     async weiXinSetting(req, res, next){
         try {
+        //检测此用户session是否超时
+        const user = req.session.user_account;
+	if (!user) {
+	    res.send({
+				ret_code: 1001,
+				ret_msg: 'ERROR_SESSION',
+				extra: '亲，您还没有登录',
+	    });
+	    return;
+	}
             var channelPath = req.body.user_account;
             var channelPathSetting = {
                 'channelPath': channelPath,
@@ -68,6 +88,16 @@ class Setting {
 
     async getSetting(req, res, next){
 	try{
+        //检测此用户session是否超时
+        const user = req.session.user_account;
+	if (!user) {
+	    res.send({
+				ret_code: 1001,
+				ret_msg: 'ERROR_SESSION',
+				extra: '亲，您还没有登录',
+	    });
+	    return;
+	}
 		var admin = req.body.user_account;
 		var channelPath = await ChannelPathModel.findOne({'channelPath': admin});
 		var result = {

@@ -244,12 +244,22 @@ class deviceHandle {
 
     ///权限控制
     async permission(req, res, next) {
+    console.log("device permission");
         //本地调试
         if (process.env.NODE_ENV == 'local') {
             next();
             return;
         }
-
+        //检测此用户session是否超时
+        const user = req.session.user_account;
+	if (!user) {
+	    res.send({
+				ret_code: 1001,
+				ret_msg: 'ERROR_SESSION',
+				extra: '亲，您还没有登录',
+	    });
+	    return;
+	}
         //超级管理员
         if (req.session.user_type == 0) {
             next();
