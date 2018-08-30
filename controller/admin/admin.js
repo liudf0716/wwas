@@ -292,7 +292,7 @@ class admin {
 		}catch(err){
 			console.log(err.message, err);
 			res.send({
-				ret_code: 1,
+				ret_code: 1001,
 				ret_msg: 'GET_ERROR_PARAM',
 				extra: err.message
 			});
