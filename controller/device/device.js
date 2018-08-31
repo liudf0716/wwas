@@ -11,10 +11,12 @@ const fs = require("fs");
 const xlsx = require('node-xlsx');
 const moment = require('moment');
 const schedule = require('node-schedule');
-
+//引入redis
+var redism = require("redis");
+var redis = redism.createClient(6379, 'localhost', {});
 //引入事件模块
 const events = require("events");
-
+var outtime=120;
 class deviceHandle {
     constructor() {
         //console.log('init 111');
@@ -315,11 +317,31 @@ class deviceHandle {
         if (typeof (page_size) === "undefined" && typeof (current_page) === "undefined") {
             var count = await DeviceModel.count(filter);
             var query = await DeviceModel.find(filter).sort(sort).limit(10);
+            for(var value of query){
+              var gwid=value.gwId;
+              var has = await deviceHandle.prototype.doCheckRedis(gwid);
+              if(has=="true"){
+                value.deviceStatus="1"
+              }else
+              {
+                value.deviceStatus="0"
+              }
+            }
             res.send({ ret_code: 0, ret_msg: 'SUCCESS', extra: { query, count } });
         }
         else if (page_size > 0 && current_page > 0) {
             var skipnum = (current_page - 1) * page_size;   //跳过数
             var query = await DeviceModel.find(filter).sort(sort).skip(skipnum).limit(page_size);
+            for(var value of query){
+              var gwid=value.gwId;
+              var has = await deviceHandle.prototype.doCheckRedis(gwid);
+              if(has=="true"){
+                value.deviceStatus="1"
+              }else
+              {
+                value.deviceStatus="0"
+              }
+            }
             res.send({ ret_code: 0, ret_msg: 'SUCCESS', extra: { query } });
         }
         else {
@@ -328,7 +350,28 @@ class deviceHandle {
 
         console.log('device list end');
     }
-
+    async doCheckRedis(gwid){
+       return new Promise(function(resolve, reject){
+              redis.get([gwid], function(error, val) {
+                if(error){
+                  reject(err);
+                }else{
+                  resolve(val);
+                }
+              });
+       });
+    }
+    async doSetRedis(gwid){
+       return new Promise(function(resolve, reject){
+              redis.set([gwid, 'true', 'EX', outtime], function(error, val) {
+                if(error){
+                  reject(err);
+                }else{
+                  resolve(val);
+                }
+              });
+       });
+    }
 
     async onLineList(req, res, next) {
         deviceHandle.prototype.listOnOffline(req, res, next, 1);
@@ -358,7 +401,6 @@ class deviceHandle {
         else {
             filter['deviceStatus'] = myfilter;
         }
-
         //参数有效性检查
         if (typeof (page_size) === "undefined" && typeof (current_page) === "undefined") {
             var count = await DeviceModel.count(filter);
@@ -419,7 +461,7 @@ class deviceHandle {
 			remoteAddress,
 			deviceStatus
 		}
-
+                var retval = await deviceHandle.prototype.doSetRedis(gwId);
 		await DeviceModel.findOneAndUpdate({ gwId }, { $set: newDevice });
 	    }
         } catch (err) {
@@ -477,5 +519,5 @@ class deviceHandle {
 const DeviceHandle = new deviceHandle();
 
 export default DeviceHandle;
-var scheduleTime = '';
-schedule.scheduleJob(scheduleTime, DeviceHandle.updateDeviceStatus);
+//var scheduleTime = '';
+//schedule.scheduleJob(scheduleTime, DeviceHandle.updateDeviceStatus);
