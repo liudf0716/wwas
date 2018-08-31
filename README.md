@@ -28,18 +28,17 @@ install nodejs （https://nodejs.org/en/download/package-manager/）
 
 install mongodb (https://docs.mongodb.com/guides/server/install/)
 
-install redis for ubuntu16
+install redis (https://redis.io/topics/quickstart)
+//for ubuntu16 quick install cmd
 sudo apt-get update
 sudo apt-get install -y redis-server
     
-start redis
+//start redis
 sudo systemctl start redis
 
-check redis status
-sudo systemctl status redis
-
-test redis
-redis-cli
+//check redis
+redis-cli ping
+PONG
 
 git clone https://github.com/wificoin-project/wificoin-wifidog-auth-server
 
