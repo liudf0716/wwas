@@ -28,6 +28,21 @@ install nodejs （https://nodejs.org/en/download/package-manager/）
 
 install mongodb (https://docs.mongodb.com/guides/server/install/)
 
+install redis for ubuntu server
+
+    sudo apt-get install -y python-software-properties
+    sudo apt-get install software-properties-common
+    sudo add-apt-repository -y ppa:rwky/redis
+    sudo apt-get update
+    sudo apt-get install -y redis-server
+    
+start redis
+sudo systemctl start redis
+check redis status
+sudo systemctl status redis
+test redis
+redis-cli
+
 git clone https://github.com/wificoin-project/wificoin-wifidog-auth-server
 
 cd wificoin-wifidog-auth-server
