@@ -29,6 +29,7 @@ install nodejs （https://nodejs.org/en/download/package-manager/）
 install mongodb (https://docs.mongodb.com/guides/server/install/)
 
 install redis (https://redis.io/topics/quickstart)
+
 //for ubuntu16 quick install
 sudo apt-get update
 sudo apt-get install -y redis-server
