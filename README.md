@@ -38,8 +38,10 @@ install redis for ubuntu server
     
 start redis
 sudo systemctl start redis
+
 check redis status
 sudo systemctl status redis
+
 test redis
 redis-cli
 
