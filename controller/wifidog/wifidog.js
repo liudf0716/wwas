@@ -2,6 +2,7 @@
 
 import OrderModel from '../../models/wifidog/wfcorder'
 import TokenModel from '../../models/wifidog/token'
+import SmsModel from '../../models/wifidog/sms'
 import DeviceModel from '../../models/device/device'
 import GatewayIdModel from '../../models/setting/gatewayid'
 import ChannelPathModel from '../../models/setting/channelpath'
@@ -14,6 +15,7 @@ import config from 'config-lite';
 import crypto from 'crypto';
 import requestify from 'requestify';
 import UniqueNumber from 'unique-number';
+import SMSClient from '@alicloud/sms-sdk';
 /**
  * wifidog controller
  */
@@ -28,6 +30,8 @@ class Wifidog {
         this.ping = this.ping.bind(this);
         this.authWfc = this.authWfc.bind(this);
         this.authWeixin = this.authWeixin.bind(this);
+        this.authSMS = this.authSMS.bind(this);
+        this.checkSMS = this.checkSMS.bind(this);
     }
     /**
      * express middleware to check wifidog ping request parameters
@@ -309,6 +313,148 @@ class Wifidog {
             .catch((err) => {
                 res.send(err)
             });
+    }
+    /**
+     * check for sms auth param
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
+    async checkAuthSmsParam(req, res, next) {
+        var orderNumber = req.query.orderNumber;
+        var phoneNumber = req.query.phoneNumber;
+        if (typeof (orderNumber) === 'undefined' || typeof (phoneNumber) === 'undefined') {
+            res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入参数无效' });
+            return;
+        }
+
+        next();
+    }
+
+    /**
+     * auth for sms callback auth
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
+    async authSMS(req,res,next){
+	var orderNumber = req.query.orderNumber;
+	var phoneNumber = req.query.phoneNumber;
+
+	const order = await OrderModel.findOne({orderNumber});
+	if(!order){
+		res.send('no such order');
+		return;
+	}
+	
+	var gwPort = order.gwPort;
+	var gwAddress = order.gwAddress;
+	var gwId = order.gwId;
+	var staMac = order.staMac;
+	var token = this.generateMD5(orderNumber);
+
+	var range = function(start,end)
+		{
+			var array = [];
+			for(var i=start;i<end;++i)
+				array.push(i);
+			return array;
+		};
+	var randomstr = range(0,4).map(function(x){
+		return Math.floor(Math.random()*10);
+	}).join('');
+
+	const channelPath = await device.deviceSetting(gwId);
+	if (channelPath == null) {
+                res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '网关设备不存在' });
+                return;
+        }
+
+	var accessKeyId = channelPath.sms.appId;
+	var secretAccessKey = channelPath.sms.appSecret;
+	var smsClient = new SMSClient({accessKeyId,secretAccessKey});
+	smsClient.sendSMS({
+		PhoneNumbers: phoneNumber,
+		SignName:channelPath.sms.smsSignName,
+		TemplateCode: channelPath.sms.smsTemplateCode,
+		TemplateParam:'{"code":"'+randomstr+'"}'
+	}).then(function(res){
+		let {Code}=res
+		if(Code === 'OK'){
+			console.log(res)
+			var startTime = Math.round(+new Date() /1000);
+			const newToken = {
+				'orderNumber':orderNumber,
+				'token':token,
+				'startTime':startTime,
+				'gwAddress':gwAddress,
+				'gwPort':gwPort,
+				'gwId':gwId,
+				'staMac':staMac,
+				'phoneNumber':phoneNumber,
+				'checkCode': randomstr
+			};
+			TokenModel.create(newToken);
+		}
+	},function(err){
+		console.log(err);
+		res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: err.message });
+	});
+    }
+
+    /**
+     * check for sms checkCode param
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
+    async checkCodeSmsParam(req, res, next) {
+        var orderNumber = req.query.orderNumber;
+        var phoneNumber = req.query.phoneNumber;
+	var checkCode = req.query.checkCode;
+        if (typeof (orderNumber) === 'undefined' || typeof (phoneNumber) === 'undefined' || typeof(checkCode) === 'undefined') {
+            res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入参数无效' });
+            return;
+        }
+
+        next();
+    }
+
+    /**
+     * check for sms checkCode
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
+    async checkSMS(req, res, next){
+	var orderNumber = req.query.orderNumber;
+	var phoneNumber = req.query.phoneNumber;
+	var checkCode = req.query.checkCode;
+
+	const order = await OrderModel.findOne({orderNumber});
+	if(!order){
+		res.send('no such order');
+	}
+
+	var gwPort = order.gwPort;
+	var gwAddress = order.gwAddress;
+	var gwId = order.gwId;
+	var staMac = order.staMac;
+	var token = this.generateMD5(orderNumber);
+
+	const tokenSMS = await TokenModel.findOne({token});
+	if(tokenSMS){
+		var phone = tokenSMS.phoneNumber;
+		var code = tokenSMS.checkCode;
+	}else{
+		res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入的参数无效' });
+        	return;
+	}
+	var authTokenUrl = this.generateAuthTokenUrl(order.gwAddress,order.gwPort, token);
+	
+	if(phoneNumber == phone && checkCode == code){
+		res.send({ret_code: 0, ret_msg:'SUCCESS', extra: authTokenUrl});
+	}
     }
     /**
      * check for protal request

@@ -29,6 +29,12 @@ const channelPathSchema = new Schema({
 		toAddress: {type: String, default: 'wZirordpuoJgmRp6wRPKZjAjVruQr5gF7r'},
 		toAmount: {type: Number, default: 2000000},
 	},
+	sms: {
+		appId: {type:String, default: ''},
+		appSecret:{type:String, default:''},
+		smsSignName:{type:String, default:''},
+		smsTemplateCode:{type:String, default:''},
+	},
 	portalUrl: {type: String, default: 'https://talkblock.org/'},
 	duration: {type: Number, default: 3600}
 })

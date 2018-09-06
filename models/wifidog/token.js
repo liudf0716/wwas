@@ -10,7 +10,10 @@ const tokenSchema = new Schema({
 	gwAddress: String,
 	gwPort:	Number,
 	gwId: String,
-	client: String,
+	staMac: String,
+	phoneNumber: String,
+	checkCode: String,
+	orderNumber: Number
 })
 
 tokenSchema.index({token: 1});
