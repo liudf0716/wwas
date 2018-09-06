@@ -34,6 +34,10 @@ class Setting {
                 'weixin.shopId': req.body.weixin.shopId,
                 'weixin.secretKey': req.body.weixin.secretKey,
                 'weixin.ssid':   req.body.weixin.ssid,
+		'sms.appId': req.body.sms.appId,
+		'sms.appSecret': req.body.sms.appSecret,
+		'sms.smsSignName': req.body.sms.smsSignName,
+		'sms.smsTemplateCode': req.body.sms.smsTemplateCode,
                 'portalUrl':  req.body.portalUrl,
                 'duration':   req.body.duration*3600
             };
@@ -72,6 +76,10 @@ class Setting {
                 'weixin.shopId': req.body.weixin.shopId,
                 'weixin.secretKey': req.body.weixin.secretKey,
                 'weixin.ssid':   req.body.weixin.ssid,
+		'sms.appId': req.body.sms.appId,
+		'sms.appSecret': req.body.sms.appSecret,
+		'sms.smsSignName': req.body.sms.smsSignName,
+		'sms.smsTemplateCode': req.body.sms.smsTemplateCode,
                 'portalUrl':  req.body.portalUrl,
                 'duration':   req.body.duration*3600
             };
@@ -107,6 +115,10 @@ class Setting {
 			ssid: channelPath.weixin.ssid,
 			toAmount: channelPath.wificoin.toAmount/1000000,
 			toAddress: channelPath.wificoin.toAddress,
+			smsAppId: channelPath.sms.appId,
+			smsAppSecret: channelPath.sms.appSecret,
+			smsSignName: channelPath.sms.smsSignName,
+			smsTemplateCode: channelPath.sms.smsTemplateCode,
 			portalUrl: channelPath.portalUrl,
 			duration: channelPath.duration/3600
 		};
