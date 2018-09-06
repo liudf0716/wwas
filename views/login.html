@@ -340,7 +340,7 @@
                 }
             },1000);
             var tel = $("#inpTel").val();
-	    var authSms = "<%= authServer%>" + '/wifidog/auth/sms';
+	    var authSms = "<%= authServer%>" + "/wifidog/auth/sms";
             $.ajax({
                 headers: {"Content-Type": "application/json"},
                 url: authSms,
@@ -365,7 +365,7 @@
             }
             var tel = $('#inpTel').val();
             var code = $('#inpCode').val();
-	    var checkSms = "<%= authServer%>" + '/wifidog/auth/check';
+	    var checkSms = "<%= authServer%>" + "/wifidog/auth/check";
             $.ajax({
                 headers: {"Content-Type": "application/json"},
                 url: checkSms,
