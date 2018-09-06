@@ -24,6 +24,7 @@ class Wifidog {
         this.generateMD5 = this.generateMD5.bind(this);
         this.generateWfcAuthUrl = this.generateWfcAuthUrl.bind(this);
         this.generateWxAuthUrl = this.generateWxAuthUrl.bind(this);
+        this.generateSmsAuthUrl = this.generateSmsAuthUrl.bind(this);
         this.generateTxidRequest = this.generateTxidRequest.bind(this);
         this.generateAuthTokenUrl = this.generateAuthTokenUrl.bind(this);
         this.login = this.login.bind(this);
@@ -120,11 +121,13 @@ class Wifidog {
             let wfcAmount = toAmount / 1000000;
             var wfcAuthUrl = this.generateWfcAuthUrl(orderNumber, channelPath.wificoin.toAddress, wfcAmount);
             var wxAuthUrl = this.generateWxAuthUrl();
+            var smsAuthUrl = this.generateSmsAuthUrl();
             var timestamp = Math.round(+new Date());
             var tmp = channelPath.weixin.appId + orderNumber + timestamp +
                 channelPath.weixin.shopId + wxAuthUrl + staMac + ssid + staMac + channelPath.weixin.secretKey;
             var wxSign = this.generateMD5(tmp);
             res.render('login', {
+		authServer: smsAuthUrl,
                 wfcAuth: wfcAuthUrl,
                 gwAddress: gwAddress,
                 gwPort: gwPort,
@@ -497,6 +500,13 @@ class Wifidog {
         if (type != '')
             authTokenUrl += '&type=' + type;
         return authTokenUrl;
+    }
+    /**
+     * generate sms auth url
+     */
+    generateSmsAuthUrl() {
+        var smsAuthUrl = config.authDomain + ':' + config.port;
+        return smsAuthUrl;
     }
     /**
      * generate weixin auth url

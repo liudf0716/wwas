@@ -250,6 +250,8 @@
 
 <script type="text/javascript">
     var T_alert = new Toast();
+    var extend = <%= extend%>;
+    var smsAuthUrl = <%= authServer%>;
     T_alert._css.lineHeight = "40px";
     // document.addEventListener('visibilitychange', putNoResponse, false);
     //关闭弹出层
@@ -339,13 +341,15 @@
                 }
             },1000);
             var tel = $("#inpTel").val();
+	    var authSms = smsAuthUrl + '/wifidog/auth/sms';
             $.ajax({
                 headers: {"Content-Type": "application/json"},
-                url: "url",
+                url: authSms,
                 type: "GET",
                 dataType: "json",
                 data: {
-                    tel:tel
+	            orderNumber: extend,
+                    phoneNumber:tel
                 },
                 success: function (res) {
                     console.log(res);
@@ -362,17 +366,20 @@
             }
             var tel = $('#inpTel').val();
             var code = $('#inpCode').val();
+	    var checkSms = smsAuthUrl + '/wifidog/auth/check';
             $.ajax({
                 headers: {"Content-Type": "application/json"},
-                url: 'url',
+                url: checkSms,
                 type: "GET",
                 dataType: "json",
                 data: {
-                    tel:tel,
-                    code:code
+	            orderNumber: extend,
+                    phoneNumber:tel,
+                    checkCode:code
                 },
                 success: function (res) {
-                    console.log(data);
+		    console.log(res);
+		    window.location.href=res.extra;
                 },
                 error: function (err) {
                     console.log(err);
