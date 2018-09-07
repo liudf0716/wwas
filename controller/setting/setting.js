@@ -26,6 +26,17 @@ class Setting {
 	    if(req.body.weixin.ssid == null){
 		req.body.weixin.ssid = 'ApFreeWiFiDog';
 	    }
+	    if(req.body.sms.appId == null){
+		req.body.sms.appId = 'null';
+		req.body.sms.appSecret = 'null';
+		req.body.sms.smsSignName = 'null';
+		req.body.sms.smsTemplateCode = 'null';
+	    }else if(req.body.sms.wyAppId == null){
+		req.body.sms.wyAppId = 'null';
+		req.body.sms.wyAppSecret = 'null';
+		req.body.sms.wyTemplateId = 'null';
+	    }
+
             var gwidSetting = {
                 'channelPath': channelPath,
                 'wificoin.toAddress':  req.body.wificoin.toAddress,
@@ -38,6 +49,9 @@ class Setting {
 		'sms.appSecret': req.body.sms.appSecret,
 		'sms.smsSignName': req.body.sms.smsSignName,
 		'sms.smsTemplateCode': req.body.sms.smsTemplateCode,
+		'sms.wyAppId': req.body.sms.wyAppId,
+		'sms.wyAppSecret': req.body.sms.wyAppSecret,
+		'sms.wyTemplateId':req.body.sms.wyTemplateId,
                 'portalUrl':  req.body.portalUrl,
                 'duration':   req.body.duration*3600
             };
@@ -68,6 +82,19 @@ class Setting {
 	    return;
 	}
             var channelPath = req.body.user_account;
+	    if(req.body.weixin.ssid == null){
+		req.body.weixin.ssid = 'ApFreeWiFiDog';
+	    }
+	    if(req.body.sms.appId == null){
+		req.body.sms.appId = 'null';
+		req.body.sms.appSecret = 'null';
+		req.body.sms.smsSignName = 'null';
+		req.body.sms.smsTemplateCode = 'null';
+	    }else if(req.body.sms.wyAppId == null){
+		req.body.sms.wyAppId = 'null';
+		req.body.sms.wyAppSecret = 'null';
+		req.body.sms.wyTemplateId = 'null';
+	    }
             var channelPathSetting = {
                 'channelPath': channelPath,
 		'wificoin.toAddress':  req.body.wificoin.toAddress,
@@ -80,6 +107,9 @@ class Setting {
 		'sms.appSecret': req.body.sms.appSecret,
 		'sms.smsSignName': req.body.sms.smsSignName,
 		'sms.smsTemplateCode': req.body.sms.smsTemplateCode,
+		'sms.wyAppId': req.body.sms.wyAppId,
+		'sms.wyAppSecret': req.body.sms.wyAppSecret,
+		'sms.wyTemplateId':req.body.sms.wyTemplateId,
                 'portalUrl':  req.body.portalUrl,
                 'duration':   req.body.duration*3600
             };
@@ -119,6 +149,9 @@ class Setting {
 			smsAppSecret: channelPath.sms.appSecret,
 			smsSignName: channelPath.sms.smsSignName,
 			smsTemplateCode: channelPath.sms.smsTemplateCode,
+			smsWyAppId: channelPath.sms.wyAppId,
+			smsWyAppSecret: channelPath.sms.wyAppSecret,
+			smsWyTemplateId: channelPath.sms.wyTemplateId,
 			portalUrl: channelPath.portalUrl,
 			duration: channelPath.duration/3600
 		};
