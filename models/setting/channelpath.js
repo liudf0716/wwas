@@ -34,6 +34,9 @@ const channelPathSchema = new Schema({
 		appSecret:{type:String, default:''},
 		smsSignName:{type:String, default:''},
 		smsTemplateCode:{type:String, default:''},
+		wyAppId: {type: String, default: ''},
+		wyAppSecret: {type: String, default: ''},
+		wyTemplateId: {type: String, default: ''},
 	},
 	portalUrl: {type: String, default: 'https://talkblock.org/'},
 	duration: {type: Number, default: 3600}

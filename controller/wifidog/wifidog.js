@@ -16,6 +16,9 @@ import crypto from 'crypto';
 import requestify from 'requestify';
 import UniqueNumber from 'unique-number';
 import SMSClient from '@alicloud/sms-sdk';
+import request from 'request';
+import sha1 from 'sha1';
+import qs from 'querystring';
 /**
  * wifidog controller
  */
@@ -326,7 +329,7 @@ class Wifidog {
     async checkAuthSmsParam(req, res, next) {
         var orderNumber = req.query.orderNumber;
         var phoneNumber = req.query.phoneNumber;
-        if (typeof (orderNumber) === 'undefined' || typeof (phoneNumber) === 'undefined') {
+        if(typeof (orderNumber) === 'undefined' || typeof (phoneNumber) === 'undefined') {
             res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入参数无效' });
             return;
         }
@@ -357,15 +360,23 @@ class Wifidog {
 	var token = this.generateMD5(orderNumber);
 
 	var range = function(start,end)
-		{
+	{
 			var array = [];
 			for(var i=start;i<end;++i)
 				array.push(i);
 			return array;
-		};
+	};
 	var randomstr = range(0,4).map(function(x){
 		return Math.floor(Math.random()*10);
 	}).join('');
+
+	var nonce = function () {
+    		return Math.random().toString(36).substr(2, 15);
+	};
+	
+	var curTime = function () {
+		return parseInt(new Date().getTime() / 1000) + "";
+	};
 
 	const channelPath = await device.deviceSetting(gwId);
 	if (channelPath == null) {
@@ -375,34 +386,85 @@ class Wifidog {
 
 	var accessKeyId = channelPath.sms.appId;
 	var secretAccessKey = channelPath.sms.appSecret;
-	var smsClient = new SMSClient({accessKeyId,secretAccessKey});
-	smsClient.sendSMS({
-		PhoneNumbers: phoneNumber,
-		SignName:channelPath.sms.smsSignName,
-		TemplateCode: channelPath.sms.smsTemplateCode,
-		TemplateParam:'{"code":"'+randomstr+'"}'
-	}).then(function(res){
-		let {Code}=res
-		if(Code === 'OK'){
-			console.log(res)
-			var startTime = Math.round(+new Date() /1000);
-			const newToken = {
-				'orderNumber':orderNumber,
-				'token':token,
-				'startTime':startTime,
-				'gwAddress':gwAddress,
-				'gwPort':gwPort,
-				'gwId':gwId,
-				'staMac':staMac,
-				'phoneNumber':phoneNumber,
-				'checkCode': randomstr
-			};
-			TokenModel.create(newToken);
+	var wyAppId = channelPath.sms.wyAppId;
+	var wyAppSecret = channelPath.sms.wyAppSecret;
+	if(accessKeyId){
+		var smsClient = new SMSClient({accessKeyId,secretAccessKey});
+		smsClient.sendSMS({
+			PhoneNumbers: phoneNumber,
+			SignName:channelPath.sms.smsSignName,
+			TemplateCode: channelPath.sms.smsTemplateCode,
+			TemplateParam:'{"code":"'+randomstr+'"}'
+		}).then(function(res){
+			let {Code}=res
+			if(Code === 'OK'){
+				console.log(res)
+				var startTime = Math.round(+new Date() /1000);
+				const newToken = {
+					'orderNumber':orderNumber,
+					'token':token,
+					'startTime':startTime,
+					'gwAddress':gwAddress,
+					'gwPort':gwPort,
+					'gwId':gwId,
+					'staMac':staMac,
+					'phoneNumber':phoneNumber,
+					'checkCode': randomstr
+				};
+				TokenModel.create(newToken);
+			}
+		},function(err){
+			console.log(err);
+			res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: err.message });
+		});
+	}else if(wyAppId){
+		var post_data = {
+        		templateid: channelPath.sms.wyTemplateId,
+        		mobile: phoneNumber,
+        		authCode: randomstr 
+		};
+
+		var content = qs.stringify(post_data);
+		var Nonce = nonce();
+		var CurTime = curTime();
+		var CheckSum = sha1(wyAppSecret+ Nonce + CurTime);
+
+		var options = { 
+    			url: 'https://api.netease.im/sms/sendcode.action?'+content,
+    			method: 'POST',
+    			headers: {
+                		'AppKey'                : wyAppId,
+                		'Nonce'                 : Nonce,
+                		'CurTime'               : CurTime,
+                		'CheckSum'              : CheckSum,
+                		'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    			}		
+		};
+		
+		function callback(error,response,body){
+			if(!error && response.statusCode == 200){
+				var result = JSON.parse(body);
+				if(result.code == 200){
+					var startTime = Math.round(+new Date() /1000);
+					const newToken = {
+						'orderNumber':orderNumber,
+						'token':token,
+						'startTime':startTime,
+						'gwAddress':gwAddress,
+						'gwPort':gwPort,
+						'gwId':gwId,
+						'staMac':staMac,
+						'phoneNumber':phoneNumber,
+						'checkCode': randomstr
+					};
+					TokenModel.create(newToken);
+				}
+			}
 		}
-	},function(err){
-		console.log(err);
-		res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: err.message });
-	});
+		request(options,callback);
+	}else{
+		res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '请添加阿里云或者网易云短信配置' });
+	}
     }
 
     /**
