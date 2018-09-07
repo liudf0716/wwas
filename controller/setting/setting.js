@@ -27,14 +27,14 @@ class Setting {
 		req.body.weixin.ssid = 'ApFreeWiFiDog';
 	    }
 	    if(req.body.sms.appId == null){
-		req.body.sms.appId = 'null';
-		req.body.sms.appSecret = 'null';
-		req.body.sms.smsSignName = 'null';
-		req.body.sms.smsTemplateCode = 'null';
+		req.body.sms.appId = null;
+		req.body.sms.appSecret = null;
+		req.body.sms.smsSignName = null;
+		req.body.sms.smsTemplateCode = null;
 	    }else if(req.body.sms.wyAppId == null){
-		req.body.sms.wyAppId = 'null';
-		req.body.sms.wyAppSecret = 'null';
-		req.body.sms.wyTemplateId = 'null';
+		req.body.sms.wyAppId = null;
+		req.body.sms.wyAppSecret = null;
+		req.body.sms.wyTemplateId = null;
 	    }
 
             var gwidSetting = {
@@ -86,14 +86,14 @@ class Setting {
 		req.body.weixin.ssid = 'ApFreeWiFiDog';
 	    }
 	    if(req.body.sms.appId == null){
-		req.body.sms.appId = 'null';
-		req.body.sms.appSecret = 'null';
-		req.body.sms.smsSignName = 'null';
-		req.body.sms.smsTemplateCode = 'null';
+		req.body.sms.appId = null;
+		req.body.sms.appSecret = null;
+		req.body.sms.smsSignName = null;
+		req.body.sms.smsTemplateCode = null;
 	    }else if(req.body.sms.wyAppId == null){
-		req.body.sms.wyAppId = 'null';
-		req.body.sms.wyAppSecret = 'null';
-		req.body.sms.wyTemplateId = 'null';
+		req.body.sms.wyAppId = null;
+		req.body.sms.wyAppSecret = null;
+		req.body.sms.wyTemplateId = null;
 	    }
             var channelPathSetting = {
                 'channelPath': channelPath,
