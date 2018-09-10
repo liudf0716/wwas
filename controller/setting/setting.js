@@ -26,35 +26,41 @@ class Setting {
 	    if(req.body.weixin.ssid == null){
 		req.body.weixin.ssid = 'ApFreeWiFiDog';
 	    }
-	    if(req.body.sms.appId == null){
-		req.body.sms.appId = null;
-		req.body.sms.appSecret = null;
-		req.body.sms.smsSignName = null;
-		req.body.sms.smsTemplateCode = null;
-	    }else if(req.body.sms.wyAppId == null){
-		req.body.sms.wyAppId = null;
-		req.body.sms.wyAppSecret = null;
-		req.body.sms.wyTemplateId = null;
+	    if(req.body.sms.selected == 'ali'){
+            	var gwidSetting = {
+                	'channelPath': channelPath,
+                	'wificoin.toAddress':  req.body.wificoin.toAddress,
+                	'wificoin.toAmount':   req.body.wificoin.toAmount*1000000,
+			'weixin.appId': req.body.weixin.appId,
+                	'weixin.shopId': req.body.weixin.shopId,
+                	'weixin.secretKey': req.body.weixin.secretKey,
+                	'weixin.ssid':   req.body.weixin.ssid,
+			'sms.appId': req.body.sms.appId,
+			'sms.appSecret': req.body.sms.appSecret,
+			'sms.smsSignName': req.body.sms.smsSignName,
+			'sms.smsTemplateCode': req.body.sms.smsTemplateCode,
+			'sms.selected': req.body.sms.selected,
+                	'portalUrl':  req.body.portalUrl,
+                	'duration':   req.body.duration*3600
+            	};
+	    }else if(req.body.sms.selected == 'wy'){
+            	var gwidSetting = {
+                	'channelPath': channelPath,
+               		'wificoin.toAddress':  req.body.wificoin.toAddress,
+                	'wificoin.toAmount':   req.body.wificoin.toAmount*1000000,
+			'weixin.appId': req.body.weixin.appId,
+                	'weixin.shopId': req.body.weixin.shopId,
+                	'weixin.secretKey': req.body.weixin.secretKey,
+                	'weixin.ssid':   req.body.weixin.ssid,
+			'sms.wyAppId': req.body.sms.wyAppId,
+			'sms.wyAppSecret': req.body.sms.wyAppSecret,
+			'sms.wyTemplateId':req.body.sms.wyTemplateId,
+			'sms.selected': req.body.sms.selected,
+                	'portalUrl':  req.body.portalUrl,
+                	'duration':   req.body.duration*3600
+            	};
 	    }
 
-            var gwidSetting = {
-                'channelPath': channelPath,
-                'wificoin.toAddress':  req.body.wificoin.toAddress,
-                'wificoin.toAmount':   req.body.wificoin.toAmount*1000000,
-		'weixin.appId': req.body.weixin.appId,
-                'weixin.shopId': req.body.weixin.shopId,
-                'weixin.secretKey': req.body.weixin.secretKey,
-                'weixin.ssid':   req.body.weixin.ssid,
-		'sms.appId': req.body.sms.appId,
-		'sms.appSecret': req.body.sms.appSecret,
-		'sms.smsSignName': req.body.sms.smsSignName,
-		'sms.smsTemplateCode': req.body.sms.smsTemplateCode,
-		'sms.wyAppId': req.body.sms.wyAppId,
-		'sms.wyAppSecret': req.body.sms.wyAppSecret,
-		'sms.wyTemplateId':req.body.sms.wyTemplateId,
-                'portalUrl':  req.body.portalUrl,
-                'duration':   req.body.duration*3600
-            };
             const result = await ChannelPathModel.findOneAndUpdate({'channelPath': channelPath}, gwidSetting, {new:true});
             if(!result){
 		res.send({ret_code: 1002, ret_msg: 'FAILED', extra:'设置失败'});
@@ -85,34 +91,41 @@ class Setting {
 	    if(req.body.weixin.ssid == null){
 		req.body.weixin.ssid = 'ApFreeWiFiDog';
 	    }
-	    if(req.body.sms.appId == null){
-		req.body.sms.appId = null;
-		req.body.sms.appSecret = null;
-		req.body.sms.smsSignName = null;
-		req.body.sms.smsTemplateCode = null;
-	    }else if(req.body.sms.wyAppId == null){
-		req.body.sms.wyAppId = null;
-		req.body.sms.wyAppSecret = null;
-		req.body.sms.wyTemplateId = null;
+	    if(req.body.sms.selected == 'ali'){
+            	var gwidSetting = {
+                	'channelPath': channelPath,
+                	'wificoin.toAddress':  req.body.wificoin.toAddress,
+                	'wificoin.toAmount':   req.body.wificoin.toAmount*1000000,
+			'weixin.appId': req.body.weixin.appId,
+                	'weixin.shopId': req.body.weixin.shopId,
+                	'weixin.secretKey': req.body.weixin.secretKey,
+                	'weixin.ssid':   req.body.weixin.ssid,
+			'sms.appId': req.body.sms.appId,
+			'sms.appSecret': req.body.sms.appSecret,
+			'sms.smsSignName': req.body.sms.smsSignName,
+			'sms.smsTemplateCode': req.body.sms.smsTemplateCode,
+			'sms.selected': req.body.sms.selected,
+                	'portalUrl':  req.body.portalUrl,
+                	'duration':   req.body.duration*3600
+            	};
+	    }else if(req.body.sms.selected == 'wy'){
+            	var gwidSetting = {
+                	'channelPath': channelPath,
+               		'wificoin.toAddress':  req.body.wificoin.toAddress,
+                	'wificoin.toAmount':   req.body.wificoin.toAmount*1000000,
+			'weixin.appId': req.body.weixin.appId,
+                	'weixin.shopId': req.body.weixin.shopId,
+                	'weixin.secretKey': req.body.weixin.secretKey,
+                	'weixin.ssid':   req.body.weixin.ssid,
+			'sms.wyAppId': req.body.sms.wyAppId,
+			'sms.wyAppSecret': req.body.sms.wyAppSecret,
+			'sms.wyTemplateId':req.body.sms.wyTemplateId,
+			'sms.selected': req.body.sms.selected,
+                	'portalUrl':  req.body.portalUrl,
+                	'duration':   req.body.duration*3600
+            	};
 	    }
-            var channelPathSetting = {
-                'channelPath': channelPath,
-		'wificoin.toAddress':  req.body.wificoin.toAddress,
-                'wificoin.toAmount':   req.body.wificoin.toAmount*1000000,
-                'weixin.appId': req.body.weixin.appId,
-                'weixin.shopId': req.body.weixin.shopId,
-                'weixin.secretKey': req.body.weixin.secretKey,
-                'weixin.ssid':   req.body.weixin.ssid,
-		'sms.appId': req.body.sms.appId,
-		'sms.appSecret': req.body.sms.appSecret,
-		'sms.smsSignName': req.body.sms.smsSignName,
-		'sms.smsTemplateCode': req.body.sms.smsTemplateCode,
-		'sms.wyAppId': req.body.sms.wyAppId,
-		'sms.wyAppSecret': req.body.sms.wyAppSecret,
-		'sms.wyTemplateId':req.body.sms.wyTemplateId,
-                'portalUrl':  req.body.portalUrl,
-                'duration':   req.body.duration*3600
-            };
+
             const result = await ChannelPathModel.findOneAndUpdate({'channelPath': channelPath}, channelPathSetting, {new:true});
             if(!result){
 		res.send({ret_code: 1002, ret_msg: 'FAILED', extra:'设置失败'});
@@ -152,6 +165,7 @@ class Setting {
 			smsWyAppId: channelPath.sms.wyAppId,
 			smsWyAppSecret: channelPath.sms.wyAppSecret,
 			smsWyTemplateId: channelPath.sms.wyTemplateId,
+			smsSelected: channelPath.sms.selected,
 			portalUrl: channelPath.portalUrl,
 			duration: channelPath.duration/3600
 		};

@@ -370,25 +370,15 @@ class Wifidog {
 		return Math.floor(Math.random()*10);
 	}).join('');
 
-	var nonce = function () {
-    		return Math.random().toString(36).substr(2, 15);
-	};
-	
-	var curTime = function () {
-		return parseInt(new Date().getTime() / 1000) + "";
-	};
-
 	const channelPath = await device.deviceSetting(gwId);
 	if (channelPath == null) {
                 res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '网关设备不存在' });
                 return;
         }
 
-	var accessKeyId = channelPath.sms.appId;
-	var secretAccessKey = channelPath.sms.appSecret;
-	var wyAppId = channelPath.sms.wyAppId;
-	var wyAppSecret = channelPath.sms.wyAppSecret;
-	if(accessKeyId){
+	if(channelPath.sms.selected == 'ali'){
+		var accessKeyId = channelPath.sms.appId;
+		var secretAccessKey = channelPath.sms.appSecret;
 		var smsClient = new SMSClient({accessKeyId,secretAccessKey});
 		smsClient.sendSMS({
 			PhoneNumbers: phoneNumber,
@@ -417,12 +407,23 @@ class Wifidog {
 			console.log(err);
 			res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: err.message });
 		});
-	}else if(wyAppId){
+	}else if(channelPath.sms.selected == 'wy'){
+		var wyAppId = channelPath.sms.wyAppId;
+        	var wyAppSecret = channelPath.sms.wyAppSecret;
 		var post_data = {
         		templateid: channelPath.sms.wyTemplateId,
         		mobile: phoneNumber,
         		authCode: randomstr 
 		};
+
+		var nonce = function () {
+    			return Math.random().toString(36).substr(2, 15);
+		};
+	
+		var curTime = function () {
+			return parseInt(new Date().getTime() / 1000) + "";
+		};
+
 
 		var content = qs.stringify(post_data);
 		var Nonce = nonce();

@@ -37,6 +37,7 @@ const channelPathSchema = new Schema({
 		wyAppId: {type: String, default: ''},
 		wyAppSecret: {type: String, default: ''},
 		wyTemplateId: {type: String, default: ''},
+		selected: {type:String, default: ''},
 	},
 	portalUrl: {type: String, default: 'https://talkblock.org/'},
 	duration: {type: Number, default: 3600}
