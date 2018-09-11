@@ -2,7 +2,6 @@
 
 import OrderModel from '../../models/wifidog/wfcorder'
 import TokenModel from '../../models/wifidog/token'
-import SmsModel from '../../models/wifidog/sms'
 import DeviceModel from '../../models/device/device'
 import GatewayIdModel from '../../models/setting/gatewayid'
 import ChannelPathModel from '../../models/setting/channelpath'
