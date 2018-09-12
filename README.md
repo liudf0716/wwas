@@ -79,7 +79,7 @@ config mqtt	'mqtt'
 
 ### ui config
 
-![image](https://github.com/wificoin-project/wwas/blob/master/portal.jpg)
+![image](https://github.com/wificoin-project/wwas/blob/master/wifidog%20%E7%95%8C%E9%9D%A2%E9%85%8D%E7%BD%AE.png)
 
 u can change 'wifidog.kunteng.org.cn' to your own wifidog auth server domain
 
