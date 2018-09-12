@@ -120,7 +120,7 @@ function sendoffline(gwid){
     http.get('http://localhost:'+port+'/wifidog/offline/?gw_id='+gwid,function(req,res){
 	    var html='';
 	    req.on('data',function(data){
-		    html+=data;
+		    html += data;
 	    });
         
 	    req.on('end',function(){
@@ -129,21 +129,9 @@ function sendoffline(gwid){
     });
 }
 
-function subscribeRedisData() {  
-    client.on("ready", function () {
-        client.subscribe("__keyevent@0__:expired");
-    });
-    client.on("error", function (error) {
-        console.log("Redis Error " + error);
-    });
-    client.on("subscribe", function (channel, count) {
-        console.log("client subscribed to " + channel + "," + count + ", total subscriptions");
-    });
+function subscribeRedisData() {   
     client.on("message", function (channel, message) {
-        console.log("expired:" + message);
+        //console.log("expired:" + message);
         sendoffline(message);
-    });
-    client.on("unsubscribe", function (channel, count) {
-        console.log("client unsubscribed from" + channel + ", " + count + ", total subscriptions")
     });
 }
