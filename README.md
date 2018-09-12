@@ -41,6 +41,10 @@ sudo systemctl start redis
 redis-cli ping
 PONG
 
+// open redis notify-keyspace-events
+redis-cli
+config set notify-keyspace-events Ex
+
 git clone https://github.com/wificoin-project/wwas
 
 cd wwas
