@@ -415,6 +415,18 @@ class deviceHandle {
             res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入参数无效' });
         }
     }
+    async updateDeviceOffline(req) {
+        try {
+            var gwId = req.query.gw_id;
+	    const device = await DeviceModel.findOne({ gwId: gwId });
+	    if(device){
+                device.deviceStatus=0;
+		await DeviceModel.findOneAndUpdate({ gwId }, { $set: device });
+	    }
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
     async updateDeviceFromPing(req) {
         try {
@@ -429,10 +441,14 @@ class deviceHandle {
             var name = req.query.name;	// router name
             var channelPath = req.query.channel_path;
             var wiredPassed = req.query.wired_passed;
+            if(wiredPassed==undefined){wiredPassed=0}
             var wifidogUptime = req.query.wifidog_uptime;
             var onlineClients = req.query.online_clients;
+            if(onlineClients==undefined){onlineClients=''}
             var offlineClients = req.query.offline_clients;
+            if(offlineClients==undefined){offlineClients=''}
             var nfConntrackCount = req.query.nf_conntrack_count;
+            if(nfConntrackCount==undefined){nfConntrackCount=0}
 	    var now = new Date();
             var lastTime = now.getTime();
             var remoteAddress = req.connection.remoteAddress;

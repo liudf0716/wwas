@@ -31,6 +31,7 @@ class Wifidog {
         this.generateAuthTokenUrl = this.generateAuthTokenUrl.bind(this);
         this.login = this.login.bind(this);
         this.ping = this.ping.bind(this);
+        this.offline = this.offline.bind(this);
         this.authWfc = this.authWfc.bind(this);
         this.authWeixin = this.authWeixin.bind(this);
         this.authSMS = this.authSMS.bind(this);
@@ -59,6 +60,16 @@ class Wifidog {
     async ping(req, res, next) {
         device.updateDeviceFromPing(req);
         res.send('Pong');
+    }
+    /**
+     * response function for wifidog offline request
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
+    async offline(req, res, next) {
+        device.updateDeviceOffline(req);
+        res.send('OK');
     }
     /**
      * express middleware to check wifidog login request parameters
