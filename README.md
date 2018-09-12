@@ -11,7 +11,7 @@
 [4]: https://github.com/wificoin-project/wwas/pulls
 [5]: https://img.shields.io/badge/Issues-welcome-brightgreen.svg?style=plastic
 [6]: https://github.com/wificoin-project/wwas/issues/new
-[7]: https://img.shields.io/badge/release-0.8.150-red.svg?style=plastic
+[7]: https://img.shields.io/badge/release-0.9.194-red.svg?style=plastic
 [8]: https://github.com/wificoin-project/wwas/releases
 [11]: https://img.shields.io/badge/Platform-%20OpenWRT%7C%20LEDE%20-brightgreen.svg?style=plastic
 [12]: https://github.com/KunTengRom/kunteng-lede-17.01.4
@@ -79,13 +79,14 @@ config mqtt	'mqtt'
 
 ### ui config
 
-![image](https://github.com/heartache1987/images/blob/master/wifidog.png)
+![image](https://github.com/wificoin-project/wwas/blob/master/portal.jpg)
 
 u can change 'wifidog.kunteng.org.cn' to your own wifidog auth server domain
 
 ## demo picture
 
-![image](https://github.com/heartache1987/images/blob/master/renz1.png)
+<img src="https://github.com/wificoin-project/wwas/blob/master/portal.jpg" width="365" height="619"/> <img src="https://github.com/wificoin-project/wwas/blob/master/sms.jpg" width="365" height="619"/>
+
 
 ## demo video
 
