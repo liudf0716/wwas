@@ -115,19 +115,20 @@ if (cluster.isMaster) {
     console.log(`工作进程 ${process.pid} 已启动`);
 }
 
-
 function sendoffline(gwid){
-var port=config.port
-http.get('http://localhost:'+port+'/wifidog/offline/?gw_id='+gwid,function(req,res){
-	var html='';
-	req.on('data',function(data){
-		html+=data;
-	});
-	req.on('end',function(){
-		console.info(html);
-	});
-});
+    var port=config.port
+    http.get('http://localhost:'+port+'/wifidog/offline/?gw_id='+gwid,function(req,res){
+	    var html='';
+	    req.on('data',function(data){
+		    html+=data;
+	    });
+        
+	    req.on('end',function(){
+		    console.info(html);
+	    });
+    });
 }
+
 function subscribeRedisData() {  
     client.on("ready", function () {
         client.subscribe("__keyevent@0__:expired");
