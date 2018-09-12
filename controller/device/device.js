@@ -246,7 +246,7 @@ class deviceHandle {
 
     ///权限控制
     async permission(req, res, next) {
-    console.log("device permission");
+        console.log("device permission");
         //本地调试
         if (process.env.NODE_ENV == 'local') {
             next();
@@ -254,14 +254,14 @@ class deviceHandle {
         }
         //检测此用户session是否超时
         const user = req.session.user_account;
-	if (!user) {
-	    res.send({
-				ret_code: 1001,
-				ret_msg: 'ERROR_SESSION',
-				extra: '亲，您还没有登录',
-	    });
-	    return;
-	}
+        if (!user) {
+            res.send({
+                    ret_code: 1001,
+                    ret_msg: 'ERROR_SESSION',
+                    extra: '亲，您还没有登录',
+            });
+            return;
+        }
         //超级管理员
         if (req.session.user_type == 0) {
             next();
@@ -350,6 +350,7 @@ class deviceHandle {
 
         console.log('device list end');
     }
+    
     async doCheckRedis(gwid){
        return new Promise(function(resolve, reject){
               redis.get([gwid], function(error, val) {
@@ -361,6 +362,7 @@ class deviceHandle {
               });
        });
     }
+    
     async doSetRedis(gwid){
        return new Promise(function(resolve, reject){
               redis.set([gwid, 'true', 'EX', outtime], function(error, val) {
@@ -415,14 +417,15 @@ class deviceHandle {
             res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入参数无效' });
         }
     }
+    
     async updateDeviceOffline(req) {
         try {
             var gwId = req.query.gw_id;
-	    const device = await DeviceModel.findOne({ gwId: gwId });
-	    if(device){
+	        const device = await DeviceModel.findOne({ gwId: gwId });
+	        if(device) {
                 device.deviceStatus=0;
-		await DeviceModel.findOneAndUpdate({ gwId }, { $set: device });
-	    }
+		        await DeviceModel.findOneAndUpdate({ gwId }, { $set: device });
+	        }
         } catch (err) {
             console.log(err);
         }
