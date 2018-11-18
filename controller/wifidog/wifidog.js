@@ -197,6 +197,9 @@ class Wifidog {
 	} else if (stage == 'counters') {
 		var result = await client.updateDeviceClientFromCounter(req.query);
 		res.send('Auth: ' + result);
+    } else if (stage == 'counters_v2') {
+        var result = await client.updateDeviceClientFromCounterV2(req.body);
+        res.json(result);
 	} else if (stage == 'logout') {
 		res.send('Auth: 1')
 	} else {
