@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/ping', WiFiDog.checkPingParam, WiFiDog.ping);
 router.get('/offline', WiFiDog.checkPingParam, WiFiDog.offline);
-router.get('/auth', WiFiDog.checkAuthParam, WiFiDog.auth);
+router.all('/auth', WiFiDog.checkAuthParam, WiFiDog.auth);
 router.get('/login', WiFiDog.checkLoginParam,  WiFiDog.login);
 router.get('/portal', WiFiDog.checkPortalParam,  WiFiDog.portal);
 router.get('/auth/wfc', WiFiDog.checkAuthWfcParam, WiFiDog.authWfc);
