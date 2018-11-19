@@ -26,7 +26,7 @@ class client {
         var res_auth = {};
         var gwId = body.gw_id;
         var clients_info = body.clients;
-        res_auth.gw_Id = gwId;
+        res_auth['gw_id'] = gwId;
         res_auth['auth_op'] = [];
         
         try{
