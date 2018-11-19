@@ -88,7 +88,7 @@ class client {
                     }
                 }
 
-                if(duration < (lastTime - firstLogin)){
+                if(duration > (lastTime - firstLogin)){
                     console.log('client timeout ' + mac);
                     auth_code.authcode = 1;
                 } 
