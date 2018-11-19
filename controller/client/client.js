@@ -30,7 +30,7 @@ class client {
         res_auth['auth_op'] = [];
         
         try{
-            for(var i=0; i < clients_info.length; i++){
+            for(var i=0; i < body.clients.length; i++){
                 var auth_code = {};
                 var client = clients_info[i];
                 var id              = client.id;

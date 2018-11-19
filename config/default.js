@@ -1,11 +1,11 @@
 'use strict';
 
 module.exports = {
-	port: 8001,
+	port: 8002,
 	mongoUrl: 'mongodb://localhost:27017/wfc',
 	insightApi: 'https://insight.wificoin.club/insight-api',
 	wfcPayUrl: 'https://wfc.wificoin.club/#/wifiPortal/payment?authServer=',
-	authDomain: 'http://wifidog.kunteng.org.cn',
+	authDomain: 'http://192.168.159.2',
 	wfcAuthPath: '/wifidog/auth/wfc',
 	wxAuthPath: '/wifidog/auth/weixin',
 	device_dir: './public/device',
