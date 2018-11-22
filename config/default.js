@@ -5,7 +5,7 @@ module.exports = {
 	mongoUrl: 'mongodb://localhost:27017/wfc',
 	insightApi: 'https://insight.wificoin.club/insight-api',
 	wfcPayUrl: 'https://wfc.wificoin.club/#/wifiPortal/payment?authServer=',
-	authDomain: 'http://wifidog.kunteng.org.cn',
+	authDomain: 'https://wifidog.kunteng.org.cn',
 	wfcAuthPath: '/wifidog/auth/wfc',
 	wxAuthPath: '/wifidog/auth/weixin',
 	device_dir: './public/device',

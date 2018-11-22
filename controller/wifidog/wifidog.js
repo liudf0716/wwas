@@ -567,14 +567,16 @@ class Wifidog {
      * generate sms auth url
      */
     generateSmsAuthUrl() {
-        var smsAuthUrl = config.authDomain + ':' + config.port;
+        //var smsAuthUrl = config.authDomain + ':' + config.port;
+        var smsAuthUrl = config.authDomain;
         return smsAuthUrl;
     }
     /**
      * generate weixin auth url
      */
     generateWxAuthUrl() {
-        var wxAuthUrl = config.authDomain + ':' + config.port + config.wxAuthPath;
+        //var wxAuthUrl = config.authDomain + ':' + config.port + config.wxAuthPath;
+        var wxAuthUrl = config.authDomain + config.wxAuthPath;
         return wxAuthUrl;
     }
     /**
@@ -584,7 +586,8 @@ class Wifidog {
      * @param {*} toAmount 
      */
     generateWfcAuthUrl(orderNumber, toAddress, toAmount) {
-        var wfcAuthUrl = config.wfcPayUrl + config.authDomain + ':' + config.port + config.wfcAuthPath;
+        //var wfcAuthUrl = config.wfcPayUrl + config.authDomain + ':' + config.port + config.wfcAuthPath;
+        var wfcAuthUrl = config.wfcPayUrl + config.authDomain + config.wfcAuthPath;
         wfcAuthUrl += '&orderNumber=' + orderNumber + '&toAddress=' + toAddress + '&toAmount=' + toAmount;
 
         return wfcAuthUrl;
