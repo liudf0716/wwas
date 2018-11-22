@@ -14,7 +14,9 @@ const fs = require("fs");
 
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
-
+var redis = require("redis");  
+var client = redis.createClient(6379, "127.0.0.1");  
+var http=require('http');
 //excel导出文件存放位置， 不存在则创建
 fs.exists(config.device_dir, function(exists) {
     console.log(exists ? "设备excel目录存在" : "设备excel目录不存在", config.device_dir);
@@ -95,7 +97,7 @@ app.get('*',function(req,res){
 
 if (cluster.isMaster) {
     console.log(`主进程 ${process.pid} 正在运行`);
-
+    subscribeRedisData();
     // 衍生工作进程。
     for (let i = 0; i < numCPUs; i++) {
         cluster.fork();
@@ -111,4 +113,25 @@ if (cluster.isMaster) {
         )
     });
     console.log(`工作进程 ${process.pid} 已启动`);
+}
+
+function sendoffline(gwid){
+    var port=config.port
+    http.get('http://localhost:'+port+'/wifidog/offline/?gw_id='+gwid,function(req,res){
+	    var html='';
+	    req.on('data',function(data){
+		    html += data;
+	    });
+        
+	    req.on('end',function(){
+		    console.info(html);
+	    });
+    });
+}
+
+function subscribeRedisData() {   
+    client.on("message", function (channel, message) {
+        //console.log("expired:" + message);
+        sendoffline(message);
+    });
 }
