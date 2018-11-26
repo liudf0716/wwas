@@ -47,8 +47,8 @@ class client {
                 var nowTime	        = now.getTime();
                 var lastTime        = Math.round(+new Date()/1000);
                 var auth_code = {};
-                auth_code.client_id = id;
-                auth_code.authcode  = 0;
+                auth_code.id = id;
+                auth_code.auth_code  = 0;
                 
                 var newClient = {
                     gwId: gwId,
@@ -69,7 +69,7 @@ class client {
                 const device = await ClientModel.findOne({'gwId': gwId,'clients.mac': mac});
                 if(!device){
                     await ClientModel.create(newClient);
-                    auth_code.authcode = 1;
+                    auth_code.auth_code = 1;
                 	res_auth['auth_op'].push(auth_code);
 					continue;
                 }
@@ -99,7 +99,7 @@ class client {
                 } 
 
                 await ClientModel.findOneAndUpdate({'gwId': gwId,'clients.mac': mac}, {$set: newClient});
-                auth_code.authcode = 1;
+                auth_code.auth_code = 1;
                 res_auth['auth_op'].push(auth_code);
             }
         }catch(err){

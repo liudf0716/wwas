@@ -298,7 +298,7 @@
         });
 
         $("#weixin").click(function(){
-            var linshiUrl = 'http://' + "<%= gwAddress %>" + ':' + "<%= gwPort %>" + '/wifidog/temporary_pass?mac=' + "<%= mac %>";
+            var linshiUrl = 'https://' + "<%= gwAddress %>" + ':8443' + '/wifidog/temporary_pass?mac=' + "<%= mac %>";
             $.ajax({
                 type:'GET',
                 url: linshiUrl,
