@@ -240,10 +240,28 @@
         </div>
     </div>
 </div>
+<div id="MyDiv_user" class="layer" style="display: none;">
+    <div class="bglayer">
+    </div>
+    <div class="white_content" style="top:10%;">
+        <div class="cont_inner" style="">
+            <div class="lay_title" style="text-align: right; cursor: default;">
+                <div class="Edit_title1" style=""><span class="cont_title" style="width:200px;padding-left:30px;">用户认证</span></div>
+                <div class="Edit_title2" style="" onclick="CloseDiv('MyDiv_user')"></div>
+            </div>
+            <div class="pad40 xy_txt" style="height:200px;overflow-y: auto;">
+                <p><input class="inp" id="inpUser" type="text" placeholder="请输入用户名"></p>
+                <p><input class="inp" id="inpPassword" type="text" placeholder="请输入密码"></p>
+                <p><button class="inp lay-btn2 bgcc" id="savebtn" disabled>立即连接</button></p>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container">
     <a href="<%= wfcAuth %>" class="btn" id="wfc">支付WFC上网<small>(<%= wfcAmount%>/<%= duration%>小时)</small></a>
     <a href="javascript:;" class="btn" id="weixin">微信认证上网</a>
     <a href="javascript:;" class="btn" id="duanxin">短信认证上网</a>
+    <a href="javascript:;" class="btn" id="user">密码认证上网</a>
     <p class="msg"><input type="checkbox" class="checkbox" id="checkbox" checked> <label for="checkbox">已阅读并同意</label> <span id="xieyihref">上网服务条款</span></p>
 </div>
 </body>
@@ -340,7 +358,7 @@
                 }
             },1000);
             var tel = $("#inpTel").val();
-	    var authSms = "<%= authServer%>" + "/wifidog/auth/sms";
+	        var authSms = "<%= authServer%>" + "/wifidog/auth/sms";
             $.ajax({
                 headers: {"Content-Type": "application/json"},
                 url: authSms,
@@ -358,7 +376,11 @@
                 }
             });
         });
-
+        
+        $('#user').click(function(){
+            ShowDiv('MyDiv_user');
+        });
+        
         $('#savebtn').click(function(){
             if(checkTel('inpTel') == false || checkCode() == false){
                 return false;
