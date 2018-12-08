@@ -115,16 +115,16 @@ class Wifidog {
             }
             console.log('channelPath is ' + JSON.stringify(channelPath));
             var toAmount = channelPath.wificoin.toAmount + randomValue;
-	    var duration = channelPath.duration/3600;
-            const newOrder = {
-                orderNumber,
-                orderTime,
-                toAmount,
-                gwAddress,
-                gwPort,
-                gwId,
-                staMac
-            };
+            var duration = channelPath.duration/3600;
+                const newOrder = {
+                    orderNumber,
+                    orderTime,
+                    toAmount,
+                    gwAddress,
+                    gwPort,
+                    gwId,
+                    staMac
+                };
             const order = await OrderModel.findOne({ orderNumber });
             if (!order) {
                 await OrderModel.create(newOrder);
@@ -140,21 +140,21 @@ class Wifidog {
                 channelPath.weixin.shopId + wxAuthUrl + staMac + ssid + staMac + channelPath.weixin.secretKey;
             var wxSign = this.generateMD5(tmp);
             res.render('login', {
-		authServer: smsAuthUrl,
-                wfcAuth: wfcAuthUrl,
-                gwAddress: gwAddress,
-                gwPort: gwPort,
-                appId: channelPath.weixin.appId,
-                extend: orderNumber,
-                timestamp: timestamp,
-                sign: wxSign,
-                shopId: channelPath.weixin.shopId,
-                authUrl: wxAuthUrl,
-                mac: staMac,
-                ssid: ssid,
-                bssid: staMac,
-                wfcAmount: wfcAmount,
-		duration: duration
+                authServer: smsAuthUrl,
+                        wfcAuth: wfcAuthUrl,
+                        gwAddress: gwAddress,
+                        gwPort: gwPort,
+                        appId: channelPath.weixin.appId,
+                        extend: orderNumber,
+                        timestamp: timestamp,
+                        sign: wxSign,
+                        shopId: channelPath.weixin.shopId,
+                        authUrl: wxAuthUrl,
+                        mac: staMac,
+                        ssid: ssid,
+                        bssid: staMac,
+                        wfcAmount: wfcAmount,
+                duration: duration
             });
         } catch (err) {
             console.log(err);
@@ -357,128 +357,128 @@ class Wifidog {
      * @param {*} next 
      */
     async authSMS(req,res,next){
-	var orderNumber = req.query.orderNumber;
-	var phoneNumber = req.query.phoneNumber;
+        var orderNumber = req.query.orderNumber;
+        var phoneNumber = req.query.phoneNumber;
 
-	const order = await OrderModel.findOne({orderNumber});
-	if(!order){
-		res.send('no such order');
-		return;
-	}
-	
-	var gwPort = order.gwPort;
-	var gwAddress = order.gwAddress;
-	var gwId = order.gwId;
-	var staMac = order.staMac;
-	var token = this.generateMD5(orderNumber);
-
-	var range = function(start,end)
-	{
-			var array = [];
-			for(var i=start;i<end;++i)
-				array.push(i);
-			return array;
-	};
-	var randomstr = range(0,4).map(function(x){
-		return Math.floor(Math.random()*10);
-	}).join('');
-
-	const channelPath = await device.deviceSetting(gwId);
-	if (channelPath == null) {
-                res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '网关设备不存在' });
-                return;
+        const order = await OrderModel.findOne({orderNumber});
+        if(!order){
+            res.send('no such order');
+            return;
         }
 
-	if(channelPath.sms.selected == 'ali'){
-		var accessKeyId = channelPath.sms.appId;
-		var secretAccessKey = channelPath.sms.appSecret;
-		var smsClient = new SMSClient({accessKeyId,secretAccessKey});
-		smsClient.sendSMS({
-			PhoneNumbers: phoneNumber,
-			SignName:channelPath.sms.smsSignName,
-			TemplateCode: channelPath.sms.smsTemplateCode,
-			TemplateParam:'{"code":"'+randomstr+'"}'
-		}).then(function(res){
-			let {Code}=res
-			if(Code === 'OK'){
-				console.log(res)
-				var startTime = Math.round(+new Date() /1000);
-				const newToken = {
-					'orderNumber':orderNumber,
-					'token':token,
-					'startTime':startTime,
-					'gwAddress':gwAddress,
-					'gwPort':gwPort,
-					'gwId':gwId,
-					'staMac':staMac,
-					'phoneNumber':phoneNumber,
-					'checkCode': randomstr
-				};
-				TokenModel.create(newToken);
-			}
-		},function(err){
-			console.log(err);
-			res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: err.message });
-		});
-	}else if(channelPath.sms.selected == 'wy'){
-		var wyAppId = channelPath.sms.wyAppId;
-        	var wyAppSecret = channelPath.sms.wyAppSecret;
-		var post_data = {
-        		templateid: channelPath.sms.wyTemplateId,
-        		mobile: phoneNumber,
-        		authCode: randomstr 
-		};
+        var gwPort = order.gwPort;
+        var gwAddress = order.gwAddress;
+        var gwId = order.gwId;
+        var staMac = order.staMac;
+        var token = this.generateMD5(orderNumber);
 
-		var nonce = function () {
-    			return Math.random().toString(36).substr(2, 15);
-		};
-	
-		var curTime = function () {
-			return parseInt(new Date().getTime() / 1000) + "";
-		};
+        var range = function(start,end)
+        {
+                var array = [];
+                for(var i=start;i<end;++i)
+                    array.push(i);
+                return array;
+        };
+        var randomstr = range(0,4).map(function(x){
+            return Math.floor(Math.random()*10);
+        }).join('');
+
+        const channelPath = await device.deviceSetting(gwId);
+        if (channelPath == null) {
+                    res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '网关设备不存在' });
+                    return;
+            }
+
+        if(channelPath.sms.selected == 'ali'){
+            var accessKeyId = channelPath.sms.appId;
+            var secretAccessKey = channelPath.sms.appSecret;
+            var smsClient = new SMSClient({accessKeyId,secretAccessKey});
+            smsClient.sendSMS({
+                PhoneNumbers: phoneNumber,
+                SignName:channelPath.sms.smsSignName,
+                TemplateCode: channelPath.sms.smsTemplateCode,
+                TemplateParam:'{"code":"'+randomstr+'"}'
+            }).then(function(res){
+                let {Code}=res
+                if(Code === 'OK'){
+                    console.log(res)
+                    var startTime = Math.round(+new Date() /1000);
+                    const newToken = {
+                        'orderNumber':orderNumber,
+                        'token':token,
+                        'startTime':startTime,
+                        'gwAddress':gwAddress,
+                        'gwPort':gwPort,
+                        'gwId':gwId,
+                        'staMac':staMac,
+                        'phoneNumber':phoneNumber,
+                        'checkCode': randomstr
+                    };
+                    TokenModel.create(newToken);
+                }
+            },function(err){
+                console.log(err);
+                res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: err.message });
+            });
+        }else if(channelPath.sms.selected == 'wy'){
+            var wyAppId = channelPath.sms.wyAppId;
+                var wyAppSecret = channelPath.sms.wyAppSecret;
+            var post_data = {
+                    templateid: channelPath.sms.wyTemplateId,
+                    mobile: phoneNumber,
+                    authCode: randomstr 
+            };
+
+            var nonce = function () {
+                    return Math.random().toString(36).substr(2, 15);
+            };
+
+            var curTime = function () {
+                return parseInt(new Date().getTime() / 1000) + "";
+            };
 
 
-		var content = qs.stringify(post_data);
-		var Nonce = nonce();
-		var CurTime = curTime();
-		var CheckSum = sha1(wyAppSecret+ Nonce + CurTime);
+            var content = qs.stringify(post_data);
+            var Nonce = nonce();
+            var CurTime = curTime();
+            var CheckSum = sha1(wyAppSecret+ Nonce + CurTime);
 
-		var options = { 
-    			url: 'https://api.netease.im/sms/sendcode.action?'+content,
-    			method: 'POST',
-    			headers: {
-                		'AppKey'                : wyAppId,
-                		'Nonce'                 : Nonce,
-                		'CurTime'               : CurTime,
-                		'CheckSum'              : CheckSum,
-                		'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-    			}		
-		};
-		
-		function callback(error,response,body){
-			if(!error && response.statusCode == 200){
-				var result = JSON.parse(body);
-				if(result.code == 200){
-					var startTime = Math.round(+new Date() /1000);
-					const newToken = {
-						'orderNumber':orderNumber,
-						'token':token,
-						'startTime':startTime,
-						'gwAddress':gwAddress,
-						'gwPort':gwPort,
-						'gwId':gwId,
-						'staMac':staMac,
-						'phoneNumber':phoneNumber,
-						'checkCode': randomstr
-					};
-					TokenModel.create(newToken);
-				}
-			}
-		}
-		request(options,callback);
-	}else{
-		res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '请添加阿里云或者网易云短信配置' });
-	}
+            var options = { 
+                    url: 'https://api.netease.im/sms/sendcode.action?'+content,
+                    method: 'POST',
+                    headers: {
+                            'AppKey'                : wyAppId,
+                            'Nonce'                 : Nonce,
+                            'CurTime'               : CurTime,
+                            'CheckSum'              : CheckSum,
+                            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    }		
+            };
+
+            function callback(error,response,body){
+                if(!error && response.statusCode == 200){
+                    var result = JSON.parse(body);
+                    if(result.code == 200){
+                        var startTime = Math.round(+new Date() /1000);
+                        const newToken = {
+                            'orderNumber':orderNumber,
+                            'token':token,
+                            'startTime':startTime,
+                            'gwAddress':gwAddress,
+                            'gwPort':gwPort,
+                            'gwId':gwId,
+                            'staMac':staMac,
+                            'phoneNumber':phoneNumber,
+                            'checkCode': randomstr
+                        };
+                        TokenModel.create(newToken);
+                    }
+                }
+            }
+            request(options,callback);
+        }else{
+            res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '请添加阿里云或者网易云短信配置' });
+        }
     }
 
     /**
@@ -490,7 +490,7 @@ class Wifidog {
     async checkCodeSmsParam(req, res, next) {
         var orderNumber = req.query.orderNumber;
         var phoneNumber = req.query.phoneNumber;
-	var checkCode = req.query.checkCode;
+	    var checkCode = req.query.checkCode;
         if (typeof (orderNumber) === 'undefined' || typeof (phoneNumber) === 'undefined' || typeof(checkCode) === 'undefined') {
             res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入参数无效' });
             return;
@@ -506,34 +506,34 @@ class Wifidog {
      * @param {*} next 
      */
     async checkSMS(req, res, next){
-	var orderNumber = req.query.orderNumber;
-	var phoneNumber = req.query.phoneNumber;
-	var checkCode = req.query.checkCode;
+        var orderNumber = req.query.orderNumber;
+        var phoneNumber = req.query.phoneNumber;
+        var checkCode = req.query.checkCode;
 
-	const order = await OrderModel.findOne({orderNumber});
-	if(!order){
-		res.send('no such order');
-	}
+        const order = await OrderModel.findOne({orderNumber});
+        if(!order){
+            res.send('no such order');
+        }
 
-	var gwPort = order.gwPort;
-	var gwAddress = order.gwAddress;
-	var gwId = order.gwId;
-	var staMac = order.staMac;
-	var token = this.generateMD5(orderNumber);
+        var gwPort = order.gwPort;
+        var gwAddress = order.gwAddress;
+        var gwId = order.gwId;
+        var staMac = order.staMac;
+        var token = this.generateMD5(orderNumber);
 
-	const tokenSMS = await TokenModel.findOne({token});
-	if(tokenSMS){
-		var phone = tokenSMS.phoneNumber;
-		var code = tokenSMS.checkCode;
-	}else{
-		res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入的参数无效' });
-        	return;
-	}
-	var authTokenUrl = this.generateAuthTokenUrl(order.gwAddress,order.gwPort, token);
-	
-	if(phoneNumber == phone && checkCode == code){
-		res.send({ret_code: 0, ret_msg:'SUCCESS', extra: authTokenUrl});
-	}
+        const tokenSMS = await TokenModel.findOne({token});
+        if(tokenSMS){
+            var phone = tokenSMS.phoneNumber;
+            var code = tokenSMS.checkCode;
+        }else{
+            res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入的参数无效' });
+                return;
+        }
+        var authTokenUrl = this.generateAuthTokenUrl(order.gwAddress,order.gwPort, token);
+
+        if(phoneNumber == phone && checkCode == code){
+            res.send({ret_code: 0, ret_msg:'SUCCESS', extra: authTokenUrl});
+        }
     }
     /**
      * check for protal request
