@@ -6,18 +6,18 @@ const Schema = mongoose.Schema;
 
 const channelPathSchema = new Schema({
 	user_account: String,
-        user_password: String,
-        user_name: {type: String, default:''},
-        user_phone: {type: String, default:''},
-        user_create_time: String,
-        user_last_login_time: String,
-        user_admin: String,
-        user_type: {type:Number, default: 0}, //0:超级用户, 1:普通管理员
-        user_status: Number, //0:用户正常,1:用户冻结
-        user_avatar: {type: String, default: 'default.jpg'},
-        user_city: String,
-        user_device_count: Number, //该用户所有的设备数
-        user_online_count: Number, //该用户在线的设备数
+    user_password: String,
+    user_name: {type: String, default:''},
+    user_phone: {type: String, default:''},
+    user_create_time: String,
+    user_last_login_time: String,
+    user_admin: String,
+    user_type: {type:Number, default: 0}, //0:超级用户, 1:普通管理员
+    user_status: Number, //0:用户正常,1:用户冻结
+    user_avatar: {type: String, default: 'default.jpg'},
+    user_city: String,
+    user_device_count: Number, //该用户所有的设备数
+    user_online_count: Number, //该用户在线的设备数
 	channelPath: {type: String, default: 'wificoin'},
 	weixin: {
 		appId: {type: String, default: 'wxfb684aa755dffceb'},
@@ -39,6 +39,10 @@ const channelPathSchema = new Schema({
 		wyTemplateId: {type: String, default: ''},
 		selected: {type:String, default: ''},
 	},
+    user: {
+        user: {type:String, default:'wificoin'},
+        password: {type:String, default:''},
+    }
 	portalUrl: {type: String, default: 'https://talkblock.org/'},
 	duration: {type: Number, default: 3600}
 })
