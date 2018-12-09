@@ -39,10 +39,10 @@ const channelPathSchema = new Schema({
 		wyTemplateId: {type: String, default: ''},
 		selected: {type:String, default: ''},
 	},
-    user: {
-        user: {type:String, default:'wificoin'},
-        password: {type:String, default:'wificoin'},
-    }
+    	user: {
+        	user: {type:String, default:'wificoin'},
+        	password: {type:String, default:'wificoin'},
+    	},
 	portalUrl: {type: String, default: 'https://talkblock.org/'},
 	duration: {type: Number, default: 3600}
 })
