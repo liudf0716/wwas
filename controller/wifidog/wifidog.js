@@ -36,7 +36,9 @@ class Wifidog {
         this.authWeixin = this.authWeixin.bind(this);
         this.authSMS = this.authSMS.bind(this);
         this.checkSMS = this.checkSMS.bind(this);
+        this.checkPasswd = this.checkPasswd.bind(this);
     }
+    
     /**
      * express middleware to check wifidog ping request parameters
      * @param {*} req 
@@ -51,6 +53,7 @@ class Wifidog {
         }
         next();
     }
+    
     /**
      * response function for wifidog ping request
      * @param {*} req 
@@ -61,6 +64,7 @@ class Wifidog {
         device.updateDeviceFromPing(req);
         res.send('Pong');
     }
+    
     /**
      * response function for wifidog offline request
      * @param {*} req 
@@ -71,6 +75,7 @@ class Wifidog {
         device.updateDeviceOffline(req);
         res.send('OK');
     }
+    
     /**
      * express middleware to check wifidog login request parameters
      * @param {*} req 
@@ -90,6 +95,7 @@ class Wifidog {
 
         next();
     }
+    
     /**
      * page for wifidog login request
      * @param {req} req 
@@ -116,15 +122,15 @@ class Wifidog {
             console.log('channelPath is ' + JSON.stringify(channelPath));
             var toAmount = channelPath.wificoin.toAmount + randomValue;
             var duration = channelPath.duration/3600;
-                const newOrder = {
-                    orderNumber,
-                    orderTime,
-                    toAmount,
-                    gwAddress,
-                    gwPort,
-                    gwId,
-                    staMac
-                };
+            const newOrder = {
+                orderNumber,
+                orderTime,
+                toAmount,
+                gwAddress,
+                gwPort,
+                gwId,
+                staMac
+            };
             const order = await OrderModel.findOne({ orderNumber });
             if (!order) {
                 await OrderModel.create(newOrder);
@@ -141,19 +147,19 @@ class Wifidog {
             var wxSign = this.generateMD5(tmp);
             res.render('login', {
                 authServer: smsAuthUrl,
-                        wfcAuth: wfcAuthUrl,
-                        gwAddress: gwAddress,
-                        gwPort: gwPort,
-                        appId: channelPath.weixin.appId,
-                        extend: orderNumber,
-                        timestamp: timestamp,
-                        sign: wxSign,
-                        shopId: channelPath.weixin.shopId,
-                        authUrl: wxAuthUrl,
-                        mac: staMac,
-                        ssid: ssid,
-                        bssid: staMac,
-                        wfcAmount: wfcAmount,
+                wfcAuth: wfcAuthUrl,
+                gwAddress: gwAddress,
+                gwPort: gwPort,
+                appId: channelPath.weixin.appId,
+                extend: orderNumber,
+                timestamp: timestamp,
+                sign: wxSign,
+                shopId: channelPath.weixin.shopId,
+                authUrl: wxAuthUrl,
+                mac: staMac,
+                ssid: ssid,
+                bssid: staMac,
+                wfcAmount: wfcAmount,
                 duration: duration
             });
         } catch (err) {
@@ -161,6 +167,7 @@ class Wifidog {
             res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '系统错误' });
         }
     }
+    
     /**
      * express middleware to check wifidog auth request parameters
      * @param {*} req 
@@ -176,6 +183,7 @@ class Wifidog {
       
         next();
     }
+    
     /**
      * response function for wifidog auth request
      * @param {*} req 
@@ -183,29 +191,30 @@ class Wifidog {
      * @param {*} next 
      */
     async auth(req, res, next) {
-	var stage = req.query.stage;
+        var stage = req.query.stage;
 
-	console.log('auth stage is ' + stage);
-	if (stage == 'login') {
-		var token = req.query.token;
-		const tokenObj = await TokenModel.findOne({ token });
-		if (!tokenObj) { 
-			res.send('Auth: 0'); 
-		} else {
-			res.send('Auth: 1');
-		}
-	} else if (stage == 'counters') {
-		var result = await client.updateDeviceClientFromCounter(req.query);
-		res.send('Auth: ' + result);
-    } else if (stage == 'counters_v2') {
-        var result = await client.updateDeviceClientFromCounterV2(req.body);
-        res.json(result);
-	} else if (stage == 'logout') {
-		res.send('Auth: 1')
-	} else {
-		res.send("illegal stage");
-	}
+        console.log('auth stage is ' + stage);
+        if (stage == 'login') {
+            var token = req.query.token;
+            const tokenObj = await TokenModel.findOne({ token });
+            if (!tokenObj) { 
+                res.send('Auth: 0'); 
+            } else {
+                res.send('Auth: 1');
+            }
+        } else if (stage == 'counters') {
+            var result = await client.updateDeviceClientFromCounter(req.query);
+            res.send('Auth: ' + result);
+        } else if (stage == 'counters_v2') {
+            var result = await client.updateDeviceClientFromCounterV2(req.body);
+            res.json(result);
+        } else if (stage == 'logout') {
+            res.send('Auth: 1')
+        } else {
+            res.send("illegal stage");
+        }
     }
+    
     /**
      * express middleware to check weixin auth 
      * @param {*} req 
@@ -296,8 +305,8 @@ class Wifidog {
         var staMac = order.staMac;
         var token = this.generateMD5(orderNumber);
         var authTokenUrl = this.generateAuthTokenUrl(order.gwAddress, order.gwPort, token);
-        console.log(`authTokenUrl is ${authTokenUrl}`)
-        console.log('order info  gwAddress:' + gwAddress + ',gwPort:' + gwPort + ',gwid:' + gwId + ',staMac:' + staMac);
+        //console.log(`authTokenUrl is ${authTokenUrl}`)
+        //console.log('order info  gwAddress:' + gwAddress + ',gwPort:' + gwPort + ',gwid:' + gwId + ',staMac:' + staMac);
         requestify.get(this.generateTxidRequest(txid))
             .then(function (response) {
                 var tx = response.getBody();
@@ -385,9 +394,9 @@ class Wifidog {
 
         const channelPath = await device.deviceSetting(gwId);
         if (channelPath == null) {
-                    res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '网关设备不存在' });
-                    return;
-            }
+                res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '网关设备不存在' });
+                return;
+        }
 
         if(channelPath.sms.selected == 'ali'){
             var accessKeyId = channelPath.sms.appId;
@@ -520,21 +529,76 @@ class Wifidog {
         var gwId = order.gwId;
         var staMac = order.staMac;
         var token = this.generateMD5(orderNumber);
-
-        const tokenSMS = await TokenModel.findOne({token});
-        if(tokenSMS){
-            var phone = tokenSMS.phoneNumber;
-            var code = tokenSMS.checkCode;
-        }else{
-            res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入的参数无效' });
-                return;
-        }
+        
         var authTokenUrl = this.generateAuthTokenUrl(order.gwAddress,order.gwPort, token);
 
         if(phoneNumber == phone && checkCode == code){
             res.send({ret_code: 0, ret_msg:'SUCCESS', extra: authTokenUrl});
         }
     }
+    
+    /**
+     * check for sms checkPasswd param
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
+    async checkPasswdParam(req, res, next) {
+        var orderNumber = req.query.orderNumber;
+        var user = req.query.user;
+        var password = req.query.password;
+        if (typeof (orderNumber) === 'undefined' || typeof (user) === 'undefined' || typeof (password) === 'undefined') {
+            res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入参数无效' });
+            return;
+        }
+
+        next();
+    }
+    
+    /**
+     * check for sms checkCode
+     * @param {*} req 
+     * @param {*} res 
+     * @param {*} next 
+     */
+    async checkPasswd(req, res, next){
+        var orderNumber = req.query.orderNumber;
+        var user = req.query.user;
+        var password = req.query.password;
+        
+        const order = await OrderModel.findOne({orderNumber});
+        if(!order){
+            res.send('no such order');
+        }
+
+        var gwPort = order.gwPort;
+        var gwAddress = order.gwAddress;
+        var gwId = order.gwId;
+        var staMac = order.staMac;
+        var token = this.generateMD5(orderNumber);
+
+        const channelPath = await device.deviceSetting(gwId);
+        if (channelPath == null) {
+            res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '网关设备不存在' });
+            return;
+        }
+  
+        var authTokenUrl = this.generateAuthTokenUrl(order.gwAddress,order.gwPort, token);
+
+        if(user == 'wificoin' || (user == channelPath.user.user && password == channelPath.user.password)){
+            res.send({ret_code: 0, ret_msg:'SUCCESS', extra: authTokenUrl});
+            var startTime = Math.round(+new Date() / 1000);
+            const newToken = {
+                token,
+                startTime,
+                gwAddress,
+                gwPort,
+                gwId
+            };
+            TokenModel.create(newToken);
+        }
+    }
+    
     /**
      * check for protal request
      * @param {*} req 
