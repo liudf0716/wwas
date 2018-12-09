@@ -14,5 +14,6 @@ router.get('/auth/wfc', WiFiDog.checkAuthWfcParam, WiFiDog.authWfc);
 router.get('/auth/weixin', WiFiDog.checkAuthWeixinParam, WiFiDog.authWeixin);
 router.get('/auth/sms', WiFiDog.checkAuthSmsParam, WiFiDog.authSMS);
 router.get('/auth/check', WiFiDog.checkCodeSmsParam, WiFiDog.checkSMS);
+router.get('/auth/passwd', WiFiDog.checkPasswdParam, WiFiDog.checkPasswd);
 
 export default router
