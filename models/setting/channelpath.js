@@ -41,7 +41,7 @@ const channelPathSchema = new Schema({
 	},
     user: {
         user: {type:String, default:'wificoin'},
-        password: {type:String, default:''},
+        password: {type:String, default:'wificoin'},
     }
 	portalUrl: {type: String, default: 'https://talkblock.org/'},
 	duration: {type: Number, default: 3600}
