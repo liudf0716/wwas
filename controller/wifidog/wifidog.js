@@ -576,7 +576,7 @@ class Wifidog {
         var orderNumber = req.query.orderNumber;
         var user = req.query.user;
         var password = req.query.password;
-        
+
         const order = await OrderModel.findOne({orderNumber});
         if(!order){
             res.send('no such order');
@@ -593,9 +593,8 @@ class Wifidog {
             res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '网关设备不存在' });
             return;
         }
-  
-        var authTokenUrl = this.generateAuthTokenUrl(order.gwAddress,order.gwPort, token);
 
+        var authTokenUrl = this.generateAuthTokenUrl(order.gwAddress,order.gwPort, token);
         if(user == 'wificoin' || (user == channelPath.user.user && password == channelPath.user.password)){
             res.send({ret_code: 0, ret_msg:'SUCCESS', extra: authTokenUrl});
             var startTime = Math.round(+new Date() / 1000);
@@ -607,7 +606,9 @@ class Wifidog {
                 gwId
             };
             TokenModel.create(newToken);
-        }
+        } else {
+            res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: 'user or password is error' });
+	}
     }
     
     /**

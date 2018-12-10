@@ -235,7 +235,7 @@
                     <input class="inp inp2" id="inpCode" type="text" placeholder="请输入验证码">
                     <button class="inp lay-btn" id="setCode">获取验证码</button>
                 </p>
-                <p><button class="inp lay-btn2 bgcc" id="savebtn">立即连接</button></p>
+                <p><button class="inp lay-btn2 bgcc" id="savebtn" disabled>立即连接</button></p>
             </div>
         </div>
     </div>
@@ -251,8 +251,8 @@
             </div>
             <div class="pad40 xy_txt" style="height:200px;overflow-y: auto;">
                 <p><input class="inp" id="inpUser" type="text" placeholder="请输入用户名"></p>
-                <p><input class="inp" id="inpPassword" type="text" placeholder="请输入密码"></p>
-                <p><button class="inp lay-btn2 bgcc" id="connectbtn">立即连接</button></p>
+                <p><input class="inp" id="inpPassword" type="password" placeholder="请输入密码"></p>
+                <p><button class="inp lay-btn2" id="connectbtn">立即连接</button></p>
             </div>
         </div>
     </div>
@@ -309,7 +309,7 @@
             return true;
         }
     }
-    function checkUser(){
+    function checkUserPassword(){
         var user = $('#inpUser').val();
         var passwd = $('#inpPassword').val();
         if(user == "" || passwd == ""){
@@ -414,14 +414,14 @@
         })
         
         $('#connectbtn').click(function(){
-            if(checkUser() == false)
+            if(checkUserPassword() == false)
                 return false;
-            var usr = $('#inpUser').val();
+            var user = $('#inpUser').val();
             var passwd = $('#inpPassword').val();
-	        var checkUser = "<%= authServer%>" + "/wifidog/auth/passwd";
+	    var checkUser = "<%= authServer%>" + "/wifidog/auth/passwd";
             $.ajax({
                 headers: {"Content-Type": "application/json"},
-                url: checkSms,
+                url: checkUser,
                 type: "GET",
                 dataType: "json",
                 data: {
@@ -430,8 +430,11 @@
                     password:passwd
                 },
                 success: function (res) {
-		            console.log(res);
-		            window.location.href=res.extra;
+					console.log(res);
+					if (res.ret_code == 0)
+						window.location.href=res.extra;
+					else
+						alert(res.extra);
                 },
                 error: function (err) {
                     console.log(err);
