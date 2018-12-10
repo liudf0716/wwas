@@ -531,10 +531,21 @@ class Wifidog {
         var token = this.generateMD5(orderNumber);
         
         var authTokenUrl = this.generateAuthTokenUrl(order.gwAddress,order.gwPort, token);
-
-        if(phoneNumber == phone && checkCode == code){
-            res.send({ret_code: 0, ret_msg:'SUCCESS', extra: authTokenUrl});
+        const tokenSMS = await TokenModel.findOne({token});
+        if(tokenSMS){
+            var phone = tokenSMS.phoneNumber;
+            var code = tokenSMS.checkCode;
+            
+            if(phoneNumber == phone && checkCode == code){
+                res.send({ret_code: 0, ret_msg:'SUCCESS', extra: authTokenUrl});
+            } else {
+                res.send({ret_code: 1002, ret_msg:'FAILED', extra: '用户输入的参数无效'});
+            }
+        }else{
+            res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入的参数无效' });
+            return;
         }
+        
     }
     
     /**
