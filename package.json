@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development supervisor --harmony index.js",
     "local": "cross-env NODE_ENV=local supervisor  --harmony index.js",
-    "start": "cross-env NODE_ENV=production pm2 start index.js --node-args='--harmony' --name 'wwas --port 8001'",
-    "stop": "cross-env NODE_ENV=production pm2 stop index.js --name 'wwas --port 8001'",
+    "start": "cross-env NODE_ENV=development pm2 start index.js --node-args='--harmony' --name 'wwas --port 8001'",
+    "stop": "cross-env NODE_ENV=development pm2 stop index.js --name 'wwas --port 8001'",
     "restart": "cross-env NODE_ENV=production pm2 restart index.js --node-args='--harmony' --name 'wwas --port 8001'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
