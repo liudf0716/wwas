@@ -23,11 +23,13 @@ const channelPathSchema = new Schema({
 		appId: {type: String, default: 'wxfb684aa755dffceb'},
 		shopId: {type: String, default: '641418'},
 		secretKey: {type: String, default: 'ca0ddbac646160edfeaf343937f73404'},
-		ssid: {type: String, default: 'ApFreeWiFiDog'}
+		ssid: {type: String, default: 'ApFreeWiFiDog'},
+        enable: {type: Boolean, default: false},
 	},
 	wificoin: {
 		toAddress: {type: String, default: 'wZirordpuoJgmRp6wRPKZjAjVruQr5gF7r'},
 		toAmount: {type: Number, default: 2000000},
+        enable: {type: Boolean, default: false},
 	},
 	sms: {
 		appId: {type:String, default: ''},
@@ -38,10 +40,13 @@ const channelPathSchema = new Schema({
 		wyAppSecret: {type: String, default: ''},
 		wyTemplateId: {type: String, default: ''},
 		selected: {type:String, default: ''},
+        smsAliEnable: {type: Boolean, default: true},
+        smsWyEnable: {type: Boolean, default: false},
 	},
     	user: {
         	user: {type:String, default:'wificoin'},
         	password: {type:String, default:'wificoin'},
+            enable: {type: Boolean, default: true},
     	},
 	portalUrl: {type: String, default: 'https://www.baidu.com/'},
 	duration: {type: Number, default: 3600}
