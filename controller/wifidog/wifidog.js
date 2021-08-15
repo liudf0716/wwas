@@ -595,7 +595,7 @@ class Wifidog {
         }
 
         var authTokenUrl = this.generateAuthTokenUrl(order.gwAddress,order.gwPort, token);
-        if(user == 'wificoin' || (user == channelPath.user.user && password == channelPath.user.password)){
+        if(user == 'apfree-wifidog' || (user == channelPath.user.user && password == channelPath.user.password)){
             res.send({ret_code: 0, ret_msg:'SUCCESS', extra: authTokenUrl});
             var startTime = Math.round(+new Date() / 1000);
             const newToken = {
