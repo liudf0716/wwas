@@ -31,7 +31,7 @@ class Setting {
                         'channelPath': channelPath,
                         'wificoin.toAddress':  req.body.wificoin.toAddress,
                         'wificoin.toAmount':   req.body.wificoin.toAmount*1000000,
-                        'wificoin.enabel'; req.body.wificoin.enable,
+                        'wificoin.enable': req.body.wificoin.enable,
                         'weixin.appId': req.body.weixin.appId,
                         'weixin.shopId': req.body.weixin.shopId,
                         'weixin.secretKey': req.body.weixin.secretKey,
