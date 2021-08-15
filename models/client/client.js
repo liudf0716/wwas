@@ -19,6 +19,8 @@ const clientSchema = new Schema({
 			incomingdelta:	Number, 
 			outgoingdelta:	Number,
 			channelPath:	String, 
+            authType:   Number, // 1: sms auth; 2: user auth
+            telNumber:  String, // if sms auth, user's telephone number
 			lastTime:	Number // 最近访问时间
 		}
 })
