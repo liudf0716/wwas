@@ -193,7 +193,7 @@ class Setting {
                 smsWyAppSecret: channelPath.sms.wyAppSecret,
                 smsWyTemplateId: channelPath.sms.wyTemplateId,
                 smsSelected: channelPath.sms.selected,
-                smsWyEnable:channelPath.sms.smsWyEnable;
+                smsWyEnable:channelPath.sms.smsWyEnable,
                 user: channelPath.user.user,
                 password: channelPath.user.password,
                 userEnable: channelPath.user.enable,
