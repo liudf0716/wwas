@@ -160,7 +160,12 @@ class Wifidog {
                 ssid: ssid,
                 bssid: staMac,
                 wfcAmount: wfcAmount,
-                duration: duration
+                duration: duration,
+                wxEnable: channelPath.weixin.enable,
+                wfcEnable: channelPath.wificoin.enable,
+                userEnable: channelPath.user.enable,
+                smsWyEnable: channelPath.sms.smsWyEnable,
+                smsAliEnable: channelPath.sms.smsAliEnable
             });
         } catch (err) {
             console.log(err);
