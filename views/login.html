@@ -258,10 +258,10 @@
     </div>
 </div>
 <div class="container">
-    <a href="<%= wfcAuth %>" class="btn" id="wfc">支付WFC上网<small>(<%= wfcAmount%>/<%= duration%>小时)</small></a>
-    <a href="javascript:;" class="btn" id="weixin">微信认证上网</a>
-    <a href="javascript:;" class="btn" id="duanxin">短信认证上网</a>
-    <a href="javascript:;" class="btn" id="user">密码认证上网</a>
+    <a href="<%= wfcAuth %>" class="btn" id="wfc" style="display: none;">支付WFC上网<small>(<%= wfcAmount%>/<%= duration%>小时)</small></a>
+    <a href="javascript:;" class="btn" id="weixin" style="display: none;">微信认证上网</a>
+    <a href="javascript:;" class="btn" id="duanxin" style="display: none;">短信认证上网</a>
+    <a href="javascript:;" class="btn" id="user" style="display: none;">密码认证上网</a>
     <p class="msg"><input type="checkbox" class="checkbox" id="checkbox" checked> <label for="checkbox">已阅读并同意</label> <span id="xieyihref">上网服务条款</span></p>
 </div>
 </body>
@@ -319,6 +319,24 @@
         return true;
     }
     $(function(){
+        var userEnable = <%= userEnable %>;
+        var wxEnable = <%= wxEnable %>;
+        var wfcEnable = <%= wfcEnable %>;
+        var smsAliEnable = <%= smsAliEnable %>;
+        var smsWyEnable = <%= smsWyEnable %>;
+        if (userEnable) {
+            ShowDiv('user');
+        }
+        if (wxEnable) {
+            ShowDiv('weixin');
+        }
+        if (wfcEnable) {
+            ShowDiv('wfc');
+        }
+        if (smsAliEnable || smsWyEnable) {
+            ShowDiv('duanxin');
+        }
+        
         //显示协议
         $("#xieyihref").click(function () {
             ShowDiv('MyDiv_xieyi');
