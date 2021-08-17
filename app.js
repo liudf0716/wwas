@@ -22,7 +22,10 @@ fs.exists(config.device_dir, function(exists) {
     console.log(exists ? "设备excel目录存在" : "设备excel目录不存在", config.device_dir);
     if (!exists) fs.mkdirSync(config.device_dir);
 });
-
+fs.exists(config.client_dir, function(exists) {
+    console.log(exists ? "客户excel目录存在" : "客户excel目录不存在", config.client_dir);
+    if (!exists) fs.mkdirSync(config.client_dir);
+});
 
 const app = express();
 
