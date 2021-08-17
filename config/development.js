@@ -9,6 +9,7 @@ module.exports = {
 	wfcAuthPath: '/wifidog/auth/wfc',
 	wxAuthPath: '/wifidog/auth/weixin',
 	device_dir: './public/device',
+    client_dir: './public/client',
 	session: {
 		name: 'SID',
 		secret: 'SID',
