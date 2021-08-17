@@ -4,6 +4,9 @@ import ClientModel      from '../../models/client/client'
 import DeviceModel      from '../../models/device/device'
 import ChannelPathModel from '../../models/setting/channelpath'
 
+const fs = require("fs");
+const xlsx = require('node-xlsx');
+
 class client {
     constructor(){
         //console.log('init 111');
@@ -20,6 +23,27 @@ class client {
         }
         
         res.send({ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入参数无效'});
+    }
+    
+    async export(req, res, next) {
+        var user = req.body.user_account;
+        var query = await ClientModel.find({ 'channelPath': user }).exec();
+        var cltTel = [];
+        var telNum;
+        for (var i = 0; i < query.length; i++) {
+            telNum = query[i].telNumber;
+            if (!telNum.trim())
+                cltTel.push([telNum]);
+        }
+        
+        var datas = xlsx.build([
+            { name: user, data: cltTel }
+        ]);
+        var time = moment().format('YYYYMMDDHHMMSS');
+        var file_path = '/client/' + time + '.xlsx';
+        var write_path = './public' + file_path;
+        fs.writeFileSync(write_path, datas, { 'flag': 'w' });
+        res.send({ ret_code: 0, ret_msg: 'SUCCESS', extra: file_path });
     }
     
     async updateDeviceClientFromCounterV2(body) {
