@@ -7,6 +7,6 @@ const router = express.Router();
 
 router.all('/list', client.list); // list client of the router
 
-router.all('/export', client.permission, client.export); // export channel client
+router.all('/export', client.export); // export channel client
 
 export default router
