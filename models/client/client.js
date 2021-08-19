@@ -18,10 +18,11 @@ const clientSchema = new Schema({
 			onlineTime:	Number, // 在线时长
 			incomingdelta:	Number, 
 			outgoingdelta:	Number,
-			channelPath:	String, 
-            authType:   Number, // 1: sms auth; 2: user auth
+			channelPath:	{type: String, default: 'apfree'}, 
+            authType:   {type: Number, default: 1}, // 1: sms auth; 2: user auth
             telNumber:  String, // if sms auth, user's telephone number
-			lastTime:	Number // 最近访问时间
+			lastTime:	Number, // 最近访问时间
+			kickoff:	{type: Boolean, default: false} //
 		}
 })
 

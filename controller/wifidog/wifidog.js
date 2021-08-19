@@ -373,6 +373,7 @@ class Wifidog {
     async authSMS(req,res,next){
         var orderNumber = req.query.orderNumber;
         var phoneNumber = req.query.phoneNumber;
+        var cltMac = req.query.clientMac;
 
         const order = await OrderModel.findOne({orderNumber});
         if(!order){
@@ -402,6 +403,17 @@ class Wifidog {
                 res.send({ ret_code: 1002, ret_msg: 'FAILED', extra: '网关设备不存在' });
                 return;
         }
+
+        /*
+        add or update client info after sms check success
+        let clt = ClientModel.findOne({'gwId': gwId,'clients.mac': cltMac});
+        if (clt) {
+            clt.clients.telNumber = phoneNumber;
+            clt.save();
+        } else {
+            console.log('can not find client ' + cltMac);
+        }
+        */
 
         if(channelPath.sms.selected == 'ali'){
             var accessKeyId = channelPath.sms.appId;
@@ -523,6 +535,7 @@ class Wifidog {
         var orderNumber = req.query.orderNumber;
         var phoneNumber = req.query.phoneNumber;
         var checkCode = req.query.checkCode;
+        var cltMac = req.query.clientMac;
 
         const order = await OrderModel.findOne({orderNumber});
         if(!order){
