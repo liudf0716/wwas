@@ -56,6 +56,15 @@ class client {
         res.send({ret_code: 1002, ret_msg: 'FAILED', extra: '用户输入参数无效'});
     }
     
+    async kickOffClient(req, res, next) {
+        try {
+            var cltMac = req.body.client_mac;
+            var query = await ClientModel.find({ 'channelPath': user }).exec();
+        } catch(e) {
+            console.log(e);
+        }
+    }
+
     async updateDeviceClientFromCounterV2(body) {
 		console.log(body);
         var res_auth = {};
