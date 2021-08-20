@@ -58,8 +58,8 @@ class client {
     
     async kickOffClient(req, res, next) {
         try {
-            var cltMac = req.body.client_mac;
-            var query = await ClientModel.find({ 'channelPath': user }).exec();
+            var filter = req.body.filter;
+            await ClientModel.findOneAndUpdate(filter, { $set: {"clients.kickoff": true}} }).exec();
         } catch(e) {
             console.log(e);
         }
