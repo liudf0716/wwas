@@ -108,13 +108,26 @@ class client {
                         'lastTime': nowTime
                     }
                 };
-
+                
+                var kickoff = false;
                 const device = await ClientModel.findOne({'gwId': gwId,'clients.mac': mac});
                 if(!device){
                     await ClientModel.create(newClient);
                     auth_code.auth_code = 1;
                 	res_auth['auth_op'].push(auth_code);
 					continue;
+                } else {
+                    device.clients.ip = ip;
+                    device.clients.token = token;
+                    device.clients.incoming = incoming;
+                    device.clients.outgoing = outgoing;
+                    device.clients.onlineTime = onlineTime;
+                    device.clients.lastTime = nowTime;
+                    if (device.clients.kickoff) {
+                        kickoff = true;
+                        device.clients.kickoff = false;
+                    } 
+                    await device.save();
                 }
 
                 var duration = 0;
@@ -141,8 +154,12 @@ class client {
                     continue;
                 } 
 
-                await ClientModel.findOneAndUpdate({'gwId': gwId,'clients.mac': mac}, {$set: newClient});
-                auth_code.auth_code = 1;
+                // await ClientModel.findOneAndUpdate({'gwId': gwId,'clients.mac': mac}, {$set: newClient});
+                
+                if (kickoff) {
+                    console.log('kickoff client' + mac);
+                } else 
+                    auth_code.auth_code = 1;
                 res_auth['auth_op'].push(auth_code);
             }
         }catch(err){
@@ -183,11 +200,28 @@ class client {
 					'lastTime': nowTime
 				}
 			};
-			const device = await ClientModel.findOne({'gwId': gwId,'clients.mac': mac});
+			let device = await ClientModel.findOne({'gwId': gwId,'clients.mac': mac});
 			if(!device){
 				await ClientModel.create(newClient);
 				return 1;
-			}
+			} else {
+                var kickoff = false;
+                device.clients.ip = ip;
+                device.clients.token = token;
+                device.clients.incoming = incoming;
+                device.clients.outgoing = outgoing;
+                device.clients.onlineTime = onlineTime;
+                device.clients.lastTime = nowTime;
+                if (device.clients.kickoff) {
+                    kickoff = true;
+                    device.clients.kickoff = false;
+                } 
+                await device.save();
+                if (kickoff) {
+                    console.log('kickoff client ' + mac);
+                    return 0;
+                }
+            }
             
 			var duration = 0;
 			var cpSetting;
@@ -210,7 +244,7 @@ class client {
 				return 0;
 			}
 
-			await ClientModel.findOneAndUpdate({'gwId': gwId,'clients.mac': mac}, {$set: newClient});
+			// await ClientModel.findOneAndUpdate({'gwId': gwId,'clients.mac': mac}, {$set: newClient});
 			return 1;
 		}catch(err){
 			console.log(err);

@@ -373,6 +373,7 @@ class Wifidog {
     async authSMS(req,res,next){
         var orderNumber = req.query.orderNumber;
         var phoneNumber = req.query.phoneNumber;
+        var cltMac = req.query.clientMac;
 
         const order = await OrderModel.findOne({orderNumber});
         if(!order){
@@ -523,6 +524,7 @@ class Wifidog {
         var orderNumber = req.query.orderNumber;
         var phoneNumber = req.query.phoneNumber;
         var checkCode = req.query.checkCode;
+        var cltMac = req.query.clientMac;
 
         const order = await OrderModel.findOne({orderNumber});
         if(!order){
@@ -542,6 +544,11 @@ class Wifidog {
             var code = tokenSMS.checkCode;
             
             if(phoneNumber == phone && checkCode == code){
+                //add or update client info after sms check success
+                await ClientModel.findOne({'gwId': gwId,'clients.mac': cltMac},
+                    {$set: {'clients.telNumber': phone}},
+                    {upsert: true});
+                
                 res.send({ret_code: 0, ret_msg:'SUCCESS', extra: authTokenUrl});
             } else {
                 res.send({ret_code: 1002, ret_msg:'FAILED', extra: '用户输入的参数无效'});

@@ -386,6 +386,7 @@
             },1000);
             var tel = $("#inpTel").val();
 	        var authSms = "<%= authServer%>" + "/wifidog/auth/sms";
+            var cltMac = "<%= mac %>";
             $.ajax({
                 headers: {"Content-Type": "application/json"},
                 url: authSms,
@@ -393,7 +394,8 @@
                 dataType: "json",
                 data: {
 	                orderNumber: extend,
-                    phoneNumber:tel
+                    phoneNumber:tel,
+                    clientMac: cltMac
                 },
                 success: function (res) {
                     console.log(res);
@@ -411,6 +413,7 @@
             var tel = $('#inpTel').val();
             var code = $('#inpCode').val();
 	        var checkSms = "<%= authServer%>" + "/wifidog/auth/check";
+            var cltMac = "<%= mac %>";
             $.ajax({
                 headers: {"Content-Type": "application/json"},
                 url: checkSms,
@@ -419,7 +422,8 @@
                 data: {
 	                orderNumber: extend,
                     phoneNumber:tel,
-                    checkCode:code
+                    checkCode:code,
+                    clientMac: cltMac,
                 },
                 success: function (res) {
 		            console.log(res);
@@ -436,7 +440,7 @@
                 return false;
             var user = $('#inpUser').val();
             var passwd = $('#inpPassword').val();
-	    var checkUser = "<%= authServer%>" + "/wifidog/auth/passwd";
+	        var checkUser = "<%= authServer%>" + "/wifidog/auth/passwd";
             $.ajax({
                 headers: {"Content-Type": "application/json"},
                 url: checkUser,
