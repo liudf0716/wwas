@@ -59,7 +59,7 @@ class client {
     async kickOffClient(req, res, next) {
         try {
             var filter = req.body.filter;
-            await ClientModel.findOneAndUpdate(filter, { $set: {"clients.kickoff": true}} }).exec();
+            await ClientModel.findOneAndUpdate(filter, { $set: {"clients.kickoff": true}}).exec();
         } catch(e) {
             console.log(e);
         }
