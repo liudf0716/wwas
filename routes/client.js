@@ -9,6 +9,6 @@ router.all('/list', client.list); // list client of the router
 
 router.all('/export', client.export); // export channel client
 
-router.all('/kickoffClient', client.kickoffClient); // kickoff online client
+router.all('/kickoffClient', client.kickOffClient); // kickoff online client
 
 export default router
