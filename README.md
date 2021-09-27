@@ -17,9 +17,11 @@
 [12]: https://github.com/KunTengRom/kunteng-lede-17.01.4
 
 
-
 # wificoin-wifidog-auth-server
-wwas is an [apfree wifidog](https://github.com/liudf0716/apfree_wifidog) auther server (it also support original wifidog), which especially supporting wfc payment  and weixin lian.
+wwas is an [apfree wifidog](https://github.com/liudf0716/apfree_wifidog) auther server (it also support original wifidog).
+
+## demo 
+[apfree-wifidog auth server]().
 
 ## how to run server side
 
@@ -101,8 +103,7 @@ Feel free to create issues or pull-requests if you have any problems.
 qq group: 424031785
 
 
-## donate
-### wfc: [weiKbu9DYg26gH2zucSHJHgH5KsuuZd3wW](https://wfc.xyblock.net/#/wifiPortal/donate)
+
 
 
 
